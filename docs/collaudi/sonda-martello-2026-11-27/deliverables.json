@@ -1,0 +1,41 @@
+{
+  "status": "review-only; seven complete fronts pending visual approval",
+  "directionApproved": "B",
+  "defaultLocale": "en",
+  "textLayers": [
+    "en",
+    "it"
+  ],
+  "artifacts": [
+    {
+      "name": "probe-cards-english.png",
+      "libraryFileId": "libfile_16c881757d508191aaabb4be0920ebbd",
+      "bytes": 2110178,
+      "sha256": "931202e7bb5aa80c3e864663efe87e21318490f03f1d55d603dd4166d4039149"
+    },
+    {
+      "name": "hammer-cards-english.png",
+      "libraryFileId": "libfile_19424ecf1df081919095987cb6019df8",
+      "bytes": 1720121,
+      "sha256": "2c2b3216d98a3438574eee3460e6bb3964417595e499d7c3e33e5ceb7391202f"
+    },
+    {
+      "name": "sonda-martello-b-effetti.mp4",
+      "libraryFileId": "libfile_ffa667ffc08081919f6a549641169037",
+      "bytes": 2923278,
+      "sha256": "6d5355ba9e956ee531ba686d6647a6bf7a1a4f00042b1b38d9b3dd8a7e6c7d21"
+    },
+    {
+      "name": "sonda-martello-b-anteprima.html",
+      "libraryFileId": "libfile_9bbf41ed8e8c8191b95a3a47bc777a06",
+      "bytes": 22991842,
+      "sha256": "6461e93b5baa48d84b724ac6ab540fff6373a8ba2df9f7f8b0b40988ce258f41"
+    },
+    {
+      "name": "sonda-martello-carte-HD-e-livelli.zip",
+      "libraryFileId": "libfile_3b7aecb835808191a5a67f33f557e2ab",
+      "bytes": 273155100,
+      "sha256": "de82d83d7156747ccf60a6eecc522a7572ce2b26c7a582d55678fb82f957a702"
+    }
+  ]
+}

@@ -159,3 +159,6 @@ function Review(){
  </div>;
 }createRoot(document.getElementById('root')).render(<Review/>);`);
 console.log('Collaudo pronto: /.maglio-review.html · carte ufficiali, raffiche dai bordi e impatti.');
+
+// Pagina separata per la revisione B; il selettore ufficiale resta sulle carte approvate.
+try{await (await import('./prepare-probe-hammer-review.mjs')).prepareProbeHammerReview();}catch(error){console.warn('Anteprima Sonda/Martello non disponibile: '+error.message);}

@@ -220,10 +220,18 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   }else if(pattern==='ion-probe')planned=[{base:p.baseDamage}];
   else if(pattern==='thunder-hammer'){
    const signal=comboSide.ionProbe;
-   const target=signal&&signal.expiresPly>b.ply?byId(signal.id):ordinary();
+   // Il segnale segue il vero bersaglio colpito, compresi gli altri
+   // componenti della madre. Una presa non più valida lascia il tiro base.
+   let marked=null;
+   if(signal&&signal.expiresPly>b.ply){
+    const candidate=signal.targetKind?
+     h.selectedEnemyTarget(enemy,{targetKind:signal.targetKind,targetId:signal.id,partId:signal.id},b.ply):
+     byId(signal.id)||h.selectedEnemyTarget(enemy,{targetKind:'part',targetId:signal.id,partId:signal.id},b.ply);
+    if(candidate?.unit?.id===signal.id)marked=candidate;
+   }
+   const target=marked||ordinary();
    planned=[{target,base:p.baseDamage}];
-   if(signal&&signal.expiresPly>b.ply&&target?.unit?.id===signal.id)
-    planned.push({target,base:p.comboBonusDamage});
+   if(marked)planned.push({target:marked,base:p.comboBonusDamage});
    comboSide.ionProbe=null;
   }else if(pattern==='command-lance'){
    if(side.commander?.id&&side.commander.untilPly>b.ply)
@@ -247,7 +255,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(pattern==='wandering-shrapnel')m.previousTargetId=r.target.unit?.id;
    if(jawRole(m))m.jawLatch={targetKind:r.target.kind,targetId:r.target.unit.id,launchPly:m.deployedPly,
     untilPly:m.deployedPly+2*p.durationTurns};
-   if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,ply:b.ply,expiresPly:b.ply+3};
+   if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,targetKind:r.target.kind,ply:b.ply,expiresPly:b.ply+3};
    if(pattern==='incinerator'&&stage===1){
     const discarded=(side.discard||[]).filter(id=>h.card(id)?.kind==='attack').length;
     const burn=Math.min(p.burnMaxDamage??Number.POSITIVE_INFINITY,

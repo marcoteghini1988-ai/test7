@@ -1,0 +1,89 @@
+{
+  "checks": [
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "e2919e3d14c08463618ccc8540c1c0000ab77ecfd87fa03702f38d33acce708d"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "262e3f35a08cfe38d288742b33284f136da0c1ce7e8e8970fa766ec640ab29e3"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "2b109054c6ecd05491b0013057606e19cc313e2435f61e32eeb2abe3c8002c4a"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "11f420c94b836b39fdff18051a7c66a60e33257010a850ecf1a19ee17b5eaec4"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "f566dd1d6fa43879f8be80fc5c94bf447f578ce752268ee7063d9ab141dbec36"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "27b00f788592d6cc5cbe7b4f4aa72edcf30975597fcd1c9f9d4600ec85e9a671"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "locale": "en",
+      "changedPixelsOutsideText": 0,
+      "sha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "locale": "it",
+      "changedPixelsOutsideText": 0,
+      "sha256": "1135f7ec3073e4f98a9b0f44ad1d2dc25399d15bcdffe18ae1d81945326dfab7"
+    }
+  ],
+  "artworkUnchanged": true
+}

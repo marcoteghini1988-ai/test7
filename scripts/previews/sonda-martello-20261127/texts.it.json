@@ -1,0 +1,6 @@
+{
+  "weapon":"ARMA","element":"ELEMENTO","lightning":"FULMINE","duration":"DURATA","turn":"TURNO","damage":"DANNO BASE","target":"1 BERSAGLIO",
+  "rarities":{"Comune":"COMUNE","Rara":"RARA","Epica":"EPICA","Leggendaria":"LEGGENDARIA"},
+  "probe":{"name":"Sonda Ionica d’Assalto","title":["SONDA IONICA","D'ASSALTO"],"rightLabel":"SEGNA SE DANNEGGIA","rightLines":["PROSSIMO MARTELLO","QUESTO O PROSSIMO","TURNO PROPRIO"],"action":"1 COLPO","description":"Infligge {damage} HP a un bersaglio. Solo un danno effettivo lascia il segnale per il Martello del Tuono, valido in questo turno o nel tuo prossimo turno. Si applicano Difese e copertura ordinarie."},
+  "hammer":{"name":"Martello del Tuono","title":["MARTELLO","DEL TUONO"],"rightLabel":"COMBO CON SONDA","rightLines":["SECONDO COLPO {bonus} HP","CONSUMA SEGNALE","SE BERSAGLIO VIVO"],"action":"1 O 2 COLPI","description":"Infligge {damage} HP con un colpo. Un segnale valido della Sonda aggiunge un secondo impatto distinto da {bonus} HP sul bersaglio ancora vivo e viene consumato. Funziona da solo senza segnale. Difese e copertura si applicano a ogni impatto."}
+}

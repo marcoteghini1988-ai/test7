@@ -1,5 +1,23 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Sonda / Martello — direzione B confermata il 27/11/2026
+
+L'utente ha scelto «ok per B»: reticolo elettrico della Sonda, lama rotante
+per il Martello e secondo fendente con detonazione elettrica, contraccolpo
+e consumo del segnale. Sono preparati sette nuovi fronti (Sonda C/R/E/L;
+Martello R/E/L) con basi HD senza scritte e livelli EN/IT. **La direzione
+è confermata; i sette fronti completi e l'animazione di studio aspettano
+la revisione visiva prima di essere promossi nella partita.** Non cambiare
+il registro delle 40 varianti approvate fino alla conferma dei fronti.
+Leggere `docs/FULMINE_06_07_SONDA_MARTELLO_2026-11-26.md` e
+`scripts/previews/sonda-martello-20261127/README.md`. Le illustrazioni
+originali sono archiviate in `asset-sources/weapon-previews/sonda-martello-2026-11-27`.
+La correzione del motore riguarda solo il segnale: conserva il vero tipo
+di bersaglio (anche altri componenti della madre) e lascia il tiro base
+al Martello se il bersaglio segnato non è più valido. Non aggiunge danni,
+turni, costi o colpi. Video/HTML di studio usano eventi reali, non sono
+registrazioni della partita StackBlitz né attestano vibrazione hardware.
+
 ## Catalogo Personaggi — 42, inclusi 12 Boss
 
 Leggere `docs/CATALOGO_42_PERSONAGGI_CON_BOSS.md` e `docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json`. Il registro riprende i 30 generici senza modificare le schede originarie e riconcilia i 12 Boss ufficiali con i loro ID e settori. Le nuove abilità dei Boss nello scontro e dopo lo sblocco, la rarità Leggendaria dei trofei e i valori sono proposte non ancora approvate o implementate. Conservare il sistema di ricompensa e le identità esistenti; distinguere Boss permanente della sfida da Personaggio giocabile. Il nome generico n.29 coincide con Plutone: proposta di rinomina Custode della Penombra, non ancora applicata. Gli esclusivi delle macchine restano separati.

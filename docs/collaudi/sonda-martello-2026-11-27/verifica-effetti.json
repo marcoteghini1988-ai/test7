@@ -1,0 +1,4935 @@
+{
+  "status": "ANTEPRIMA_ISOLATA_NON_INTEGRATA",
+  "direction": "B",
+  "directionApproved": true,
+  "cardVisualApproval": false,
+  "effectRuntimeApproval": false,
+  "actualBattleRecording": false,
+  "physicalHapticsVerified": false,
+  "canvas": [
+    900,
+    1600
+  ],
+  "fps": 30,
+  "cases": [
+    {
+      "title": "Comune · Sonda e segnale · A · madre",
+      "mode": "probe-only",
+      "rarity": "Comune",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica",
+          "hitCount": 1,
+          "actualDamage": 8,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 14,
+              "actualDamage": 8,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "id": "weapons",
+        "targetKind": "part",
+        "ply": 0,
+        "expiresPly": 3
+      },
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica",
+            "who": "A",
+            "rarity": "Comune",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 349,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 8,
+            "nominalDamage": 14,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 6600
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        }
+      ]
+    },
+    {
+      "title": "Rara · Sonda e segnale · A · madre",
+      "mode": "probe-only",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "id": "weapons",
+        "targetKind": "part",
+        "ply": 0,
+        "expiresPly": 3
+      },
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 176,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 6600
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        }
+      ]
+    },
+    {
+      "title": "Epica · Sonda e segnale · A · madre",
+      "mode": "probe-only",
+      "rarity": "Epica",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+          "hitCount": 1,
+          "actualDamage": 49,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 30,
+              "actualDamage": 49,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "id": "weapons",
+        "targetKind": "part",
+        "ply": 0,
+        "expiresPly": 3
+      },
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 285,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 49,
+            "nominalDamage": 30,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 6600
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        }
+      ]
+    },
+    {
+      "title": "Leggendaria · Sonda e segnale · A · madre",
+      "mode": "probe-only",
+      "rarity": "Leggendaria",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+          "hitCount": 1,
+          "actualDamage": 68,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 68,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "id": "weapons",
+        "targetKind": "part",
+        "ply": 0,
+        "expiresPly": 3
+      },
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 182,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 68,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 6600
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        }
+      ]
+    },
+    {
+      "title": "Rara · Martello autonomo · A · madre",
+      "mode": "hammer-alone",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 27,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1380,
+            "flightMs": 1220,
+            "originX": 227,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "blade-contact",
+          "at": 1.38,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 1
+        }
+      ]
+    },
+    {
+      "title": "Rara · Combo nello stesso turno · A · madre",
+      "mode": "combo",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 2,
+          "actualDamage": 44,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 18,
+              "actualDamage": 17,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 247,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 175,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 112,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 17,
+            "nominalDamage": 18,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Rara · Combo nel turno successivo · A · supporti",
+      "mode": "next-turn",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 26,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 26,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 2,
+          "actualDamage": 57,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 35,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 18,
+              "actualDamage": 22,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 256,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 26,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 120,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 35,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 313,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 22,
+            "nominalDamage": 18,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Epica · Martello autonomo · A · madre",
+      "mode": "hammer-alone",
+      "rarity": "Epica",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+          "hitCount": 1,
+          "actualDamage": 63,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 63,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1380,
+            "flightMs": 1220,
+            "originX": 269,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 63,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "blade-contact",
+          "at": 1.38,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 1
+        }
+      ]
+    },
+    {
+      "title": "Epica · Combo nello stesso turno · A · madre",
+      "mode": "combo",
+      "rarity": "Epica",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+          "hitCount": 1,
+          "actualDamage": 49,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 30,
+              "actualDamage": 49,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+          "hitCount": 2,
+          "actualDamage": 104,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 63,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 25,
+              "actualDamage": 41,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 298,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 49,
+            "nominalDamage": 30,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 325,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 63,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 198,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 41,
+            "nominalDamage": 25,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Epica · Combo nel turno successivo · A · supporti",
+      "mode": "next-turn",
+      "rarity": "Epica",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+          "hitCount": 1,
+          "actualDamage": 63,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 30,
+              "actualDamage": 63,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+          "hitCount": 2,
+          "actualDamage": 137,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 83,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 25,
+              "actualDamage": 54,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 179,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 63,
+            "nominalDamage": 30,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 206,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 83,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-e",
+            "who": "A",
+            "rarity": "Epica",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 79,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 54,
+            "nominalDamage": 25,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Leggendaria · Martello autonomo · A · madre",
+      "mode": "hammer-alone",
+      "rarity": "Leggendaria",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+          "hitCount": 1,
+          "actualDamage": 89,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 51,
+              "actualDamage": 89,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1380,
+            "flightMs": 1220,
+            "originX": 294,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 89,
+            "nominalDamage": 51,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "blade-contact",
+          "at": 1.38,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 1
+        }
+      ]
+    },
+    {
+      "title": "Leggendaria · Combo nello stesso turno · A · madre",
+      "mode": "combo",
+      "rarity": "Leggendaria",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+          "hitCount": 1,
+          "actualDamage": 68,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 68,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+          "hitCount": 2,
+          "actualDamage": 147,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 51,
+              "actualDamage": 89,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 33,
+              "actualDamage": 58,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 113,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 68,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 140,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 89,
+            "nominalDamage": 51,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 333,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 58,
+            "nominalDamage": 33,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Leggendaria · Combo nel turno successivo · A · supporti",
+      "mode": "next-turn",
+      "rarity": "Leggendaria",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+          "hitCount": 1,
+          "actualDamage": 90,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 39,
+              "actualDamage": 90,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+          "hitCount": 2,
+          "actualDamage": 193,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 51,
+              "actualDamage": 117,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 33,
+              "actualDamage": 76,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 314,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 90,
+            "nominalDamage": 39,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 341,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 117,
+            "nominalDamage": 51,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono-rarity-l",
+            "who": "A",
+            "rarity": "Leggendaria",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 214,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 76,
+            "nominalDamage": 33,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Rara · Ordine inverso · A · madre",
+      "mode": "reverse",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 27,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "id": "weapons",
+        "targetKind": "part",
+        "ply": 0,
+        "expiresPly": 3
+      },
+      "timeline": {
+        "hits": [
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1380,
+            "flightMs": 1220,
+            "originX": 195,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2230,
+            "impactAt": 3310,
+            "flightMs": 1080,
+            "originX": 75,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 3345,
+          "until": 1380
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "blade-contact",
+          "at": 1.38,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "launch",
+          "at": 2.23,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "probe-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "mark-set",
+          "at": 3.345,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        }
+      ]
+    },
+    {
+      "title": "Rara · Sonda intercettata · A · madre",
+      "mode": "probe-blocked",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 0,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 0,
+              "defenseBlocked": true,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 27,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 120,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 0,
+            "nominalDamage": 21,
+            "blocked": true,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 240,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "block",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5,
+            15,
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 4800,
+              "to": 900,
+              "duration": 0.09,
+              "gain": 0.05
+            },
+            {
+              "wave": "sine",
+              "from": 1100,
+              "to": 420,
+              "duration": 0.08,
+              "gain": 0.025
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        }
+      ]
+    },
+    {
+      "title": "Rara · Due fendenti intercettati · A · madre",
+      "mode": "hammer-blocked",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 2,
+          "actualDamage": 0,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 0,
+              "defenseBlocked": true,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 18,
+              "actualDamage": 0,
+              "defenseBlocked": true,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 108,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 372,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 0,
+            "nominalDamage": 28,
+            "blocked": true,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 275,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 0,
+            "nominalDamage": 18,
+            "blocked": true,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "block",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5,
+            15,
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 4800,
+              "to": 900,
+              "duration": 0.09,
+              "gain": 0.05
+            },
+            {
+              "wave": "sine",
+              "from": 1100,
+              "to": 420,
+              "duration": 0.08,
+              "gain": 0.025
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "block",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5,
+            15,
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 4800,
+              "to": 900,
+              "duration": 0.09,
+              "gain": 0.05
+            },
+            {
+              "wave": "sine",
+              "from": 1100,
+              "to": 420,
+              "duration": 0.08,
+              "gain": 0.025
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Rara · Segnale scaduto · A · madre",
+      "mode": "expired",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 27,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 270,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 70,
+            "originY": 830,
+            "targetId": "weapons",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "weapons",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 3310
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        }
+      ]
+    },
+    {
+      "title": "Rara · Bersaglio distrutto dalla Sonda · A · supporti",
+      "mode": "target-dies",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 1,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 1,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": true
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 35,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 35,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-1",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 88,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 1,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": true
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 208,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort",
+            "actualDamage": 35,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        }
+      ]
+    },
+    {
+      "title": "Rara · Primo fendente letale · A · supporti",
+      "mode": "first-hit-kills",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 26,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 26,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 4,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 4,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-B-0",
+              "destroyed": true
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 231,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 26,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 223,
+            "originY": 830,
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "actualDamage": 4,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": true
+          }
+        ],
+        "mark": {
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "at": 1275,
+          "until": 3310
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        }
+      ]
+    },
+    {
+      "title": "Rara · Combo nel turno successivo · A · madre",
+      "mode": "next-turn",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "generator",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 20,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 20,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "generator",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 2,
+          "actualDamage": 44,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 27,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "generator",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 18,
+              "actualDamage": 17,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "generator",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 256,
+            "originY": 830,
+            "targetId": "generator",
+            "targetKind": "part",
+            "actualDamage": 20,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 120,
+            "originY": 830,
+            "targetId": "generator",
+            "targetKind": "part",
+            "actualDamage": 27,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "A",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 313,
+            "originY": 830,
+            "targetId": "generator",
+            "targetKind": "part",
+            "actualDamage": 17,
+            "nominalDamage": 18,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "generator",
+          "targetKind": "part",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "A",
+          "pan": 0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Rara · Combo nello stesso turno · B · supporti",
+      "mode": "combo",
+      "rarity": "Rara",
+      "who": "B",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 26,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 26,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-A-0",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 2,
+          "actualDamage": 57,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 35,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-A-0",
+              "destroyed": false
+            },
+            {
+              "index": 2,
+              "nominalDamage": 18,
+              "actualDamage": 22,
+              "defenseBlocked": false,
+              "targetKind": "escort",
+              "targetId": "escort:maglio-review-A-0",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [
+          {
+            "kind": "probe",
+            "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+            "who": "B",
+            "rarity": "Rara",
+            "frameIndex": 0,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 160,
+            "impactAt": 1240,
+            "flightMs": 1080,
+            "originX": 248,
+            "originY": -30,
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "actualDamage": 26,
+            "nominalDamage": 21,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "B",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 0,
+            "bonus": false,
+            "launchAt": 2090,
+            "impactAt": 3310,
+            "flightMs": 1220,
+            "originX": 176,
+            "originY": -30,
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "actualDamage": 35,
+            "nominalDamage": 28,
+            "blocked": false,
+            "destroyed": false
+          },
+          {
+            "kind": "hammer",
+            "cardId": "weapon-designed-ionic-martello-tuono",
+            "who": "B",
+            "rarity": "Rara",
+            "frameIndex": 1,
+            "index": 1,
+            "bonus": true,
+            "launchAt": 3510,
+            "impactAt": 4730,
+            "flightMs": 1220,
+            "originX": 113,
+            "originY": -30,
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "actualDamage": 22,
+            "nominalDamage": 18,
+            "blocked": false,
+            "destroyed": false
+          }
+        ],
+        "mark": {
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "at": 1275,
+          "until": 4730
+        },
+        "total": 6600
+      },
+      "audioHaptics": [
+        {
+          "phase": "launch",
+          "at": 0.16,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            5
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 6100,
+              "to": 2800,
+              "duration": 1.08,
+              "gain": 0.018
+            },
+            {
+              "wave": "sine",
+              "from": 1200,
+              "to": 2100,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 0
+        },
+        {
+          "phase": "probe-contact",
+          "at": 1.24,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            7
+          ],
+          "voices": [
+            {
+              "wave": "triangle",
+              "from": 1650,
+              "to": 700,
+              "duration": 0.1,
+              "gain": 0.042
+            },
+            {
+              "wave": "noise",
+              "from": 5600,
+              "to": 2100,
+              "duration": 0.07,
+              "gain": 0.038
+            }
+          ],
+          "seedIndex": 1
+        },
+        {
+          "phase": "mark-set",
+          "at": 1.275,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [],
+          "voices": [
+            {
+              "wave": "sine",
+              "from": 1000,
+              "to": 1600,
+              "duration": 0.16,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 6
+        },
+        {
+          "phase": "launch",
+          "at": 2.09,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 2
+        },
+        {
+          "phase": "blade-contact",
+          "at": 3.31,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            18
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 7200,
+              "to": 1400,
+              "duration": 0.12,
+              "gain": 0.085
+            },
+            {
+              "wave": "triangle",
+              "from": 1400,
+              "to": 290,
+              "duration": 0.1,
+              "gain": 0.045
+            },
+            {
+              "wave": "sine",
+              "from": 155,
+              "to": 60,
+              "duration": 0.19,
+              "gain": 0.044
+            }
+          ],
+          "seedIndex": 3
+        },
+        {
+          "phase": "launch",
+          "at": 3.51,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            8
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 1200,
+              "to": 6500,
+              "duration": 1.22,
+              "gain": 0.03
+            },
+            {
+              "wave": "sine",
+              "from": 420,
+              "to": 1050,
+              "duration": 0.75,
+              "gain": 0.015
+            }
+          ],
+          "seedIndex": 4
+        },
+        {
+          "phase": "combo-detonation",
+          "at": 4.73,
+          "who": "B",
+          "pan": -0.1,
+          "haptic": [
+            34,
+            16,
+            16
+          ],
+          "voices": [
+            {
+              "wave": "noise",
+              "from": 8200,
+              "to": 650,
+              "duration": 0.24,
+              "gain": 0.145
+            },
+            {
+              "wave": "sine",
+              "from": 190,
+              "to": 32,
+              "duration": 0.4,
+              "gain": 0.125
+            },
+            {
+              "wave": "triangle",
+              "from": 1600,
+              "to": 210,
+              "duration": 0.12,
+              "gain": 0.065
+            },
+            {
+              "wave": "noise",
+              "from": 6500,
+              "to": 1700,
+              "duration": 0.16,
+              "gain": 0.035,
+              "delay": 0.065
+            }
+          ],
+          "seedIndex": 5
+        }
+      ]
+    },
+    {
+      "title": "Rara · Arma disabilitata · A · madre",
+      "mode": "weapon-blocked",
+      "rarity": "Rara",
+      "who": "A",
+      "targetPart": "weapons",
+      "shots": [
+        {
+          "kind": "probe",
+          "cardId": "weapon-designed-ionic-sonda-ionica-rarity-r",
+          "hitCount": 1,
+          "actualDamage": 0,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 21,
+              "actualDamage": 0,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        },
+        {
+          "kind": "hammer",
+          "cardId": "weapon-designed-ionic-martello-tuono",
+          "hitCount": 1,
+          "actualDamage": 0,
+          "impacts": [
+            {
+              "index": 1,
+              "nominalDamage": 28,
+              "actualDamage": 0,
+              "defenseBlocked": false,
+              "targetKind": "part",
+              "targetId": "weapons",
+              "destroyed": false
+            }
+          ]
+        }
+      ],
+      "mark": null,
+      "timeline": {
+        "hits": [],
+        "mark": null,
+        "total": 6600
+      },
+      "audioHaptics": []
+    }
+  ],
+  "video": "sonda-martello-b-effetti.mp4",
+  "videoCases": [
+    "Rara · Combo nello stesso turno · A · madre",
+    "Epica · Combo nel turno successivo · A · supporti",
+    "Leggendaria · Combo nello stesso turno · A · madre",
+    "Leggendaria · Martello autonomo · A · madre",
+    "Rara · Combo nello stesso turno · B · supporti",
+    "Rara · Due fendenti intercettati · A · madre"
+  ],
+  "duration": 39.599999999999994,
+  "audio": {
+    "sampleRate": 48000,
+    "channels": 2,
+    "peakDb": -4.452402571310826,
+    "rmsDb": -34.60777251261037
+  }
+}

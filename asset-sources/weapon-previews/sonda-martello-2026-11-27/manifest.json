@@ -1,0 +1,56 @@
+{
+  "choice": "B",
+  "directionApproved": true,
+  "cardVisualApproval": false,
+  "inGame": false,
+  "art": {
+    "probe-common": {
+      "path": "art/probe-common.png",
+      "source": "exec-b608f204-3ea0-49d3-82f0-fb47c30e2cb1.png",
+      "sha256": "9e8b13db067ebb4ff91dbf87a6089d745e0b8a62c03ef97c45e161cd872176ff"
+    },
+    "probe-rare": {
+      "path": "art/probe-rare.png",
+      "source": "exec-dc47c2ed-9e41-43ad-910a-ccfcb1b6026a.png",
+      "sha256": "905082ebac900735e225b408e4ae76ceb970931ad26543261f1358612daf2b7a"
+    },
+    "probe-epic": {
+      "path": "art/probe-epic.png",
+      "source": "exec-48eb28d1-ddff-41e7-9bc7-009a093924fe.png",
+      "sha256": "76bd266d145d464677f616665099ac42892008ad3a77f9eda6527c4c4354529c"
+    },
+    "probe-legendary": {
+      "path": "art/probe-legendary.png",
+      "source": "exec-d3b5ff80-fcdf-4471-9064-4e646ef8df30.png",
+      "sha256": "d44e1e10ea8ad9214cddcdc1433ca8a036055a543c2c1ec9a53dd7ddcc6a0a02"
+    },
+    "hammer-rare": {
+      "path": "art/hammer-rare.png",
+      "source": "exec-74446507-205e-4762-b621-d0b3f98b2e79.png",
+      "sha256": "08b9402f523512920c19a9dc7f68fa9b6b2ad7a9902ba430eb3addc7bfdd199a"
+    },
+    "hammer-epic": {
+      "path": "art/hammer-epic.png",
+      "source": "exec-608e1efe-3352-41d3-a25c-286f4eecacf9.png",
+      "sha256": "c60a25fd5495b7fea8b7542ff41d3a4e3eeafbcfcf084fc3062502ad2c5d212b"
+    },
+    "hammer-legendary": {
+      "path": "art/hammer-legendary.png",
+      "source": "exec-048d4ebf-ad29-4f0e-8488-730c1db15046.png",
+      "sha256": "84c3c9f5c3c855e4dd42454dadec895268b7b499e7e617c5578bfb229aade596"
+    }
+  },
+  "approval": {
+    "userText": "ok per B",
+    "date": "2026-11-27",
+    "includes": [
+      "reticolo elettrico",
+      "lama rotante",
+      "secondo fendente condizionale con detonazione",
+      "contraccolpo dello scafo",
+      "consumo visivo del segnale"
+    ]
+  },
+  "storyboard": "direction-b-storyboard.png",
+  "storyboardSha256": "dd8f00ecbacece17dc1ac4b8464a64af6c2870ee1e57dcc3ed8b94f44ce63ace"
+}

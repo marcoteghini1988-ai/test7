@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {probeHammerCases,probeHammerSequence} from './sequence.mjs';
+import {reviewTimeline} from './timeline.mjs';
+import {reviewCuePlan,synthesizeReviewAudio} from './audio.mjs';
+import {previewCards} from './prepare-cards.mjs';
+import {textFields} from './card-text.mjs';
+import {crescentLeadingPoint} from './visuals.mjs';
+test('Ventidue casi: nessun impatto aggiunto dalla coreografia',()=>{for(const c of probeHammerCases()){const p=reviewTimeline(c),enabled=c.frames.filter(f=>!f.disabledBefore);assert.equal(p.hits.length,enabled.reduce((n,f)=>n+f.event.impacts.length,0));assert.equal(p.hits.filter(h=>h.bonus).length,enabled.filter(f=>f.kind==='hammer'&&f.event.impacts.length===2).length);assert.ok(p.hits.every(h=>h.originY===(h.who==='A'?830:-30)&&h.originX>=65&&h.originX<=384));}});
+test('Arma disabilitata: nessun lancio, suono o impulso di impatto',()=>{const s=probeHammerSequence({mode:'weapon-blocked'});assert.equal(reviewTimeline(s).hits.length,0);assert.equal(reviewCuePlan(s).length,0);assert.ok(s.frames.every(f=>f.event.actualDamage===0));});
+test('Un solo BOOM nella combo riuscita; nessuno con Martello autonomo o Difese bloccanti',()=>{assert.equal(reviewCuePlan(probeHammerSequence()).filter(x=>x.phase==='combo-detonation').length,1);for(const mode of ['hammer-alone','hammer-blocked','probe-blocked','target-dies']){const s=probeHammerSequence({mode,supports:mode==='target-dies'});assert.equal(reviewCuePlan(s).filter(x=>x.phase==='combo-detonation').length,0);}});
+test('La punta volumetrica resta finita e tridimensionale in entrambi i sensi',()=>{for(const phi of [-Math.PI/2,Math.PI/2])for(const angle of [0,.4,1.2,2.8])for(const t of [0,.3,.7,1]){const p=crescentLeadingPoint(22,angle,t,phi);assert.ok([p.x,p.y,p.z].every(Number.isFinite));assert.ok(Math.abs(p.x)+Math.abs(p.y)>4);}});
+test('Sette carte, due lingue e 17 campi entro gli ingombri del font reale',()=>{const cards=previewCards();assert.equal(cards.length,7);for(const c of cards)for(const locale of ['en','it']){const fields=textFields(c,locale);assert.equal(fields.length,17);for(const f of fields)assert.ok(f.advance*f.size+f.spacing*(f.text.length-1)+f.stroke*2<=f.maxWidth+.01,c.id+' '+f.text);}});
+test('Sintesi riproducibile e senza clipping, con cue sullo stesso impatto',()=>{const s=probeHammerSequence({rarity:'Leggendaria'}),plan=reviewCuePlan(s),h=reviewTimeline(s).hits.find(h=>h.bonus),boom=plan.find(c=>c.phase==='combo-detonation');assert.equal(boom.at,h.impactAt/1000);const a=synthesizeReviewAudio(plan,6.6,{sampleRate:12000}),b=synthesizeReviewAudio(plan,6.6,{sampleRate:12000});assert.deepEqual(a.channels,b.channels);let peak=0;for(const ch of a.channels)for(const x of ch){assert.ok(Number.isFinite(x));peak=Math.max(peak,Math.abs(x));}assert.ok(peak>.05&&peak<.98,'picco '+peak);});

@@ -1,0 +1,146 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "rarity": "Comune",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9",
+      "bytes": 17055979,
+      "originalIllustrationSize": [
+        1536,
+        1024
+      ],
+      "originalIllustrationSha256": "9e8b13db067ebb4ff91dbf87a6089d745e0b8a62c03ef97c45e161cd872176ff",
+      "frameGitBlob": "e91536202ad1618017a5c04c92eddffcc65e8492",
+      "protectedFramePixelsVerified": 7239,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "rarity": "Rara",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033",
+      "bytes": 19602619,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "08b9402f523512920c19a9dc7f68fa9b6b2ad7a9902ba430eb3addc7bfdd199a",
+      "frameGitBlob": "59e256d1624695f4788c178ddbc589a41aeb73b1",
+      "protectedFramePixelsVerified": 5304,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "rarity": "Rara",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a",
+      "bytes": 17862873,
+      "originalIllustrationSize": [
+        1536,
+        1024
+      ],
+      "originalIllustrationSha256": "905082ebac900735e225b408e4ae76ceb970931ad26543261f1358612daf2b7a",
+      "frameGitBlob": "59e256d1624695f4788c178ddbc589a41aeb73b1",
+      "protectedFramePixelsVerified": 5304,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3",
+      "bytes": 18711450,
+      "originalIllustrationSize": [
+        1536,
+        1024
+      ],
+      "originalIllustrationSha256": "76bd266d145d464677f616665099ac42892008ad3a77f9eda6527c4c4354529c",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426",
+      "bytes": 21464067,
+      "originalIllustrationSize": [
+        1536,
+        1024
+      ],
+      "originalIllustrationSha256": "d44e1e10ea8ad9214cddcdc1433ca8a036055a543c2c1ec9a53dd7ddcc6a0a02",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25",
+      "bytes": 20626173,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "c60a25fd5495b7fea8b7542ff41d3a4e3eeafbcfcf084fc3062502ad2c5d212b",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8",
+      "bytes": 23010203,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "84c3c9f5c3c855e4dd42454dadec895268b7b499e7e617c5578bfb229aade596",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    }
+  ],
+  "inGame": false,
+  "finalVisualApproval": false
+}

@@ -1,0 +1,30 @@
+{
+  "bytes": 22991842,
+  "sha256": "6461e93b5baa48d84b724ac6ab540fff6373a8ba2df9f7f8b0b40988ce258f41",
+  "parts": [
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/review-html.part-001",
+      "bytes": 6000000,
+      "sha256": "9cc5fe25a2f64b61f4e8ed632049f112e67f119d6e6f379158408e44dcdfe386",
+      "sha": "e43d230766fdb4610454636746307c689238323b"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/review-html.part-002",
+      "bytes": 6000000,
+      "sha256": "28017c7d3a401e30571a6a556b74a6d7c99868d0746814f27871275d9435bc0f",
+      "sha": "47d29b52401d6052d26bcc7060c127e56f5c7db4"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/review-html.part-003",
+      "bytes": 6000000,
+      "sha256": "a4af5d29b873eb514047b58ff4b74faf21e4eb64718bc546b616a5f8d2bfe900",
+      "sha": "e0f16666a92ecb21a235bb38a4469f3f78b70db2"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/review-html.part-004",
+      "bytes": 4991842,
+      "sha256": "8bd76257645e6059e93777bcfe74b4c6da9e825b6e8f0a8b440cea0a86b07c17",
+      "sha": "70a5ab4c2f3e347758650bc54d5d5153c620b8ca"
+    }
+  ]
+}
