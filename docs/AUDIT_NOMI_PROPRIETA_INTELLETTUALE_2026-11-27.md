@@ -205,9 +205,35 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 - Strategia a fuoco
 - Buco Nero
 
+
+## Estensione audit — cataloghi di gioco completi al 27/11/2026
+
+**Decisione editoriale dell'utente:** il **titolo commerciale del gioco è escluso** da questa fase; verrà scelto soltanto dopo il completamento del progetto. *Eclissi Stellare* resta un'etichetta interna di lavoro; non avviare la sua rinomina o un'altra ricerca sul titolo durante l'audit delle carte.
+
+È disponibile il [manifest strutturato di 453 nomi correnti e 167 bozze storiche non approvate](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json). Le **453 denominazioni attuali** sono confrontate per grafia, maiuscole, accenti e apostrofi; **non restano duplicati testuali esatti tra i cataloghi esaminati**. Le dieci chiavi `shipId` condivise tra madri e supporti indicano l'origine del modello e non costituiscono un conflitto di identificativi delle carte.
+
+### Cataloghi aggiunti al controllo
+
+- 12 madri e 13 supporti indipendenti, più 13 carte Fusione supporto generate
+- 120 carte esclusive delle madri (fra cui 12 Personaggi con ruoli/persona, non nomi di macchine)
+- 35 Armi progettate e 27 Armi native delle madri; 22 famiglie nuove e 2 armi trasferite
+- 35 moduli, 25 carte tattiche e 10 famiglie Energia; oltre ai 161 nomi già inventariati nella prima fase
+- 100 proposte e 67 bozze storiche mantenute **separate** perché non approvate come carte giocabili
+
+### Correzioni effettuate sulla versione di gioco
+
+1. `ex-l04-01` (design `nx-l04-04`), carta Personaggio dell'Arca Astrale: **Custode Astrale → Vegliatore delle Rotte Celesti**. Esiste un videogioco con titolo italiano esatto «Custode Astrale», pubblicato il 12 aprile 2023 su Steam: https://store.steampowered.com/app/2346320/Astral_Guardian/?l=italian . Modificati cataloghi e testi UI/log/test, lasciando fissi ID e meccanica.
+2. `nx-l03-02`, carta **Attacco** del Titano Ossidiana: **Obice nero → Tiro d’Assedio Ossidiano**. Era duplicata con `W38`, arma nativa «Obice Nero». L'arma W38 è rimasta invariata; sono state aggiornate le etichette dell'Attacco in catalogo, UI/log e test.
+
+Le descrizioni e le etichette storiche delle vecchie bozze possono conservare il nome precedente come documentazione; **non** sono approvazioni per carte nuove o per vendita. Nessun valore HP, costo, slot, durata, ID o abilità è stato intenzionalmente modificato.
+
+### Esito giuridico e limiti
+
+Il controllo corrente documenta nomi e collisioni visibili, **non** attesta che 453 nomi siano legalmente liberi. Le ricerche esterne mirate non sostituiscono una ricerca per marchi identici/simili. Il modulo UIBM è accessibile, TMview non offre risultati consultabili da questa modalità e WIPO richiede una verifica automatica; nessuna ricerca esaustiva di classi 9/41 (e 28 se carte fisiche) è stata conclusa. È ancora aperto il controllo di eventuali scritte nei file grafici non presenti nei cataloghi e della licenza di immagini, musica ed effetti sonori.
+
 ## Verifica commerciale ancora da completare
 1. Consultare effettivamente **UIBM**, **EUIPO/TMview** e **WIPO Global Brand Database** con nomi identici e simili (anche foneticamente e in inglese), soprattutto per **classe 9** (software e videogiochi) e **classe 41** (servizi di intrattenimento/gioco). Per un gioco di carte fisico considerare anche la **classe 28**.
-2. Estendere l'inventario a tutte le altre serie di carte, alle carte esclusive delle navi, ai supporti, alle navi e al **titolo del gioco**, inclusi gli asset grafici con testo. I 161 nomi sopra non rappresentano la totalità degli asset del repository.
+2. Estendere la verifica ai **restanti asset grafici con scritte** e ad eventuali nuovi cataloghi non inclusi nel manifest di 453 nomi; il titolo commerciale del gioco è volutamente rinviato a progetto terminato.
 3. Cercare eventuali nomi storici rimasti nei documenti e distinguerli dai dati usati in gioco. Non rinominare mai ID persistenti o chiavi dei salvataggi solo per cambiare un'etichetta visibile.
 4. Prima del Play Store, fare una valutazione professionale delle collisioni realmente rilevanti, separando **nomi/marchi**, **titoli**, e **opere grafiche/audio**.
 
