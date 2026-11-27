@@ -843,13 +843,14 @@
         "replaceable": true,
         "durationStatus": "pending",
         "abilities": [
-          "Proposta di adattamento: stessa neutralizzazione delle debolezze elementali di tutte le proprie navi durante la permanenza del Personaggio, sospendibile da effetti validi. Durata e conferma della versione giocabile ancora da definire."
-        ]
+          "Durante la propria permanenza neutralizza le debolezze elementali di tutte le navicelle alleate vive, madre e supporti, mantenendone i vantaggi offensivi. Stessa abilità della versione Boss, non permanente; gli effetti di sospensione validi ripristinano le debolezze per la loro durata."
+        ],
+        "abilityStatus": "confirmed"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Rarità e durata della versione sbloccata, eventuale ulteriore abilità e conferma esplicita dell'adattamento giocabile.",
+        "Rarità e numero di turni della versione sbloccata da confermare. La stessa abilità della versione Boss è confermata.",
         "Definire finestra esatta di sospensione della futura Carta Strategia (un turno), rarità, eventuali costi e limiti; non è una carta già progettata o implementata.",
         "Verificare bonus di debolezza anche con Terreno, mantenendo i modificatori autonomi, la sospensione immediata prima di ESEGUI e il ripristino senza effetti retroattivi."
       ]
@@ -1190,7 +1191,7 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca: prima abilità confermata, rarità e durata giocabile aperte; per gli altri 9 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca: stessa abilità confermata nello scontro e nella carta giocabile, rarità e durata giocabile aperte; per gli altri 9 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.",
