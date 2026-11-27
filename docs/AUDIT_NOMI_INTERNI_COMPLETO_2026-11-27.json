@@ -1,0 +1,4600 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-27",
+  "scope": "Nomi interni al gioco; titolo commerciale volutamente escluso su richiesta dell'utente",
+  "repo": "marcoteghini1988-ai/test7",
+  "recordsCount": 453,
+  "proposalCount": 167,
+  "coverage": {
+    "navi_madri": 12,
+    "supporti": 13,
+    "carte_fusione_supporti": 13,
+    "carte_esclusive_madri": 120,
+    "boss": 12,
+    "personaggi_generici": 30,
+    "piloti": 16,
+    "armi_catalogo_48": 48,
+    "nuove_famiglie_22": 22,
+    "armi_progettate_35": 35,
+    "armi_trasferite": 2,
+    "carte_sistema": 32,
+    "moduli_16F": 35,
+    "carte_tattiche": 25,
+    "carte_energia": 10,
+    "armi_native": 27,
+    "carta_sistema_speciale": 1
+  },
+  "identicalNamesAcrossDefinitions": [
+    {
+      "normalizedName": "obice nero",
+      "entries": [
+        {
+          "id": "nx-l03-02",
+          "group": "carte_esclusive_madri",
+          "name": "Obice nero"
+        },
+        {
+          "id": "W38",
+          "group": "armi_native",
+          "name": "Obice Nero"
+        }
+      ]
+    }
+  ],
+  "duplicateStableIds": [
+    {
+      "id": "N00",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "N00",
+          "name": "Aurora-0",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "N00",
+          "name": "Velo Aurora",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "C01",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "C01",
+          "name": "Lince Solare",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "C01",
+          "name": "Bastione Solare",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "C02",
+          "name": "Vespa di Vetro",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "C02",
+          "name": "Prisma Silente",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "C03",
+          "name": "Corvo a Impulsi",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "C03",
+          "name": "Corvo Esploratore",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "R01",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "R01",
+          "name": "Falco Binario",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "R01",
+          "name": "Armeria Binaria",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "R02",
+          "name": "Manta Ionica",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "R02",
+          "name": "Relè Ionico",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "E01",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "E01",
+          "name": "Nebulosa",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "E01",
+          "name": "Scudo Nebuloso",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "L01",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "L01",
+          "name": "Eclisse Reale",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "L01",
+          "name": "Eclisse Sacrificale",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "L03",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "L03",
+          "name": "Titano Ossidiana",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "L03",
+          "name": "Titano della Tempesta",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    },
+    {
+      "id": "L04",
+      "values": [
+        {
+          "group": "navi_madri",
+          "id": "L04",
+          "name": "Arca Astrale",
+          "source": "src/phase1FleetCatalog.js",
+          "kind": "current"
+        },
+        {
+          "group": "supporti",
+          "id": "L04",
+          "name": "Arca Condensatrice",
+          "source": "src/fleetNext/supportModelRegistry.js",
+          "kind": "current"
+        }
+      ]
+    }
+  ],
+  "crossRegistryMismatches": {
+    "exclusiveCharacterNames": [],
+    "genericCharacters": []
+  },
+  "completedRiskReview": [
+    {
+      "id": "ex-l04-01",
+      "formerName": "Custode Astrale",
+      "currentName": "Vegliatore delle Rotte Celesti",
+      "reason": "Coincideva con titolo italiano di videogioco Steam 2023; rinomina prudenziale",
+      "source": "https://store.steampowered.com/app/2346320/Astral_Guardian/?l=italian"
+    }
+  ],
+  "caveats": [
+    "Un inventario di fonti principali non prova che ogni stringa del repository sia stata esaminata.",
+    "La ricerca web non sostituisce UIBM/EUIPO/WIPO; nessuna certificazione legale di libertà commerciale.",
+    "I nomi di varianti evolutive e rarità condividono intenzionalmente il nome della famiglia.",
+    "Le proposte storiche non giocabili sono registrate separatamente.",
+    "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie."
+  ],
+  "currentNames": [
+    {
+      "group": "navi_madri",
+      "id": "N00",
+      "name": "Aurora-0",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "C01",
+      "name": "Lince Solare",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "C02",
+      "name": "Vespa di Vetro",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "C03",
+      "name": "Corvo a Impulsi",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "R01",
+      "name": "Falco Binario",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "R02",
+      "name": "Manta Ionica",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "R04",
+      "name": "Squalo del Vuoto",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "E01",
+      "name": "Nebulosa",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "E02",
+      "name": "Tempesta",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "L01",
+      "name": "Eclisse Reale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "L03",
+      "name": "Titano Ossidiana",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "navi_madri",
+      "id": "L04",
+      "name": "Arca Astrale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "N00",
+      "name": "Velo Aurora",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "C01",
+      "name": "Bastione Solare",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "C02",
+      "name": "Prisma Silente",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "C03",
+      "name": "Corvo Esploratore",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "C04",
+      "name": "Falce del Vento",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "R01",
+      "name": "Armeria Binaria",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "R02",
+      "name": "Relè Ionico",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "E01",
+      "name": "Scudo Nebuloso",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "E03",
+      "name": "Fenice Energetica",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "L01",
+      "name": "Eclisse Sacrificale",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "L02",
+      "name": "Spina Gravitazionale",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "L03",
+      "name": "Titano della Tempesta",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "supporti",
+      "id": "L04",
+      "name": "Arca Condensatrice",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-n00",
+      "name": "Navicella Fusione — Velo Aurora",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-c01",
+      "name": "Navicella Fusione — Bastione Solare",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-c02",
+      "name": "Navicella Fusione — Prisma Silente",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-c03",
+      "name": "Navicella Fusione — Corvo Esploratore",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-c04",
+      "name": "Navicella Fusione — Falce del Vento",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-r01",
+      "name": "Navicella Fusione — Armeria Binaria",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-r02",
+      "name": "Navicella Fusione — Relè Ionico",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-e01",
+      "name": "Navicella Fusione — Scudo Nebuloso",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-e03",
+      "name": "Navicella Fusione — Fenice Energetica",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-l01",
+      "name": "Navicella Fusione — Eclisse Sacrificale",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-l02",
+      "name": "Navicella Fusione — Spina Gravitazionale",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-l03",
+      "name": "Navicella Fusione — Titano della Tempesta",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_fusione_supporti",
+      "id": "fusion-ship-l04",
+      "name": "Navicella Fusione — Arca Condensatrice",
+      "source": "src/fleetNext/supportModelRegistry.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-01",
+      "name": "Ottica di ricognizione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-02",
+      "name": "Raffica di prova",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-03",
+      "name": "Tiro di smontaggio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-04",
+      "name": "Velo di salvataggio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-05",
+      "name": "Adattamento immediato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-06",
+      "name": "Cartografo Aurora",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-07",
+      "name": "Canna perforante",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-08",
+      "name": "Corazza modulare",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-09",
+      "name": "Cannone biforcato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-n00-10",
+      "name": "Riconfigurazione Aurora",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-01",
+      "name": "Propulsori radenti",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-02",
+      "name": "Sorpasso solare",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-03",
+      "name": "Artiglio di coda",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-04",
+      "name": "Falsa scia",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-05",
+      "name": "Pilota Helios",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-06",
+      "name": "Rotta marcata",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-07",
+      "name": "Lama di prua",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-08",
+      "name": "Passaggio scoperto",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-09",
+      "name": "Disimpegno armato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c01-10",
+      "name": "Incursione cremisi",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-01",
+      "name": "Lente prismatica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-02",
+      "name": "Scheggia riflessa",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-03",
+      "name": "Prisma di deviazione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-04",
+      "name": "Riflesso falso",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-05",
+      "name": "Artigiana Prisma",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-06",
+      "name": "Taglio della lente",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-07",
+      "name": "Geometria spezzata",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-08",
+      "name": "Custodia del Prisma",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-09",
+      "name": "Specchio segmentato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c02-10",
+      "name": "Rosa di cristallo",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-01",
+      "name": "Antenna di disturbo",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-02",
+      "name": "Dardo intermittente",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-03",
+      "name": "Canale di riserva",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-04",
+      "name": "Eco di ritorno",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-05",
+      "name": "Comandante Risonante",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-06",
+      "name": "Analisi di frequenza",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-07",
+      "name": "Cortocircuito mirato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-08",
+      "name": "Richiamo inverso",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-09",
+      "name": "Interruttore di sicurezza",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-c03-10",
+      "name": "Blackout selettivo",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-01",
+      "name": "Capacitore binario",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-02",
+      "name": "Tiro d’assedio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-03",
+      "name": "Salva di taratura",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-04",
+      "name": "Camera blindata",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-05",
+      "name": "Artigliere Binario",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-06",
+      "name": "Correzione balistica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-07",
+      "name": "Camera Gemella Binaria",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-08",
+      "name": "Falco guardiano",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-09",
+      "name": "Caricatore d’emergenza",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r01-10",
+      "name": "Triangolazione Falco",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-01",
+      "name": "Capacitore Manta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-02",
+      "name": "Arco di scarica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-03",
+      "name": "Schermo di assorbimento",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-04",
+      "name": "Messa a terra",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-05",
+      "name": "Navigatrice Manta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-06",
+      "name": "Polarità inversa",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-07",
+      "name": "Forcella ionica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-08",
+      "name": "Campo Manta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-09",
+      "name": "Scarica totale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r02-10",
+      "name": "Riserva dielettrica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-01",
+      "name": "Corazza dentata",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-02",
+      "name": "Morso del Vuoto",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-03",
+      "name": "Esca abissale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-04",
+      "name": "Denti di ritorno",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-05",
+      "name": "Ammiraglio Abissale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-06",
+      "name": "Siluro di ritorsione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-07",
+      "name": "Arpione predatorio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-08",
+      "name": "Scudo del predatore",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-09",
+      "name": "Risposta spietata",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-r04-10",
+      "name": "Ultimo morso",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-01",
+      "name": "Proiettore di bruma",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-02",
+      "name": "Ago nella nebbia",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-03",
+      "name": "Velo criogenico",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-04",
+      "name": "Falso bersaglio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-05",
+      "name": "Arconte della Bruma",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-06",
+      "name": "Dissipazione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-07",
+      "name": "Nebbia polare",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-08",
+      "name": "Bruma itinerante",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-09",
+      "name": "Cannone velato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e01-10",
+      "name": "Notte criogenica",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-01",
+      "name": "Bobina a catena",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-02",
+      "name": "Onda a pettine",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-03",
+      "name": "Fulmine di rimbalzo",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-04",
+      "name": "Fronte di Tempesta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-05",
+      "name": "Capitano della Tempesta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-06",
+      "name": "Ripresa del tuono",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-07",
+      "name": "Scarica selettiva",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-08",
+      "name": "Rete parafulmine",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-09",
+      "name": "Condensatore di Tempesta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-e02-10",
+      "name": "Quadrante di Tempesta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-01",
+      "name": "Relè della Corona",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-02",
+      "name": "Pioggia reale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-03",
+      "name": "Corona protettiva",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-04",
+      "name": "Decreto di interdizione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-05",
+      "name": "Sovrano dell’Eclisse",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-06",
+      "name": "Ordine incrociato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-07",
+      "name": "Lancia regale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-08",
+      "name": "Bastione reale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-09",
+      "name": "Giudizio coordinato",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l01-10",
+      "name": "Velo della Corona",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-01",
+      "name": "Ancoraggi d’assedio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-02",
+      "name": "Obice nero",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-03",
+      "name": "Frattura d’assedio",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-04",
+      "name": "Paratia d’ossidiana",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-05",
+      "name": "Magistro Ossidiana",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-06",
+      "name": "Rampa di sfondamento",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-07",
+      "name": "Catene di posizione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-08",
+      "name": "Spine di Ossidiana",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-09",
+      "name": "Portelli sigillati",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l03-10",
+      "name": "Sentenza del Titano",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-01",
+      "name": "Archivio stellare",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-02",
+      "name": "Raggio conservativo",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-03",
+      "name": "Custodia delle riserve",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-04",
+      "name": "Vegliatore delle Rotte Celesti",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-05",
+      "name": "Ricambio Astrale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-06",
+      "name": "Coro di riparazione",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-07",
+      "name": "Lanciatore di stelle",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-08",
+      "name": "Ingresso protetto",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-09",
+      "name": "Risonanza della flotta",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_esclusive_madri",
+      "id": "nx-l04-10",
+      "name": "Convergenza astrale",
+      "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-1",
+      "name": "Guardiano di Gaia",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-2",
+      "name": "Colosso di Tharsis",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-3",
+      "name": "Matriarca Tossica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-6",
+      "name": "Devastatore delle Ere",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-7",
+      "name": "Sentinella Ionica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-8",
+      "name": "Serpe delle Fosse Abissali",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-9",
+      "name": "Predone della Penombra",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-11",
+      "name": "Idra Criogenica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-14",
+      "name": "Sovvertitore del Caso",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-17",
+      "name": "Boss del Sacrificio",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-19",
+      "name": "Divoratore delle Scorie",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "boss",
+      "id": "boss-character-20",
+      "name": "Custode dell’Antispazio",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-01",
+      "name": "Medico da campo",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-02",
+      "name": "Ingegnere dei sistemi",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-03",
+      "name": "Tecnico del sacrificio",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-04",
+      "name": "Operatrice degli scudi",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-05",
+      "name": "Archivista",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-06",
+      "name": "Tecnico di recupero",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-07",
+      "name": "Capomeccanico",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-08",
+      "name": "Ingegnere energetico",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-09",
+      "name": "Ufficiale del reattore",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-10",
+      "name": "Coordinatore dei supporti",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-11",
+      "name": "Stratega di flotta",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-12",
+      "name": "Tecnico di conversione energetica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-13",
+      "name": "Ingegnere di ricostruzione",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-14",
+      "name": "Maestro dell'energia",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-15",
+      "name": "Tecnica delle contromisure",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-16",
+      "name": "Tecnico delle interfacce",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-17",
+      "name": "Specialista di disinnesco",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-18",
+      "name": "Capo della manutenzione preventiva",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-19",
+      "name": "Medico di terapia intensiva",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-20",
+      "name": "Ingegnere della rete di bordo",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-21",
+      "name": "Artificiere di bordo",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-22",
+      "name": "Criotecnica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-23",
+      "name": "Specialista idrostatica",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-24",
+      "name": "Elettrotecnico",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-25",
+      "name": "Comandante d’Acciaio",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-26",
+      "name": "Sismologo",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-27",
+      "name": "Pilota delle correnti",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-28",
+      "name": "Maestra dei fotoni",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-29",
+      "name": "Tracciatore del Buio Astrale",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "personaggi_generici",
+      "id": "character-general-30",
+      "name": "Architetto gravitazionale",
+      "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_1",
+      "name": "Cadetto Additivo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_2",
+      "name": "Calibratore Sottrattivo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_3",
+      "name": "Cannoniere Balistico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_4",
+      "name": "Cecchino Quantico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_1",
+      "name": "Il Vendicatore",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_2",
+      "name": "L'Adrenalinico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_3",
+      "name": "Il Baro",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_4",
+      "name": "Il Collezionista di Specchi",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_1",
+      "name": "L'Artificiere di Bordo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_2",
+      "name": "L'Alchimista Aurico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_3",
+      "name": "Il Viaggiatore del Tempo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_4",
+      "name": "Comandante della Galaverna",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_1",
+      "name": "Stratega delle Tre Figure",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_2",
+      "name": "Il Veggente Supremo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_3",
+      "name": "Il Fissatore",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_4",
+      "name": "Il Lottatore di Sumo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_light_01",
+      "name": "Gatling Cinetica",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_light_02",
+      "name": "Spillo Pulsar",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_light_03",
+      "name": "Falce di Rimbalzo",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_light_04",
+      "name": "Ago Gravitico",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_medium_01",
+      "name": "Doppio Arco Ionico",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_medium_02",
+      "name": "Cannone a Prisma",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_medium_03",
+      "name": "Turbina Fotonica",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_medium_04",
+      "name": "Scudo-Arpione",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_heavy_01",
+      "name": "Obice del Crepuscolo",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_heavy_02",
+      "name": "Lanciatore Leviatano",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_heavy_03",
+      "name": "Mortaio Gravem",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_common_heavy_04",
+      "name": "Forgia Stellare",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_light_01",
+      "name": "Vespa Quantum",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_light_02",
+      "name": "Gemelli Mirage",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_light_03",
+      "name": "Lancia Aurora",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_light_04",
+      "name": "Scintilla Nera",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_medium_01",
+      "name": "Spettro Ferrico",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_medium_02",
+      "name": "Lente di Nyx",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_medium_03",
+      "name": "Raggio Bifronte",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_medium_04",
+      "name": "Draga Volt",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_heavy_01",
+      "name": "Martello Quasar",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_heavy_02",
+      "name": "Arca di Tritone",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_heavy_03",
+      "name": "Cataclisma Polare",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_rare_heavy_04",
+      "name": "Faro del Vuoto",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_light_01",
+      "name": "Colibrì Tachionico",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_light_02",
+      "name": "Sette Veli",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_light_03",
+      "name": "Serpe Nebulare",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_light_04",
+      "name": "Chiave del Paradosso",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_medium_01",
+      "name": "Matrice Helios",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_medium_02",
+      "name": "Idra Sinaptica",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_medium_03",
+      "name": "Orizzonte Blu",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_medium_04",
+      "name": "Corvo di Antimateria",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_heavy_01",
+      "name": "Giudizio di Orione",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_heavy_02",
+      "name": "Cripta del Sole",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_heavy_03",
+      "name": "Anello di Marea",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_epic_heavy_04",
+      "name": "Cattedrale di Plasma",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_light_01",
+      "name": "Filo dell’Eternità",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_light_02",
+      "name": "Luce Fantasma",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_light_03",
+      "name": "Artiglio del Tempo",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_light_04",
+      "name": "Penna del Destino",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_medium_01",
+      "name": "Bussola di Andromeda",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_medium_02",
+      "name": "Corona di Eclisse",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_medium_03",
+      "name": "Biblioteca degli Astri",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_medium_04",
+      "name": "Macchina del Crepuscolo",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_heavy_01",
+      "name": "Trono della Singolarità",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_heavy_02",
+      "name": "Ultima Supernova",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_heavy_03",
+      "name": "Portale del Nulla",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_catalogo_48",
+      "id": "es_legendary_heavy_04",
+      "name": "Sentenza Cosmica",
+      "source": "src/newCombat/weaponCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-refrigerant-marea-laterale",
+      "name": "Condotto di Marea Laterale",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-refrigerant-pressione-isobarica",
+      "name": "Disgregatore di Pressione Isobarica",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-mineral-sismico-tettonico",
+      "name": "Generatore Sismico Tettonico",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-mineral-tempeste-silicee",
+      "name": "Generatore di Tempeste Silicee",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-mineral-macigni-tettonici",
+      "name": "Lanciatore di Macigni Tettonici",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-mineral-collettore-frammenti",
+      "name": "Collettore di Frammenti Minerali",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-aerial-vortici-ciclonici",
+      "name": "Generatore di Vortici Ciclonici",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-aerial-spinta-eolica",
+      "name": "Turbina a Spinta Eolica",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-aerial-boato-cosmico",
+      "name": "Boato Cosmico",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-aerial-convertitore-cinetico",
+      "name": "Convertitore di Energia Cinetica",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-radiant-concentrazione-solare",
+      "name": "Cannone a Concentrazione Solare",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-radiant-fotoni-riflessi",
+      "name": "Emettitore di Fotoni Riflessi",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-radiant-replicatore-olografico",
+      "name": "Replicatore Olografico",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-radiant-proiettore-olografico",
+      "name": "Proiettore Olografico",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-void-eclissi-quantistica",
+      "name": "Lanciatore a Eclissi Quantistica",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-void-inversione-vitale",
+      "name": "Disgregatore a Inversione Vitale",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-void-drone-parassita",
+      "name": "Drone Parassita",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-void-estrattore-materia-oscura",
+      "name": "Estrattore di Materia Oscura",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-gravity-massa-inerziale",
+      "name": "Generatore di Massa Inerziale",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-gravity-implosore-singolarita",
+      "name": "Implosore a Singolarità",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-gravity-oscurita-gravitazionale",
+      "name": "Generatore di Oscurità Gravitazionale",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "nuove_famiglie_22",
+      "id": "weapon-design-20261126-gravity-tenebre-infinite",
+      "name": "Tenebre Infinite",
+      "source": "src/fleetNext/confirmedNextWeaponDesigns.json",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-mortaio-magmatico",
+      "name": "Mortaio Magmatico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-inceneritore-rotante",
+      "name": "Inceneritore a Plasma Rotante",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-sistema-binario",
+      "name": "Cannone Binario a Sovraccarico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-accoppiatore-termofagico",
+      "name": "Cannone Accoppiatore Termofagico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-obice-crogiolo",
+      "name": "Obice a Crogiolo Pressurizzato",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-batteria-tre-ugelli",
+      "name": "Batteria Termica a Tre Ugelli",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-lanciafiamme-ventaglio",
+      "name": "Lanciafiamme a Ventaglio",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-torretta-piroclastica",
+      "name": "Torretta di Puntamento Piroclastico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-plasma-condensatore-pirobalistico",
+      "name": "Cannone Condensatore Pirobalistico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-cryogenic-ago-inverno-nero",
+      "name": "Perforatore dell’Inverno Nero",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-cryogenic-cannone-condensazione",
+      "name": "Cannone a Condensazione Glaciale",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-cryogenic-batteria-dardi-polari",
+      "name": "Batteria di Dardi Polari",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-cryogenic-acceleratore-boreale",
+      "name": "Cannone Acceleratore Boreale",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-cryogenic-compressore-impulso",
+      "name": "Cannone a Compressione Criogenica d’Impulso",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-idrocannone-doppia-mandata",
+      "name": "Idrocannone a Doppia Mandata",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-torretta-crioguidata",
+      "name": "Torretta Crioguidata",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-bassa-marea",
+      "name": "Cannone di Bassa Marea",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-alta-marea",
+      "name": "Cannone di Alta Marea",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-diffusore-marea",
+      "name": "Diffusore di Marea a Ventaglio",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-refrigerant-ariete-fosse",
+      "name": "Ariete delle Fosse Abissali",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "name": "Artiglieria delle Schegge Erranti",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "name": "Artiglieria Termobalistica di Recupero",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-rivetti-magnetici",
+      "name": "Batteria di Rivetti Magnetici",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-obice-pioggia-schegge",
+      "name": "Obice a Pioggia di Schegge",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "name": "Arpioni a Ganasce Magnetiche",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "name": "Cannone Collassatore di Lega",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "name": "Frantumatore a Induzione",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "name": "Perforatore a Cascata",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-metallic-impatto-comandante",
+      "name": "Impattatore del Comandante d’Acciaio",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-nucleo-folgore",
+      "name": "Cannone a Nucleo di Folgore Crescente",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "name": "Sonda Ionica d’Assalto",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-martello-tuono",
+      "name": "Martello del Tuono",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-lancia-comando-ionico",
+      "name": "Lancia del Comando Ionico",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "name": "Cannone Condensatore della Tempesta Stellare",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_progettate_35",
+      "id": "weapon-designed-ionic-giudizio-temporale",
+      "name": "Cannone del Giudizio Temporale",
+      "source": "src/fleetNext/designedWeaponCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_trasferite",
+      "id": "weapon-transferred-mineral-sirio",
+      "name": "Sputacristalli di Sirio",
+      "source": "src/fleetNext/confirmedTransferredWeapons.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_trasferite",
+      "id": "weapon-transferred-aerial-cicloreattore",
+      "name": "Cannone Cicloreattore Grandinifero",
+      "source": "src/fleetNext/confirmedTransferredWeapons.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-minus-c",
+      "name": "Fruscio di telemetria",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-minus-r",
+      "name": "Interferenza di collegamento",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-minus-e",
+      "name": "Sfasamento di formazione",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-minus-l",
+      "name": "Silenzio di comando",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-plus-c",
+      "name": "Riallineamento del canale",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-plus-r",
+      "name": "Relè di riserva",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-plus-e",
+      "name": "Trama risonante",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-command-plus-l",
+      "name": "Rete di comando totale",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-minus-c",
+      "name": "Tubo surriscaldato",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-minus-r",
+      "name": "Munizioni interferite",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-minus-e",
+      "name": "Alimentazione inceppata",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-minus-l",
+      "name": "Arsenale in ombra",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-plus-c",
+      "name": "Carica rapida",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-plus-r",
+      "name": "Doppia camera",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-plus-e",
+      "name": "Sovralimentazione multipla",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-weapons-plus-l",
+      "name": "Furia coordinata",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-minus-c",
+      "name": "Calo di tensione",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-minus-r",
+      "name": "Perdita di flusso",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-minus-e",
+      "name": "Scarica di ritorno",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-minus-l",
+      "name": "Soffocamento del nucleo",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-plus-c",
+      "name": "Condensatore ausiliario",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-plus-r",
+      "name": "Flusso stabilizzato",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-plus-e",
+      "name": "Nucleo potenziato",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-generator-plus-l",
+      "name": "Risonanza del Generatore",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-minus-c",
+      "name": "Coordinate falsate",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-minus-r",
+      "name": "Confusione della rotta",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-minus-e",
+      "name": "Rotta fantasma",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-minus-l",
+      "name": "Cortocircuito tattico",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-plus-c",
+      "name": "Calcolo di tiro",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-plus-r",
+      "name": "Navigazione assistita",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-plus-e",
+      "name": "Analisi predittiva",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "carte_sistema",
+      "id": "draft-sys-bridge-plus-l",
+      "name": "Strategia a fuoco",
+      "source": "docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "aries",
+      "name": "Ariete · Impatto Diretto",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "taurus",
+      "name": "Toro · Sintesi Biologica",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "gemini",
+      "name": "Gemelli · Efficienza Rapida",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "cancer",
+      "name": "Cancro · Pesca Protettiva",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "leo",
+      "name": "Leone · Furia di Grazia",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "virgo",
+      "name": "Vergine · Precisione Pura",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "libra",
+      "name": "Bilancia · Blindatura Calibrata",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "scorpio",
+      "name": "Scorpione · Perforazione Tracciante",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "sagittarius",
+      "name": "Sagittario · Buffer Temporale",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "capricorn",
+      "name": "Capricorno · Ammortizzatore",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "aquarius",
+      "name": "Acquario · Catalizzatore Etere",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "pisces",
+      "name": "Pesci · Risonanza Algebrica",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_1",
+      "name": "Gaia · Corazza di Emergenza",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_2",
+      "name": "Marte · Bombardamento Orbitale",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_3",
+      "name": "Venere · Ricombinazione",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_4",
+      "name": "Mercurio · Caricatore Quantico",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_5",
+      "name": "Giove · Vortice Ciclonico",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_6",
+      "name": "Saturno · Crono",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_7",
+      "name": "Urano · Impulso Ionico",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_8",
+      "name": "Nettuno · Onda Abissale",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_9",
+      "name": "Plutone · Sifone Oscuro",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_10",
+      "name": "Titano · Difesa Metanica",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_11",
+      "name": "Europa · Fonte Criogenica",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_12",
+      "name": "Ganimede · Campo Ferromagnetico",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_13",
+      "name": "Kepler · Risonanza Stellare",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_14",
+      "name": "Proxima b · Purificazione",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_15",
+      "name": "TRAPPIST-1e · Arconte",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_16",
+      "name": "Gliese · Sintesi Etere",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_17",
+      "name": "Haumea · Spinta Cinetica",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_18",
+      "name": "Eris · Discordia",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_19",
+      "name": "Io · Magma",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "planet_char_20",
+      "name": "Encelado · Vuoto Sovrano",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "singularity_core",
+      "name": "Singolarità · Buco Nero",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "ophiuchus",
+      "name": "Ophiuchus · Retaggio",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "moduli_16F",
+      "id": "supreme_eclipse",
+      "name": "Eclissi Suprema · Retaggio",
+      "source": "src/newCombat/phase16FModules.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-1",
+      "name": "Fusione Barriera",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-2",
+      "name": "Fusione Assalto",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-3",
+      "name": "Fusione Gemellare",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-4",
+      "name": "Fusione Trina",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-5",
+      "name": "Copertura Tattica",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-6",
+      "name": "Colpo Perforante",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-7",
+      "name": "Impulso Ionico",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-8",
+      "name": "Corrosione",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-9",
+      "name": "Riparazione Scudo",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-10",
+      "name": "Pulizia Sistemi",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-11",
+      "name": "Riparazione Scudiera",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-12",
+      "name": "Dado Quantico",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-13",
+      "name": "Numero Bomba",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-14",
+      "name": "Barra Malus",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-15",
+      "name": "Carta Dorata",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-16",
+      "name": "Faglia di Vulnerabilità",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-17",
+      "name": "Mutazione della Firma",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-18",
+      "name": "Deviazione Energia",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-19",
+      "name": "Scansione Tattica",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-20",
+      "name": "Soppressione Scorta",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-21",
+      "name": "Contromisura Programmata",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-22",
+      "name": "Paratia Reattiva",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-23",
+      "name": "Carica Cinetica",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-24",
+      "name": "Schermo d'Urto",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_tattiche",
+      "id": "tactical-name-25",
+      "name": "Ricambio Numerico",
+      "source": "src/specialCards.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-plasma",
+      "name": "Energia Fuoco",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-refrigerant",
+      "name": "Energia Acqua",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-cryogenic",
+      "name": "Energia Ghiaccio",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-ionic",
+      "name": "Energia Fulmine",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-mineral",
+      "name": "Energia Terra",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-aerial",
+      "name": "Energia Vento",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-radiant",
+      "name": "Energia Luce",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-void",
+      "name": "Energia Ombra",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-metallic",
+      "name": "Energia Metallo",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "carte_energia",
+      "id": "energy-gravity",
+      "name": "Energia Gravità",
+      "source": "src/fleetNext/elementalAffinities.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W01",
+      "name": "Cannone adattivo",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W02",
+      "name": "Laser Rosso",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W03",
+      "name": "Lanciatore Prisma",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W04",
+      "name": "Mitraglia Verde",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W05",
+      "name": "Arco Crepuscolo",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W08",
+      "name": "Batteria Gemella",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W09",
+      "name": "Canna Diamante",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W10",
+      "name": "Arco Ionico",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W11",
+      "name": "Fulmine Incrociato",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W15",
+      "name": "Lancia Minerale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W16",
+      "name": "Cannone Abissale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W17",
+      "name": "Corona Solare",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W18",
+      "name": "Nucleo Prismatico",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W19",
+      "name": "Arco Vettoriale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W20",
+      "name": "Pioggia Scura",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W21",
+      "name": "Onde Verdi",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W22",
+      "name": "Rottura Magnetica",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W30",
+      "name": "Corona Reale",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W31",
+      "name": "Rottura dei Diamanti",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W32",
+      "name": "Ciclone Verde",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W33",
+      "name": "Giudizio Eclissi",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W37",
+      "name": "Cannone Titano",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W38",
+      "name": "Obice Nero",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W39",
+      "name": "Stella Cremisi",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W40",
+      "name": "Luce di Quadri",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W41",
+      "name": "Sfera Flora",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "armi_native",
+      "id": "W42",
+      "name": "Arca del Vuoto",
+      "source": "src/phase1FleetCatalog.js",
+      "kind": "current"
+    },
+    {
+      "group": "carta_sistema_speciale",
+      "id": "sys-black-hole",
+      "name": "Buco Nero",
+      "source": "src/fleetNext/newCardRegistry.js",
+      "kind": "current"
+    }
+  ],
+  "unapprovedDraftNames": [
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-01",
+      "name": "Erogatore di Braci",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-02",
+      "name": "Cannone Bifiamma",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-03",
+      "name": "Ugello Termico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-04",
+      "name": "Mortaio Magmatico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-05",
+      "name": "Turbina di Plasma",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-06",
+      "name": "Trivella Solare",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-07",
+      "name": "Batteria Meteoritica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-08",
+      "name": "Reattore di Cenere",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-09",
+      "name": "Lancia della Corona Solare",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-plasma-10",
+      "name": "Obice Supernova",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-01",
+      "name": "Idrogetto Orbitale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-02",
+      "name": "Cannone a Marea",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-03",
+      "name": "Eiettore di Vapore",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-04",
+      "name": "Pompa di Risacca",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-05",
+      "name": "Lancia di Pressione",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-06",
+      "name": "Turbina Abissale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-07",
+      "name": "Batteria del Diluvio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-08",
+      "name": "Reattore delle Correnti",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-09",
+      "name": "Cannone del Maelstrom",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-refrigerant-10",
+      "name": "Monolite Oceanico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-01",
+      "name": "Spruzzatore di Brina",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-02",
+      "name": "Puntale Criogenico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-03",
+      "name": "Laminatore Polare",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-04",
+      "name": "Artiglieria delle Schegge Erranti",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-05",
+      "name": "Frusta Glaciale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-06",
+      "name": "Piastra Subzero",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-07",
+      "name": "Lancia di Permafrost",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-08",
+      "name": "Camera Zero Assoluto",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-09",
+      "name": "Obice del Silenzio Boreale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-cryogenic-10",
+      "name": "Cannone del Crepaccio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-01",
+      "name": "Saetta di Rame",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-02",
+      "name": "Bobina Sincrona",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-03",
+      "name": "Impulsore a Scatti",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-04",
+      "name": "Lancetta Tempestosa",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-05",
+      "name": "Tridente Voltaico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-06",
+      "name": "Induttore a Catena",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-07",
+      "name": "Fulminatore di Nodo",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-08",
+      "name": "Centrale delle Saette",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-09",
+      "name": "Martello di Giove",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-ionic-10",
+      "name": "Colonna di Tesla Astrale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-01",
+      "name": "Sparachiodi di Basalto",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-02",
+      "name": "Lanciaghiaia Cosmico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-03",
+      "name": "Pressa Tellurica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-04",
+      "name": "Mortaio dei Crateri",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-05",
+      "name": "Trivella Sismica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-06",
+      "name": "Catapulta di Obsidiana",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-07",
+      "name": "Batteria delle Faglie",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-08",
+      "name": "Nucleo Geotermico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-09",
+      "name": "Martello Continentale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-mineral-10",
+      "name": "Cannone della Frattura Planetaria",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-01",
+      "name": "Ventola d'Assalto",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-02",
+      "name": "Ago Anemico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-03",
+      "name": "Soffiatore Orbitale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-04",
+      "name": "Lancia di Monsoni",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-05",
+      "name": "Turbina Ciclonica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-06",
+      "name": "Cannoniera di Corrente",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-07",
+      "name": "Batteria dei Vortici",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-08",
+      "name": "Iniettore del Jetstream",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-09",
+      "name": "Falce dell'Uragano",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-aerial-10",
+      "name": "Cannone del Grande Ciclone",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-01",
+      "name": "Proiettore di Fotoni",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-02",
+      "name": "Raggio di Prisma",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-03",
+      "name": "Faro Balistico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-04",
+      "name": "Lanciatore d'Aurora",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-05",
+      "name": "Specchio Concentrico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-06",
+      "name": "Arco di Helios",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-07",
+      "name": "Corona Rifrangente",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-08",
+      "name": "Reattore dell'Alba",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-09",
+      "name": "Lancia dell'Equinozio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-radiant-10",
+      "name": "Cannone del Solstizio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-01",
+      "name": "Ago dell'Eclisse",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-02",
+      "name": "Silenziatore del Vuoto",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-03",
+      "name": "Proiettore di Nebbia Nera",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-04",
+      "name": "Trivella d'Ombra",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-05",
+      "name": "Batteria dei Fantasmi",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-06",
+      "name": "Morsa Crepuscolare",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-07",
+      "name": "Fenditura delle Lame",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-08",
+      "name": "Cisterna dell'Oblio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-09",
+      "name": "Obice della Notte Eterna",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-void-10",
+      "name": "Cannone del Nulla Risonante",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-01",
+      "name": "Chiodatrice Magnetica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-02",
+      "name": "Cannoncino a Cuscinetti",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-03",
+      "name": "Estrattore di Schegge",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-04",
+      "name": "Trivella Ferritica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-05",
+      "name": "Balestra a Binari",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-06",
+      "name": "Martello d'Acciaio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-07",
+      "name": "Batteria di Lame Rotanti",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-08",
+      "name": "Fucina Magnetar",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-09",
+      "name": "Cannone a Massa Critica",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-metallic-10",
+      "name": "Colosso delle Leghe",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-01",
+      "name": "Impulsore di Massa",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-02",
+      "name": "Lanciapesi Orbitale",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-03",
+      "name": "Compressore Gravitico",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-04",
+      "name": "Mortaio delle Orbite",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-05",
+      "name": "Trattore d'Assalto",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-06",
+      "name": "Vortice di Compressione",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-07",
+      "name": "Batteria delle Maree Nere",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-08",
+      "name": "Reattore di Orbita Spezzata",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-09",
+      "name": "Cannone dell'Orizzonte",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "proposte_100_armi",
+      "id": "weapon100-gravity-10",
+      "name": "Singolarità da Assedio",
+      "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-01",
+      "name": "Lanciabraci Helion",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-02",
+      "name": "Spaccanebulosa Cremisi",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-03",
+      "name": "Siluro Piromante",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-05",
+      "name": "Rotore Salamandra",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-06",
+      "name": "Bombarda Corium",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-08",
+      "name": "Artiglieria Fenice",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-plasma-09",
+      "name": "Forgia dell'Ultimo Sole",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-01",
+      "name": "Arpione Pelagico",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-02",
+      "name": "Torretta delle Due Maree",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-03",
+      "name": "Getto Naiade",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-04",
+      "name": "Mitraglia di Comete Liquide",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-05",
+      "name": "Torpedine Abissale",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-06",
+      "name": "Martello Idrosonico",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-08",
+      "name": "Raggio della Fossa Profonda",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-09",
+      "name": "Tentacoli di Teti",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-refrigerant-10",
+      "name": "Diluvio di Nettuno",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-01",
+      "name": "Sputacristalli di Sirio",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-02",
+      "name": "Ago dell'Inverno Nero",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-03",
+      "name": "Balestra di Nebbia Gelata",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-05",
+      "name": "Dardiera della Brina Inversa",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-06",
+      "name": "Bombarda delle Lastre Vive",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-07",
+      "name": "Tridente del Freddo Immobile",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-cryogenic-08",
+      "name": "Sciame di Comete Gelate",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-02",
+      "name": "Fucile di Ioni Bianchi",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-03",
+      "name": "Scaricatore Multiarco",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-04",
+      "name": "Arpione del Conduttore",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-05",
+      "name": "Serpente Elettrostatico",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-06",
+      "name": "Doppio Tuono Aster",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-ionic-07",
+      "name": "Camera del Tuono Compresso",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-mineral-01",
+      "name": "Sputapietre d'Olivina",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-mineral-03",
+      "name": "Lanciamassi di Titania",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-mineral-05",
+      "name": "Macina d'Assedio",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-mineral-08",
+      "name": "Drago di Basalto",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-mineral-10",
+      "name": "Mazza di Pangea",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-01",
+      "name": "Cannone a Turbovento",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-02",
+      "name": "Dardi del Jetpolare",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-03",
+      "name": "Obice dei Sette Venti",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-05",
+      "name": "Ciclone di Lame",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-07",
+      "name": "Ala del Nibbio Stellare",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-aerial-08",
+      "name": "Compasso Tempestoso",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-01",
+      "name": "Laser dell'Equatore",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-02",
+      "name": "Mitraglia delle Lucciole",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-03",
+      "name": "Fionda Prismatica",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-04",
+      "name": "Lancia dei Sette Raggi",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-05",
+      "name": "Toroide dell'Aurora",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-06",
+      "name": "Martello del Mattino",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-07",
+      "name": "Spettro di Asterion",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-08",
+      "name": "Aurora a Pettine",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-radiant-09",
+      "name": "Zenit delle Mille Lenti",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-01",
+      "name": "Fucile della Luna Vuota",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-02",
+      "name": "Dardo di Nebbia Solida",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-03",
+      "name": "Pistola degli Specchi Neri",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-04",
+      "name": "Corvo di Materia Nera",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-06",
+      "name": "Morsa del Crepuscolo Armato",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-void-08",
+      "name": "Sciame di Microvuoti",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-01",
+      "name": "Mitraliera di Tungsteno",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-03",
+      "name": "Fucile a Schegge Orbitali",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-04",
+      "name": "Falce del Rotore Induttivo",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-06",
+      "name": "Obice al Cobalto",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-08",
+      "name": "Treno Magnetico Celeritas",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-09",
+      "name": "Spada Ferrogamma",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-metallic-10",
+      "name": "Cannone del Ferro Morto",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-gravity-01",
+      "name": "Fionda di Asteroidi",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-gravity-03",
+      "name": "Ago di Massa Negativa",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-gravity-05",
+      "name": "Mortaio di Nodi Orbitali",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-gravity-06",
+      "name": "Lanciatore di Lune Gemelle",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    },
+    {
+      "group": "bozza_67_armi",
+      "id": "weapon-new-gravity-08",
+      "name": "Divoratore di Traiettorie",
+      "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
+      "kind": "draft"
+    }
+  ]
+}
