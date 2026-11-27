@@ -855,7 +855,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_20',
-    name: 'Custode dell'Antispazio',
+    name: 'Custode dell’Antispazio',
     rarity: 'Leggendaria',
     rarityColor: '#facc15',
     color: '#06b6d4',
@@ -1273,7 +1273,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_18',
-    name: 'Predone dell'Entropia',
+    name: 'Predone dell’Entropia',
     planetNum: 18,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
