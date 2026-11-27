@@ -51,6 +51,13 @@
       "formerName": "Saturno · Crono",
       "currentName": "Saturno · Contromossa degli Anelli",
       "reason": "Rinomina prudenziale del modulo; restano altre diciture legacy in log/test"
+    },
+    {
+      "id": "pilot_rare_4",
+      "formerName": "Il Collezionista di Specchi",
+      "currentName": "Mercante dei Riflessi Gemelli",
+      "reason": "Omonimia esatta con titolo di romanzo 2024; nome di pilota rinominato",
+      "source": "https://lanavediteseo.eu/portfolio/il-collezionista-di-specchi/"
     }
   ],
   "caveats": [
@@ -1515,7 +1522,7 @@
     {
       "group": "piloti",
       "id": "pilot_rare_4",
-      "name": "Il Collezionista di Specchi",
+      "name": "Mercante dei Riflessi Gemelli",
       "source": "src/newCombat/phase16GPilots.js",
       "kind": "current"
     },
@@ -4508,6 +4515,15 @@
       "newName": "Saturno · Contromossa degli Anelli",
       "category": "Modulo",
       "reason": "Rimosso dal modulo un riferimento ambiguo a Crono; mantenuti ID, carica ed effetto",
+      "status": "corretto"
+    },
+    {
+      "cardId": "pilot_rare_4",
+      "previousName": "Il Collezionista di Specchi",
+      "newName": "Mercante dei Riflessi Gemelli",
+      "category": "Pilota",
+      "reason": "Omonimia esatta con romanzo di Salvatore Niffoi, pubblicato da La nave di Teseo nel 2024; differenziazione precauzionale",
+      "source": "https://lanavediteseo.eu/portfolio/il-collezionista-di-specchi/",
       "status": "corretto"
     }
   ],
