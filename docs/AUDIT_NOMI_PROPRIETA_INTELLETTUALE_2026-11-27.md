@@ -86,7 +86,7 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 - `pilot_rare_1` — Corsaro della Rivalsa
 - `pilot_rare_2` — L'Adrenalinico
 - `pilot_rare_3` — Il Baro
-- `pilot_rare_4` — Il Collezionista di Specchi
+- `pilot_rare_4` — Mercante dei Riflessi Gemelli
 - `pilot_epic_1` — L'Artificiere di Bordo
 - `pilot_epic_2` — L'Alchimista Aurico
 - `pilot_epic_3` — Il Viaggiatore del Tempo
@@ -261,3 +261,7 @@ Il primo cambio è salvato nei cataloghi `newCombat/phase16GPilots.js`, `command
 La scansione dei percorsi nel repository ha individuato **320 PNG, 33 JPG, 51 WebP, 169 SVG, 1 GIF, 3 MP4 e 1 font TTF** (inclusi file sorgenti, anteprime e collaudi). Non è stato individuato un file generale `LICENSE` o `ATTRIBUTION`: questo **non dimostra che gli asset siano illeciti**, ma non consente di verificarne automaticamente le licenze e la provenienza. Va compilato un registro dei soli elementi effettivamente inclusi nel prodotto distribuito: illustrazioni, font, musiche, effetti audio, video e risorse software di terze parti.
 
 **Conclusione commerciale al 27 novembre:** nomi e grafica non sono dichiarati «liberi da copyright». La ricerca delle anteriorità nei registri ufficiali per marchi identici/simili, classi 9 e 41 (e 28 per carte fisiche), e la verifica dei diritti degli asset restano aperte. L'<https://www.euipo.europa.eu/en/trade-marks/before-applying/availability> spiega che coincidono o possono confliggere anche segni simili e che una ricerca preliminare non garantisce piena disponibilità.
+
+### Terza collisione individuata nello screening esterno del 27/11
+
+Il nome del pilota `pilot_rare_4`, **Il Collezionista di Specchi**, corrisponde esattamente al titolo del romanzo omonimo di Salvatore Niffoi, pubblicato nel 2024 da La nave di Teseo: https://lanavediteseo.eu/portfolio/il-collezionista-di-specchi/ . Per evitare una coincidenza non necessaria è stato rinominato **Mercante dei Riflessi Gemelli** in tutti e tre i cataloghi sorgente del pilota. Identificativo, effetti, rarità e costo non cambiano. La coincidenza con un libro non implicherebbe automaticamente una violazione; la rinomina è una misura prudenziale, non un esito ufficiale dei registri marchi.
