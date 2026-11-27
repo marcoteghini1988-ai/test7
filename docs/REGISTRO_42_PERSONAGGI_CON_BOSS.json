@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v7-2026-11-27",
+  "revision": "personaggi-42-v8-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
@@ -874,8 +874,9 @@
         "supportCount": 1,
         "temporarilySuppressible": true,
         "abilities": [
-          "Una volta per proprio turno può sacrificare una carta dalla propria mano, mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa."
-        ]
+          "Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa."
+        ],
+        "sacrificeSelection": "owner-choice"
       },
       "unlocked": {
         "duration": {
@@ -886,14 +887,15 @@
         "replaceable": true,
         "abilityStatus": "confirmed",
         "abilities": [
-          "Una volta per proprio turno può sacrificare una carta dalla propria mano, mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa."
-        ]
+          "Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa."
+        ],
+        "sacrificeSelection": "owner-choice"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
         "Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare, non decisioni definitive.",
-        "Definire se la carta sacrificata dalla mano sia scelta o casuale e quando si conferma il sacrificio. Per evitare la chiusura automatica dopo la terza giocata, l'attivazione deve precederla o essere atomica con essa; proposta operativa da verificare. Il sacrificio non è una giocata: la quarta deve essere effettivamente disponibile.",
+        "Scelta manuale della carta dalla mano confermata, mai casuale. Definire quando si conferma il sacrificio. Per evitare la chiusura automatica dopo la terza giocata, l'attivazione deve precederla o essere atomica con essa; proposta operativa da verificare. Il sacrificio non è una giocata: la quarta deve essere effettivamente disponibile.",
         "Definire interazioni con sospensione del Personaggio, sostituzione, mano vuota, timer scaduto e chiusura anticipata. Non permettere più di una estensione per turno né rimborsare il costo dopo la risoluzione senza una decisione esplicita.",
         "La precedente proposta di sottrazione/trasferimento dei secondi è stata rifiutata. Non introdurre ulteriori abilità o dipendenze dal supporto."
       ]

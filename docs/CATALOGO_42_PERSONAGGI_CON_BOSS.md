@@ -321,11 +321,11 @@ ID conservato: `boss-character-3`.
 **Meccanica approvata il 27/11/2026: sacrificio per la quarta giocata.** Una sola abilità; la precedente proposta di trasferimento del tempo è rifiutata. Madre Corvo a Impulsi, un supporto Corvo Esploratore. La pesca aggiuntiva del supporto è una sinergia, non un requisito.
 
 **Durante lo scontro (permanente, sospendibile):**
-- Una volta per proprio turno può sacrificare una carta dalla propria mano, mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa.
+- Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa.
 
 **Dopo lo sblocco:** stessa abilità indipendente dalla formazione. Durata proposta di tre turni propri e rarità Rara ancora da confermare. Il Personaggio occupa una giocata ordinaria quando viene schierato.
 
-Da definire e collaudare: scelta o casualità della carta sacrificata, attivazione prima della chiusura automatica alla terza giocata (o atomica con essa), sospensione/sostituzione, fine turno e mano vuota. Il sacrificio non è una giocata; la quarta carta deve essere realmente giocabile entro il timer. Nessuna estensione multipla nello stesso turno. Non implementato.
+Da definire e collaudare: scelta manuale della carta sacrificata confermata; restano da definire attivazione prima della chiusura automatica alla terza giocata (o atomica con essa), sospensione/sostituzione, fine turno e mano vuota. Il sacrificio non è una giocata; la quarta carta deve essere realmente giocabile entro il timer. Nessuna estensione multipla nello stesso turno. Non implementato.
 
 ID conservato: `boss-character-6`.
 
