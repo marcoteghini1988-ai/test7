@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v11-2026-11-27",
+  "revision": "personaggi-42-v12-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
@@ -12,7 +12,7 @@
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
   "genericProposed": 16,
-  "bossReworkProposed": 7,
+  "bossReworkProposed": 6,
   "characters": [
     {
       "id": "character-general-01",
@@ -954,14 +954,15 @@
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "mechanic-confirmed-balance-pending",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
         "abilities": [
-          "Riduce i danni alla propria madre mentre sono presenti supporti vivi.",
-          "Potenzia gli attacchi contro navicelle già danneggiate; il giocatore deve scegliere se concentrare i colpi o distribuire il danno."
-        ]
+          "Finché il Personaggio è attivo, riduce di un turno i tempi di raffreddamento del Generatore, sia per l'attacco rapido sia per quello potente, senza modificare il consumo di Energia."
+        ],
+        "supportCount": 2,
+        "temporarilySuppressible": true
       },
       "unlocked": {
         "duration": {
@@ -970,17 +971,16 @@
         },
         "replaceable": true,
         "abilities": [
-          "Riduce il danno alla propria madre quando almeno un supporto è vivo.",
-          "Potenzia un colpo contro una nave avversaria già ferita, una volta per turno.",
-          "Cura una volta un supporto alleato sopravvissuto a un attacco."
+          "Finché il Personaggio è attivo, riduce di un turno i tempi di raffreddamento del Generatore, sia per l'attacco rapido sia per quello potente, senza modificare il consumo di Energia."
         ],
-        "durationStatus": "proposed",
-        "abilityStatus": "proposed"
+        "durationStatus": "confirmed",
+        "abilityStatus": "confirmed"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+        "Definire e collaudare la cumulabilità con il Relè Ionico, il limite minimo del raffreddamento e il momento di applicazione in caso di attivazione, scadenza o sospensione durante un raffreddamento già in corso.",
+        "Le precedenti proposte sono superate; nessuna dipendenza dal supporto."
       ]
     },
     {
@@ -1238,14 +1238,14 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Comune, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; Rara e durata giocabile di tre turni propri confermate; le abilità e durate degli altri 7 restano da approvare individualmente. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Comune, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; Rara e durata giocabile di tre turni propri confermate; Leviatano Abissale: riduzione del raffreddamento del Generatore di un turno, Rara, tre turni propri dopo lo sblocco; le abilità e durate degli altri 6 restano da approvare individualmente. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.",
     "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione.",
     "Regola confermata: un Boss fisso può avere le abilità sospese temporaneamente da una Carta Strategia idonea senza lasciare lo slot. Per Matriarca, durante la sospensione tornano immediatamente le debolezze elementali di tutte le navi; alla fine l'effetto riprende. La futura Strategia resta da definire."
   ],
-  "bossMechanicConfirmed": 5,
+  "bossMechanicConfirmed": 6,
   "rarityPendingCount": 0,
   "bossRarityProgression": [
     {
