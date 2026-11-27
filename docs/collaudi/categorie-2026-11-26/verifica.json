@@ -475,6 +475,60 @@
       ],
       "redSha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
       "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-giudizio-temporale",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "fe3f8e73099f9561b025da24dd10962bad7164f8904db1bfb6435abba860465c",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "99c4e89fac4099decf0c7d55011486f40865a9332198df8592e1b19c5d0e9b91",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "ac488a8e823f45e6a768c447cb268796ffd6ed9b580749e83df892da5f2777ed",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "3821e0f2c622f25d17dc0c161ee9fb7e103f5d7869c1770ebdfb70a3fd9e0f1c",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "ad16e1ed415bdc99480e5d533cd834b4b68e677f27d7785a14c28c49a1a76e63",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "44142b9930efb505bc5b8b1fa48148024ed3737deb2f9f4d3ad2c140461f70a2",
+      "preservedApprovedRevision": true
     }
   ]
 }
