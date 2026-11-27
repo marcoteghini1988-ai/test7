@@ -36,7 +36,7 @@ test('Leviatano Profondita: solo 3 numeriche e abilita sbloccata dal livello 4',
  assert.equal(arm(good,'engine','plus',plus),null);
  assert.equal(arm(good,'engine','plus',three)?.percentage,7);
 });
-test('Nucleo Magmatico Forgia: soltanto moltiplicazione autentica e livello 7+',()=>{
+test('Divoratore delle Scorie Forgia: soltanto moltiplicazione autentica e livello 7+',()=>{
  const cards=[P(3,'♣'),P(4,'♦')];
  const low=game('planet_char_19',6);
  assert.equal(arm(low,'shieldGenerator','times',cards),null);
