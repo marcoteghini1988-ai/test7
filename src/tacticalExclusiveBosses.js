@@ -147,7 +147,7 @@ export function transferExclusiveIonicSync(attacker,defender,barrierDamage){
 }
 
 
-// Leviatano Abissale (Nettuno, ID 8) - Pressione degli abissi.
+// Serpe delle Fosse Abissali (Nettuno, ID 8) - Pressione degli abissi.
 // The enemy barrier is sampled at the START of the simultaneous cycle,
 // before repair, native fire, precision or other resolution-phase changes.
 // No access to the opponent's hidden order, draw or numeric signature.
