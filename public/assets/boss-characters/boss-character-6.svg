@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="Crono il Distruttore"><defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="Devastatore delle Ere"><defs>
  <radialGradient id="bg"><stop offset="0" stop-color="#b68dff" stop-opacity=".42"/><stop offset=".55" stop-color="#14253f"/><stop offset="1" stop-color="#050a16"/></radialGradient>
  <linearGradient id="metal" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#a3b4c4"/><stop offset=".24" stop-color="#25354b"/><stop offset=".56" stop-color="#101b2b"/><stop offset=".85" stop-color="#405674"/><stop offset="1" stop-color="#a4b9ce"/></linearGradient>
  <radialGradient id="core"><stop stop-color="#ffffff"/><stop offset=".27" stop-color="#b68dff"/><stop offset=".7" stop-color="#213850"/><stop offset="1" stop-color="#060c1a"/></radialGradient>
