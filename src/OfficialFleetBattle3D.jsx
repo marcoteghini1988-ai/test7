@@ -519,7 +519,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
     if(art&&event.currentTarget.getAttribute('src')!==fallbackArt){
      event.currentTarget.src=fallbackArt;
     }
-   }}/>:<span className="live-card-pending-art" aria-hidden="true">ILLUSTRAZIONE DA CREARE</span>}
+   }}/>:<span className="live-card-pending-art" aria-hidden="true">CARTA IN PREPARAZIONE</span>}
   {art&&<WeaponSalvoCardMarks cardId={type}/>}
   <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity" title={localizedCardText(def)?.rarity||'Rarità '+rarity}>{categoryLabel}</span>

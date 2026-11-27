@@ -27,7 +27,7 @@ export const BOSS_CHARACTER_CATALOG=Object.freeze(Object.fromEntries(defs.map(
   const id='boss-character-'+planetId;
   return [id,Object.freeze({id,planetId,name,skill,effect,description,
    family:'boss-character',short:skill.toUpperCase(),durationCycles:BOSS_CHARACTER_DURATION_CYCLES,
-   // Nessun fronte illustrato approvato: il catalogo conserva solo identità e regole.
+   // Nessuna carta completa approvata: il catalogo conserva identità e regole.
    imagePath:null,maxCopies:1})];
  })));
 export const BOSS_CHARACTER_TYPES=Object.freeze(Object.keys(BOSS_CHARACTER_CATALOG));

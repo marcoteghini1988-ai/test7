@@ -2,7 +2,7 @@
 
 ## Correzione prioritaria — illustrazioni Personaggio Boss, 27/11/2026
 
-L'utente ha chiarito che **nessuna delle dodici carte Personaggio Boss è stata ancora creata o approvata graficamente**. I vecchi PNG/SVG `public/assets/boss-characters/` e gli SVG `public/assets/fleet-next-boss-cards/` con ritratti incorporati erano prove provvisorie: sono stati eliminati. Non descriverli come carte originali o definitive e non rigenerarli dagli script. I cataloghi, gli ID, gli sblocchi e le meccaniche esistenti restano per consentire la progettazione delle illustrazioni future. Nelle viste del gioco va mostrata soltanto l'indicazione testuale di illustrazione da creare finché l'utente non approva ciascun fronte secondo la procedura ufficiale. L'audit dei diritti deve rispecchiare questa correzione.
+L'utente ha chiarito che immagini, cornici, scritte e icone del progetto sono state create in ChatGPT; il dorso di cui sta parlando è ancora da creare. Questo non significa che siano già state composte e approvate le dodici carte Personaggio Boss complete. I vecchi PNG/SVG `public/assets/boss-characters/` e gli SVG `public/assets/fleet-next-boss-cards/` con ritratti incorporati erano prove provvisorie: sono stati eliminati. Non descriverli come carte originali o definitive e non rigenerarli dagli script. I cataloghi, gli ID, gli sblocchi e le meccaniche esistenti restano per la futura composizione e approvazione delle carte con i materiali creati. Nelle viste del gioco va mostrata soltanto l'indicazione testuale «Carta in preparazione» finché l'utente non approva ciascuna carta completa secondo la procedura ufficiale. L'audit dei diritti deve rispecchiare questa distinzione.
 
 ## Aggiornamento prioritario — 27/11/2026, secondo audit nomi
 

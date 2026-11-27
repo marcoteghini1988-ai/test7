@@ -118,7 +118,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
         {visual?.limited==='BOSS'&&<span className="special-deck-tier">BOSS</span>}
        </div>
        <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 ROUND · ':''}{fleetCardEffect(type).description}</small>
-       {isBossCharacterCard(type)&&<small>Illustrazione ancora da creare.</small>}
+       {isBossCharacterCard(type)&&<small>Carta illustrata completa ancora da comporre e approvare.</small>}
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
        {isPvpTerrain(type)&&<small>Terreno attivo per 2 round · il boss impone il proprio scenario. Non si ottiene nei pacchetti correnti.</small>}
        {isTacticalEpic(type)&&<small>Oggetto Epico · sblocco dal Varco fuso nella Cripta. Una copia per tipo, massimo due nel mazzo; uno slot a L20/primo Varco, due a L60.</small>}
