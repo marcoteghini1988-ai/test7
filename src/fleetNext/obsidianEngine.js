@@ -88,7 +88,7 @@ export function obsidianPrecondition(def,side,battle=null){
   const enemy=battle?(battle.sides.A===side?battle.sides.B:battle.sides.A):null;
   if(action==='black-howitzer'&&enemy&&
    !(enemy.machines||[]).some(obsidianAlive))
-   return 'Obice nero richiede una macchina nemica viva';
+   return 'Tiro d’Assedio Ossidiano richiede una macchina nemica viva';
   if(action==='titan-verdict'&&enemy&&!obsidianEnemyUnits(enemy).length)
    return 'Sentenza richiede una unità nemica viva';
  }
@@ -128,9 +128,9 @@ export function obsidianChoiceReason(side,enemy,chosen=[],order={},ply=0){
  const units=obsidianEnemyUnits(enemy);
  const primary=units.find(t=>t.kind===order.targetKind&&t.unit.id===order.targetId);
  if(actions.includes('black-howitzer')){
-  if(order.pass)return 'Obice nero non può essere passato';
+  if(order.pass)return 'Tiro d’Assedio Ossidiano non può essere passato';
   if(order.targetKind!=='machine'||!primary)
-   return 'Obice nero richiede una macchina nemica dichiarata';
+   return 'Tiro d’Assedio Ossidiano richiede una macchina nemica dichiarata';
  }
  if(actions.includes('titan-verdict')||actions.includes('siege-fracture')){
   if(order.pass)return 'Attacco Ossidiana non può essere passato';
