@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v4-2026-11-27",
+  "revision": "personaggi-42-v5-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
-    "Comune": 7,
+    "Comune": 8,
     "Rara": 10,
     "Epica": 8,
-    "Leggendaria": 17
+    "Leggendaria": 16
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
   "genericProposed": 16,
-  "bossReworkProposed": 11,
+  "bossReworkProposed": 10,
   "characters": [
     {
       "id": "character-general-01",
@@ -778,34 +778,38 @@
       "name": "Colosso di Tharsis",
       "sector": 20,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Comune",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "mechanic-confirmed-balance-pending",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
+        "supportCount": 1,
         "abilities": [
-          "Dopo un turno in cui ha inflitto danni, accumula un bonus crescente alla potenza delle proprie Armi, entro un limite; un turno senza danni interrompe la serie.",
-          "Il giocatore non può schierare due nuove Difese nello stesso turno."
+          "A ogni proprio turno sacrifica una percentuale degli HP massimi del proprio supporto per potenziare il primo attacco effettivamente eseguito. La perdita degli HP è reale e può distruggere il Bastione Solare, attivandone la passiva di cura della madre. Se non ha più supporti vivi non può attivare nuovi potenziamenti."
         ]
       },
       "unlocked": {
         "duration": {
           "mode": "own-turns",
-          "turns": 3
+          "turns": null
         },
         "replaceable": true,
         "abilities": [
-          "Potenzia il primo colpo Arma di ogni turno proprio.",
-          "Se infligge danni in due turni propri consecutivi, applica un bonus aggiuntivo limitato.",
-          "La prima Arma che distrugge un supporto nemico riduce di un turno il raffreddamento del Generatore."
-        ]
+          "Mantiene la stessa abilità di sacrificio degli HP di un supporto alleato per potenziare il primo attacco del turno; non è permanente, funziona solo durante la propria durata. Senza supporti vivi non si attiva."
+        ],
+        "durationStatus": "pending"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Percentuali di sacrificio e potenziamento da bilanciare; 10% degli HP massimi e +30% danni erano esempi, non valori definitivi.",
+        "Proposta non confermata: durata della versione sbloccata tre turni propri; se il giocatore ha due supporti vivi, sceglie quale sacrificare a ogni attivazione.",
+        "Definire l'ordine di pagamento e risoluzione del primo attacco, morte del supporto, passiva e annullamento del colpo; preservare il costo reale e verificare i casi limite."
+      ]
     },
     {
       "number": 33,
@@ -1180,11 +1184,11 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia Comune con una sola abilità è confermato in progettazione; per gli altri 11 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; per gli altri 10 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.",
     "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione."
   ],
-  "bossMechanicConfirmed": 1
+  "bossMechanicConfirmed": 2
 }
