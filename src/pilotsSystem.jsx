@@ -409,7 +409,7 @@ export const PILOTS_DATABASE = Object.freeze([
   // --- 8 CARTE EROE BOSS RARE (SBLOCCO DA SETTORE 10: P5 - P12) ---
   {
     id: 'pilot_boss_5',
-    name: 'Occhio del Vortice',
+    name: 'Vegliardo del Vortice',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#f97316',
@@ -974,7 +974,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_5',
-    name: 'Vortice Ionico',
+    name: 'Incursore Ionico',
     planetNum: 5,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1158,7 +1158,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_13',
-    name: 'Eco Fotonico',
+    name: 'Cacciatore Fotonico',
     planetNum: 13,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1181,7 +1181,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_14',
-    name: 'Anomalia Caotica',
+    name: 'Predatore Caotico',
     planetNum: 14,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1204,7 +1204,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_15',
-    name: 'Risonatore Polifonico',
+    name: 'Cantore della Risonanza',
     planetNum: 15,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1227,7 +1227,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_16',
-    name: 'Ago di Lagrange',
+    name: 'Lanciere di Lagrange',
     planetNum: 16,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1250,7 +1250,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_17',
-    name: 'Vettore Cinetico',
+    name: 'Predone Cinetico',
     planetNum: 17,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1273,7 +1273,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_18',
-    name: 'Scheggia Entropica',
+    name: 'Predone dell'Entropia',
     planetNum: 18,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
@@ -1319,7 +1319,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_sentinel_20',
-    name: 'Fenditura del Vuoto',
+    name: 'Custode della Frattura',
     planetNum: 20,
     rarity: 'Sentinella',
     rarityColor: '#94a3b8',
