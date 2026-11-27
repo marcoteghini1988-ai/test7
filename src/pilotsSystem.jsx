@@ -432,7 +432,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_6',
-    name: 'Crono il Distruttore',
+    name: 'Devastatore delle Ere',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#0284c7',
@@ -501,7 +501,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_9',
-    name: 'Signore delle Ombre',
+    name: 'Predone della Penombra',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#64748b',
@@ -658,7 +658,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_epic_4',
-    name: 'Il Re del Ghiaccio',
+    name: 'Comandante della Galaverna',
     rarity: 'Epica',
     rarityColor: '#c084fc',
     color: '#c084fc',
@@ -832,7 +832,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_19',
-    name: 'Nucleo Magmatico',
+    name: 'Divoratore delle Scorie',
     rarity: 'Leggendaria',
     rarityColor: '#facc15',
     color: '#ef4444',
@@ -855,7 +855,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_20',
-    name: 'Sovrano del Vuoto',
+    name: 'Custode dell'Antispazio',
     rarity: 'Leggendaria',
     rarityColor: '#facc15',
     color: '#06b6d4',
