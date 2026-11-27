@@ -260,7 +260,7 @@ export function cancelExclusiveIdraByHeart(side,damage,cards,round){
  return true;
 }
 
-// GENERATORE DEL CAOS — Proxima b (14): build up to three charges from
+// SOVVERTITORE DEL CASO — Proxima b (14): build up to three charges from
 // TRUE native barrier hits. After the third successful hit, the NEXT
 // successful native volley gets +10%; failed volleys do not consume charge.
 // The third charge itself NEVER deals bonus damage.
@@ -280,7 +280,7 @@ export function rememberExclusiveChaosNativeHit(side,damage,bonus){
  return {charges,released:!!bonus?.active};
 }
 
-// CRISTALLO DI RISONANZA — Haumea (17): only two or more numeric
+// BOSS DEL SACRIFICIO — Haumea (17): only two or more numeric
 // cards ACTUALLY discarded by the opponent in the previous cycle can
 // arm a future reward. The boss receives up to five REAL Sync, only on
 // an effective native hit in exactly the next cycle. Never reads hidden hand.
@@ -303,7 +303,7 @@ export function collectExclusiveResonanceSync(side,damage,round){
  return gained;
 }
 
-// NUCLEO MAGMATICO — Io (19): visible 3-cycle phase, fixed by round,
+// DIVORATORE DELLE SCORIE — Io (19): visible 3-cycle phase, fixed by round,
 // NOT by random rolls or the opponent's secret cards.
 export const MAGMA_PHASES=Object.freeze(['carica','eruzione','raffreddamento']);
 export function exclusiveMagmaPhase(side,round){
@@ -319,7 +319,7 @@ export function exclusiveMagmaNativeAdjustment(side,base,round){
   penalty:phase==='raffreddamento'?Math.ceil(base*.10-1e-9):0};
 }
 
-// SOVRANO DEL VUOTO — Encelado (20): public dominant suit changes every
+// CUSTODE DELL'ANTISPAZIO — Encelado (20): public dominant suit changes every
 // three cycles in a fixed four-suit sequence. A valid precision on the
 // boss using that suit DISABLES its precision boost the NEXT round only.
 // Boss precision remains subject to normal signature/exposure/escorts.
