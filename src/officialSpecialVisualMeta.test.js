@@ -16,7 +16,7 @@ test('Tutte le carte reali hanno ruolo riconoscibile senza creare carte',()=>{
  }
  assert.equal(officialSpecialVisualMeta('non-esistente'),null);
  assert.equal(officialSpecialVisualMeta('tactic-counter').role,'REAZIONE');
- assert.equal(officialSpecialVisualMeta('tactic-kinetic').role,'ATTACCO');
+ assert.equal(officialSpecialVisualMeta('tactic-kinetic').role,'STRATEGIA');
  assert.equal(officialSpecialVisualMeta('tactic-reactive').role,'DIFESA');
  for(const type of Object.keys(BOSS_CHARACTER_CATALOG)){
   assert.equal(officialSpecialVisualMeta(type).role,'PERSONAGGIO');
