@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v3-2026-11-27",
+  "revision": "personaggi-42-v4-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
-    "Comune": 6,
+    "Comune": 7,
     "Rara": 10,
     "Epica": 8,
-    "Leggendaria": 18
+    "Leggendaria": 17
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
   "genericProposed": 16,
-  "bossReworkProposed": 12,
+  "bossReworkProposed": 11,
   "characters": [
     {
       "id": "character-general-01",
@@ -737,34 +737,39 @@
       "name": "Guardiano di Gaia",
       "sector": 10,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Comune",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "mechanic-confirmed-balance-pending",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
+        "supportCount": 0,
         "abilities": [
-          "Riduce i danni ordinari subiti dalla flotta; ogni turno rinnova una protezione contro il primo colpo ordinario.",
-          "La prima Difesa schierata da Gaia non occupa una giocata aggiuntiva del giocatore: il bonus riguarda esclusivamente il Boss."
+          "A ogni proprio turno rigenera una percentuale degli HP massimi della propria nave madre, senza superare il massimo. Non ha navicelle di supporto al settore 10."
         ]
       },
       "unlocked": {
         "duration": {
           "mode": "own-turns",
-          "turns": 3
+          "turns": null
         },
         "replaceable": true,
         "abilities": [
-          "Riduce i danni del primo colpo ordinario per turno avversario.",
-          "All'ingresso protegge una navicella alleata scelta da un colpo ordinario.",
-          "Quando perde il primo supporto, cura la madre una sola volta."
-        ]
+          "Quando giocato, durante la permanenza cura una sola navicella alleata viva scelta dal giocatore (madre o uno dei supporti presenti), della stessa percentuale dei suoi HP massimi prevista per il Boss, senza superare il massimo."
+        ],
+        "durationStatus": "pending",
+        "targetSelectionTiming": "pending"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Percentuale definitiva da bilanciare; 5% era una proposta, non approvata.",
+        "Numero di turni della versione sbloccata e scelta del bersaglio una sola volta allo schieramento oppure a ogni turno da confermare. Il bersaglio dev'essere vivo.",
+        "Momento esatto delle cure ricorrenti e interazioni con la regola degli effetti immediati da definire e collaudare."
+      ]
     },
     {
       "number": 32,
@@ -1176,10 +1181,11 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La classificazione Leggendaria dei trofei e le 3 abilità per ciascuno sono proposte da approvare, non modifiche già eseguite.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia Comune con una sola abilità è confermato in progettazione; per gli altri 11 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.",
     "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione."
-  ]
+  ],
+  "bossMechanicConfirmed": 1
 }
