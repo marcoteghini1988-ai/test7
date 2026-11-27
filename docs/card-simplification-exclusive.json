@@ -2590,7 +2590,7 @@
     },
     {
       "id": "ex-l04-01",
-      "name": "Custode Astrale",
+      "name": "Vegliatore delle Rotte Celesti",
       "shipId": "L04",
       "before": {
         "effect": "Una riparazione riuscita genera un segnalino di armonia per la prossima combo.",
