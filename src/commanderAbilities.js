@@ -26,7 +26,7 @@ const definitions=[
  ['pilot_rare_1','Corsaro della Rivalsa','Attacco','Un vitale alleato in avaria o distrutto','damaged_vital',STANDARD],
  ['pilot_rare_2',"L'Adrenalinico",'Attacco','Scudo proprio al 60% o meno','strained_shield',STANDARD],
  ['pilot_rare_3','Il Baro','Attacco','Formula da tre numeriche con semi differenti','mixed_triple',STANDARD],
- ['pilot_rare_4','Il Collezionista di Specchi','Difesa','Almeno due vitali alleati in avaria','two_damaged_vitals',STANDARD],
+ ['pilot_rare_4','Mercante dei Riflessi Gemelli','Difesa','Almeno due vitali alleati in avaria','two_damaged_vitals',STANDARD],
  ['pilot_epic_1',"L'Artificiere di Bordo",'Attacco','Colpo preparato con Perforante o Corrosione','special_attack',ELITE],
  ['pilot_epic_2',"L'Alchimista Aurico",'Attacco','Due diverse carte speciali offensive sullo stesso colpo','double_special',ELITE],
  ['pilot_epic_3','Il Viaggiatore del Tempo','Attacco','Primo colpo efficace contro un vitale mai raggiunto','new_vital',ELITE],
