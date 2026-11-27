@@ -88,6 +88,13 @@ separati. Il cambio lingua della galleria mantiene la stessa base.
 
 Sorgenti riproducibili in `scripts/previews/sonda-martello-20261127/`.
 Report in `docs/collaudi/sonda-martello-2026-11-27/`.
-La revisione della pagina in StackBlitz resta da registrare; non equivale
-all’integrazione nella partita. I 40 fronti già approvati restano gli
-unici promossi; questi sette nuovi fronti aspettano conferma visiva.
+La pagina isolata è stata collaudata nella copia StackBlitz esistente sul
+commit `db6327b81a369a6f8a743d87c6d71938398f4769`: sei casi osservati,
+combo A/B, turno successivo, Difesa e arma disabilitata; sette carte con
+17 campi testo EN/IT, cambio lingua durante la riproduzione e nessun
+errore della pagina in console. Avvio salvato, ricaricamento e pin
+confermati, con 725 sorgenti verificati. Controlli GitHub e Chrome mobile
+passati. Report: `collaudi/sonda-martello-2026-11-27/verifica-stackblitz.json`.
+Questo collaudo non equivale all’integrazione nella partita. I 40 fronti
+già approvati restano gli unici promossi; questi sette nuovi fronti
+aspettano conferma visiva. La vibrazione fisica resta da verificare.

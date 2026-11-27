@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-27",
+  "status": "isolated preview reviewed on existing StackBlitz copy; not integrated in battle",
+  "commit": "db6327b81a369a6f8a743d87c6d71938398f4769",
+  "project": "https://stackblitz.com/edit/github-edu2s6xy",
+  "savedPinConfirmedAfterReload": true,
+  "sourceSync": {
+    "repository": "marcoteghini1988-ai/test7",
+    "commit": "db6327b81a369a6f8a743d87c6d71938398f4769",
+    "files": 725,
+    "updated": 405,
+    "applied": true
+  },
+  "casesObserved": [
+    {
+      "index": 5,
+      "case": "Rare, same-turn combo A, mother",
+      "observed": "mark, separate two Hammer contacts, local electrical boom and consumed mark",
+      "realImpacts": 3,
+      "effectiveHp": 64
+    },
+    {
+      "index": 20,
+      "case": "Rare, same-turn combo B, supports",
+      "observed": "entry from upper opponent edge, correct lower support contact and recoil",
+      "realImpacts": 3,
+      "effectiveHp": 83
+    },
+    {
+      "index": 15,
+      "case": "Rare, both Hammer hits intercepted",
+      "observed": "Defense catches each slash, no damage boom; only Probe damages",
+      "realImpacts": 3,
+      "effectiveHp": 20
+    },
+    {
+      "index": 21,
+      "case": "Rare, weapon disabled",
+      "observed": "no projectile and zero impact",
+      "realImpacts": 0,
+      "effectiveHp": 0
+    },
+    {
+      "index": 9,
+      "case": "Epic, next-turn combo A, supports",
+      "observed": "mark follows actual support, second slash boom and recoil",
+      "realImpacts": 3,
+      "effectiveHp": 200
+    },
+    {
+      "index": 11,
+      "case": "Legendary, same-turn combo A, mother",
+      "observed": "second slash, local electrical contact and hull recoil",
+      "realImpacts": 3,
+      "effectiveHp": 215
+    }
+  ],
+  "gallery": {
+    "defaultLocale": "en",
+    "testedLocales": [
+      "en",
+      "it"
+    ],
+    "cards": 7,
+    "textFieldsEach": 17,
+    "baseDimensionsInHtml": [
+      620,
+      930
+    ],
+    "localeChangedWhilePlaying": true,
+    "playbackContinuesDuringLocaleChange": true,
+    "baseCheck": "Same DOM image lengths and first/last samples across locale change; full source/pixel checks in verifica-lingue.json",
+    "english": [
+      {
+        "base": {
+          "height": 930,
+          "length": 1237690,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIcHBwcHBwcHBwcHBwcHBwcHBwcHBwDPvi4P8HqizzOTTpwnMAAAAASUVORK5CYII=",
+          "width": 620
+        },
+        "firstWord": "IONIC ASSAULT",
+        "id": "weapon-designed-ionic-sonda-ionica",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1412870,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAICAQCgUAgEAgEAoFAIBAIBAKBQCAQCATZt47/AxAB+GqOZ/d/AAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "THUNDER",
+        "id": "weapon-designed-ionic-martello-tuono",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1322094,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEJef/A3vKszvLFLLxAAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "IONIC ASSAULT",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1385090,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIKBQKhUKhUCgUCoVCoVAoFAqFQqHM+UHz/wFK4O7IBUYNLAAAAABJRU5ErkJggg==",
+          "width": 620
+        },
+        "firstWord": "IONIC ASSAULT",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1507038,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIQkJCQkJCQkJCQkJCQkJCQkJCQkJC0u/x4/8D0bHXZmBDqgUAAAAASUVORK5CYII=",
+          "width": 620
+        },
+        "firstWord": "IONIC ASSAULT",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1482194,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIgUAgEAgEAoFAIBAIBAKBQCAQCATCkoua/x/v9XWLBOnRJwAAAABJRU5ErkJggg==",
+          "width": 620
+        },
+        "firstWord": "THUNDER",
+        "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+        "lang": "en",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1574026,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAICAQCgUAgEAgEAoFAIBAIBAKBQCAQCMSQO4//D4t+/SaEfDlYAAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "THUNDER",
+        "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+        "lang": "en",
+        "textFields": 17
+      }
+    ],
+    "italian": [
+      {
+        "base": {
+          "height": 930,
+          "length": 1237690,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIcHBwcHBwcHBwcHBwcHBwcHBwcHBwDPvi4P8HqizzOTTpwnMAAAAASUVORK5CYII=",
+          "width": 620
+        },
+        "firstWord": "SONDA IONICA",
+        "id": "weapon-designed-ionic-sonda-ionica",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1412870,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAICAQCgUAgEAgEAoFAIBAIBAKBQCAQCATZt47/AxAB+GqOZ/d/AAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "MARTELLO",
+        "id": "weapon-designed-ionic-martello-tuono",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1322094,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEJef/A3vKszvLFLLxAAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "SONDA IONICA",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1385090,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIKBQKhUKhUCgUCoVCoVAoFAqFQqHM+UHz/wFK4O7IBUYNLAAAAABJRU5ErkJggg==",
+          "width": 620
+        },
+        "firstWord": "SONDA IONICA",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1507038,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIQkJCQkJCQkJCQkJCQkJCQkJCQkJC0u/x4/8D0bHXZmBDqgUAAAAASUVORK5CYII=",
+          "width": 620
+        },
+        "firstWord": "SONDA IONICA",
+        "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1482194,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAIgUAgEAgEAoFAIBAIBAKBQCAQCATCkoua/x/v9XWLBOnRJwAAAABJRU5ErkJggg==",
+          "width": 620
+        },
+        "firstWord": "MARTELLO",
+        "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+        "lang": "it",
+        "textFields": 17
+      },
+      {
+        "base": {
+          "height": 930,
+          "length": 1574026,
+          "sample": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAOiCAYAAADNAICAQCgUAgEAgEAoFAIBAIBAKBQCAQCMSQO4//D4t+/SaEfDlYAAAAAElFTkSuQmCC",
+          "width": 620
+        },
+        "firstWord": "MARTELLO",
+        "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+        "lang": "it",
+        "textFields": 17
+      }
+    ]
+  },
+  "controlsObserved": {
+    "play": true,
+    "restart": true,
+    "mute": true,
+    "selectorOptions": 22
+  },
+  "applicationConsoleErrors": [],
+  "ci": {
+    "checksRun": 45950186174,
+    "mobileRun": 45950186195,
+    "checks": "success",
+    "mobile": "success"
+  },
+  "limitations": {
+    "newFrontsApproved": false,
+    "battleVfxIntegrated": false,
+    "actualBattleRecording": false,
+    "physicalHapticsVerified": false,
+    "audioHeardOnPhysicalDevice": false
+  },
+  "loadingNote": "Large self-contained HTML initially required waiting for module/images. Snapshot API timed out during loading; scoped DOM and screenshots completed. No site/automation denial.",
+  "saveNote": "Initial global Save raced source synchronization and returned generic error. Saved minimal bootstrap while sync was stopped, then reloaded and verified commit pin and 725 applied source files.",
+  "visualEvidence": {
+    "name": "prova-stackblitz-direzione-b.jpg",
+    "libraryFileId": "libfile_bdbf1e62bc0c8191b896c938f25ac809",
+    "bytes": 70408,
+    "sha256": "b3494da05bb043d56de75779c669cc357fb89b290a270ea73b9c668a04b74388"
+  }
+}

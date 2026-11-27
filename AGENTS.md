@@ -17,6 +17,10 @@ di bersaglio (anche altri componenti della madre) e lascia il tiro base
 al Martello se il bersaglio segnato non è più valido. Non aggiunge danni,
 turni, costi o colpi. Video/HTML di studio usano eventi reali, non sono
 registrazioni della partita StackBlitz né attestano vibrazione hardware.
+La pagina isolata è stata collaudata nella copia StackBlitz esistente:
+sei casi A/B/Difesa/disabilitata, galleria EN/IT e nessun errore pagina.
+Avvio persistente verificato al commit `db6327b81a369a6f8a743d87c6d71938398f4769`,
+725 sorgenti. Registro: `docs/collaudi/sonda-martello-2026-11-27/verifica-stackblitz.json`.
 
 ## Catalogo Personaggi — 42, inclusi 12 Boss
 

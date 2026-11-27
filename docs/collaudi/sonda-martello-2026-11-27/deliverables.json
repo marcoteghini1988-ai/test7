@@ -36,6 +36,12 @@
       "libraryFileId": "libfile_3b7aecb835808191a5a67f33f557e2ab",
       "bytes": 273155100,
       "sha256": "de82d83d7156747ccf60a6eecc522a7572ce2b26c7a582d55678fb82f957a702"
+    },
+    {
+      "name": "prova-stackblitz-direzione-b.jpg",
+      "libraryFileId": "libfile_bdbf1e62bc0c8191b896c938f25ac809",
+      "bytes": 70408,
+      "sha256": "b3494da05bb043d56de75779c669cc357fb89b290a270ea73b9c668a04b74388"
     }
   ]
 }
