@@ -36,6 +36,7 @@ import {hologramDisplayEscorts} from './fleetNext/nextHolographicWeapons.js';
 import {cardTextName,cardTextDescription,localizedCardText} from './cardTextPresentation.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 
 function extract(file,name,scope={}){
  const source=readFileSync(new URL(file,import.meta.url),'utf8');
@@ -242,7 +243,7 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
 
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{
-  card,displayedCard:(id)=>card(id),cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
+  card,displayedCard:(id)=>card(id),cardRole,cardFacePath,describeEffect,officialSpecialArtPath,isBossCharacterCard,
   exclusiveRarityAtLevel,FLEET_ELEMENTS,cardVisualFamily,cardCategoryLabel,cardTextName,cardTextDescription,localizedCardText,WeaponSalvoCardMarks:()=>null
  });
  for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
