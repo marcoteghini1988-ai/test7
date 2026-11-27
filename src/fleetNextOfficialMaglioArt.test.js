@@ -15,7 +15,7 @@ const CURRENT=[
 ];
 
 test('Maglio Ferrogravitazionale: quattro fronti HD montati, uno per rarità',()=>{
- assert.equal(Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).length,50);
+ assert.equal(Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).length,52);
  for(const [rarita,id,damage,expectedBlob] of CURRENT){
   const definition=card(id);
   assert.ok(definition,id);

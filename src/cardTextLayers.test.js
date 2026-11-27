@@ -6,6 +6,7 @@ import {card,ENERGY_CARDS} from './fleetNext/rules.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {LOCALIZED_WEAPON_CARD_IDS,cardTextFields,cardTextSvgContents,cardTextBasePath,localizedCardText} from './cardTextPresentation.js';
 import {getCardTextLocale,setCardTextLocale,subscribeCardTextLocale} from './cardTextLocale.js';
+import {stormCapacitorVariant} from './stormCapacitorSpec.js';
 import {CORE_FAMILY} from './coreThunderSpec.js';
 import metrics from './fleetNext/cardTextFontMetrics.json' with {type:'json'};
 
@@ -35,12 +36,12 @@ test('Both languages fit the fixed text sectors with actual font advances and ha
   for(const f of cardTextFields(id,lang)){
    assert.ok([...f.text].every(c=>Object.hasOwn(metrics.advances,c)),'Glyph missing: '+f.text);
    const width=[...f.text].reduce((n,c)=>n+(metrics.advances[c]??metrics.advances.M),0)/metrics.unitsPerEm*f.size+
-    (f.text.length-1)*(f.weight==='minor'?4:1)+(f.weight==='number'?12:f.weight==='strong'?9:7)*2;
+    (f.text.length-1)*(f.spacing??(f.weight==='minor'?4:1))+(f.stroke??(f.weight==='number'?12:f.weight==='strong'?9:7))*2;
    assert.ok(width<=f.maxWidth+.1,id+':'+lang+':'+f.text);
   }
   const a=cardTextSvgContents(id,lang,'first'),b=cardTextSvgContents(id,lang,'second');
   assert.match(a,/id="card-text-first-material"/);assert.match(b,/id="card-text-second-material"/);
-  assert.equal((a.match(/<text /g)||[]).length,17);assert.doesNotMatch(a,/<image|<script/);
+  assert.equal((a.match(/<text /g)||[]).length,stormCapacitorVariant(id)?18:17);assert.doesNotMatch(a,/<image|<script/);
  }
 });
 test('Migration backgrounds are verified RGBA HD assets and original approved card bytes remain intact',()=>{

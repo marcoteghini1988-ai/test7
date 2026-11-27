@@ -50,7 +50,7 @@ test('Catalogo: 35 carte attive, 20 con bilanciamento provvisorio',()=>{
   const approvedFront=['weapon-designed-metallic-recuperatore-termobalistico',
    'weapon-designed-metallic-ganasce-magnetiche','weapon-designed-metallic-collassatore-lega',
    'weapon-designed-metallic-frantumatore-induzione','weapon-designed-metallic-perforatore-cascata',
-   'weapon-designed-metallic-artiglieria-schegge','weapon-designed-ionic-nucleo-folgore','weapon-designed-ionic-sonda-ionica','weapon-designed-ionic-martello-tuono','weapon-designed-ionic-lancia-comando-ionico'].includes(c.id)?
+   'weapon-designed-metallic-artiglieria-schegge','weapon-designed-ionic-nucleo-folgore','weapon-designed-ionic-sonda-ionica','weapon-designed-ionic-martello-tuono','weapon-designed-ionic-lancia-comando-ionico','weapon-designed-ionic-condensatore-tempesta'].includes(c.id)?
    '/assets/fleet-weapon-fronts/'+c.id+'.png':null;
   assert.equal(cardFacePath(c.id),approvedFront);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(describeEffect(c),c.effectProposed,c.id);

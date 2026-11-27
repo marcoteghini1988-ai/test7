@@ -1,0 +1,32 @@
+{
+  "approvalDate": "2026-11-27",
+  "approvalQuote": "confermo",
+  "artworkRegenerated": false,
+  "defaultLocale": "en",
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-text-base.png",
+      "sha256": "6ed152eb38e25dc35980a713192b1695336860f6fb18460af539473954d1da5e",
+      "bytes": 23305510,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "approvedFrontSha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959",
+      "artworkRegenerated": false
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.png",
+      "sha256": "c346de611be88c56618ecee1ba1e811287c9ce82b7c2524ac81e1cf62c7255ba",
+      "bytes": 25719009,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "approvedFrontSha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
+      "artworkRegenerated": false
+    }
+  ]
+}

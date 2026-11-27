@@ -1,7 +1,7 @@
 {
   "directionApproved": true,
-  "cardVisualApproval": false,
-  "inGame": false,
+  "cardVisualApproval": true,
+  "inGame": true,
   "actualBattleRecording": false,
   "files": [
     {
@@ -53,5 +53,7 @@
       "bytes": 2302780,
       "sha256": "6c971ef09e361e19635f62761b6a27335648445205feeb87ba9d6e94f7957dc8"
     }
-  ]
+  ],
+  "approvalQuote": "confermo",
+  "artworkRegenerated": false
 }

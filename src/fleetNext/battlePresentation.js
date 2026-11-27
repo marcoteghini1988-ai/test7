@@ -1,6 +1,7 @@
 import {card,cardRole} from './rules.js';
 import {isTrapCard} from './simpleEffects.js';
 import {supportWeaponCharge,arsenalBonus} from './newCardEffects.js';
+import {stormCapacitorNominal,withFinalStormNominal} from './stormCapacitorNominals.js';
 import {hasBalancedMother} from './confirmedCardBalance.js';
 import {CAMPAIGN_SHIP_ORDER} from './progression.js';
 
@@ -93,8 +94,8 @@ function designedWeaponPreview(side,machine,ply){
   Math.round(Math.max(0,(side.weaponObservedHpLoss||0)-(machine.observedHpLoss||0))*profile.damageConversionPercent/100));
  if(profile.pattern==='growing-thunder-core')nominal=machine.chargeBroken?profile.baseDamage:
   profile.damageStages[stage]??profile.baseDamage;
- if(profile.pattern==='storm-capacitor')nominal=profile.baseDamage+
-  (side.escorts||[]).filter(e=>e.hp>0&&!e.destroyed).length*profile.perSupportDamage;
+ if(profile.pattern==='storm-capacitor')return {nominalDamage:arsenalBonus(side,withFinalStormNominal(machine),ply,
+  stormCapacitorNominal(side,machine,(side.escorts||[]).filter(e=>e.hp>0&&!e.destroyed).length))};
  if(['energy-tier','energy-fan'].includes(profile.pattern))nominal=profile.damages?.[tier];
  if(profile.pattern==='character-health')nominal=profile.damages?.[0];
  const commander=card(side.commander?.id);

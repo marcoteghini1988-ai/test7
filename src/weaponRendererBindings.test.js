@@ -15,7 +15,7 @@ test('Live weapon renderers contain no unbound identifiers',()=>{
   'coreThunderAudio.js','coreThunderBattleVisuals.js','coreThunderSpec.js','CardTextLayer.jsx',
   'cardTextPresentation.js','cardTextLocale.js','cardTextDom.js','cardTextAssets.js',
   'probeHammerSpec.js','probeHammerRenderer.js','probeHammerAudio.js','probeHammerMarks.js',
-  'ProbeHammerMarks.jsx','probeHammerCardText.js','commandLanceSpec.js','commandLanceRenderer.js','commandLanceAudio.js','commandLanceCardText.js'].map(p=>'src/'+p);
+  'ProbeHammerMarks.jsx','probeHammerCardText.js','commandLanceSpec.js','commandLanceRenderer.js','commandLanceAudio.js','commandLanceCardText.js','stormCapacitorSpec.js','stormCapacitorRenderer.js','stormCapacitorAudio.js','stormCapacitorCardText.js'].map(p=>'src/'+p);
  const program=ts.createProgram(files,{allowJs:true,checkJs:true,noEmit:true,skipLibCheck:true,
   target:ts.ScriptTarget.ES2023,module:ts.ModuleKind.ESNext,moduleResolution:ts.ModuleResolutionKind.Bundler,
   jsx:ts.JsxEmit.ReactJSX,lib:['lib.es2023.d.ts','lib.dom.d.ts'],allowSyntheticDefaultImports:true});

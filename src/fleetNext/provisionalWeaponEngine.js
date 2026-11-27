@@ -2,6 +2,7 @@
 // Usa i medesimi controlli di Difese, Terreni, copertura e limiti della nave madre.
 import {hologramCombatEscorts} from './nextHolographicWeapons.js';
 import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
+import {stormCapacitorNominal,withFinalStormNominal} from './stormCapacitorNominals.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
 import {weaponFiresOnOwnTurn,consumeMortarEnergy,mortarAmmunition} from './confirmedAdvancedWeaponMechanics.js';
 
@@ -96,7 +97,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const target=hit.target||ordinary();
   if(!target||target.kind==='escort'&&!physical(target.unit))return 0;
   const nominal=Math.max(1,Math.round(hit.base||0));
-  const power=h.arsenalBonus(side,m,b.ply,nominal);
+  const power=h.arsenalBonus(side,hit.finalNominal?withFinalStormNominal(m):m,b.ply,nominal);
   const old=ctx.attackElement,priorPiercing=ctx.iceNeedlePiercing||false;
   ctx.attackElement=m.weaponElementId;
   if(hit.ignoreOrdinaryDefenses)ctx.iceNeedlePiercing=true;
@@ -248,7 +249,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
     const supports=(side.escorts||[]).filter(physical);
     stormFeedback={energySpent:p.energyCost,energyContributions:contributors,
      contributingSupportIds:supports.map(unit=>unit.id),supportCount:supports.length};
-    planned=[{base:p.baseDamage+supports.length*p.perSupportDamage}];
+    planned=[{base:stormCapacitorNominal(side,m,supports.length),finalNominal:true}];
    }
   }else if(pattern==='wind-cycloreactor'){
    planned=every().map(target=>({target,base:p.damageStages[stage-1],

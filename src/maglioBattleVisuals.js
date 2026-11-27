@@ -8,6 +8,7 @@ import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisio
 import {ionicWeaponEffectProfile} from './ionicWeaponBattleVisuals.js';
 import {probeHammerEffectProfile,probeHammerVariant,PROBE_HAMMER_TIMING} from './probeHammerSpec.js';
 import {commandLanceEffectProfile,commandLanceVariant} from './commandLanceSpec.js';
+import {stormCapacitorEffectProfile,stormCapacitorVariant} from './stormCapacitorSpec.js';
 import {coreThunderEffectProfile} from './coreThunderBattleVisuals.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
@@ -63,7 +64,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot),...probeHammerEffectProfile(id,shot),...commandLanceEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot),...probeHammerEffectProfile(id,shot),...commandLanceEffectProfile(id),...stormCapacitorEffectProfile(id)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -109,6 +110,11 @@ export function fleetWeaponShots(events=[]){
    let groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
    const pair=probeHammerVariant(event.cardId),lance=commandLanceVariant(event.cardId),preceding=shots.filter(s=>pair||lance||probeHammerVariant(s.cardId)||commandLanceVariant(s.cardId));
    if(preceding.length)groupStart=Math.max(groupStart,...preceding.map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||470)+(s.projectileHits?.at(-1)?.delayMs||0)+PROBE_HAMMER_TIMING.betweenActivations));
+   const storm=stormCapacitorVariant(event.cardId),stormPreceding=shots.filter(s=>storm||stormCapacitorVariant(s.cardId));
+   if(stormPreceding.length)groupStart=Math.max(groupStart,...stormPreceding.map(s=>{
+    const p=weaponEffectProfile(s.cardId,s),next=weaponEffectProfile(event.cardId);
+    return (s.delayMs||0)+p.flightMs+p.impactMs+(next.chargeMs||0)+150;
+   }));
    if(event.jawCombo){
     const arrivals=shots.filter(s=>s.who===event.who&&event.jawMachineIds?.includes(s.machineId))
      .map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||1450));

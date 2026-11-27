@@ -968,6 +968,38 @@
       ],
       "artworkRegenerated": false,
       "sourceApprovalLibraryFileId": "libfile_e65573405e9881918b4892fb20dcb8fa"
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "familyId": "weapon-designed-ionic-condensatore-tempesta",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "storm-capacitor-cloud",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta.png",
+      "sha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959",
+      "bytes": 23545710,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "artworkRegenerated": false,
+      "sourceApprovalLibraryFileId": "libfile_bb96158c9c4c8191bdf1465a569ec04e"
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "familyId": "weapon-designed-ionic-condensatore-tempesta",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "storm-capacitor-cloud",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l.png",
+      "sha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
+      "bytes": 25955489,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "artworkRegenerated": false,
+      "sourceApprovalLibraryFileId": "libfile_bbcd41ffaee881918b9388100ceeaf95"
     }
   ],
   "rulesConfirmed": {
@@ -1002,6 +1034,17 @@
       "ownTurns": 1,
       "shots": 1,
       "dedicatedEnergyCost": 0,
+      "defaultLocale": "en",
+      "artworkRegenerated": false
+    },
+    "stormCapacitor": {
+      "visualApprovalReceived": true,
+      "ownTurns": 3,
+      "freshEnergyCost": 1,
+      "livingSupportsOnly": true,
+      "allyHpSacrifice": false,
+      "oneCloudPerActivation": true,
+      "skipDoesNotBreakFutureTurns": true,
       "defaultLocale": "en",
       "artworkRegenerated": false
     }

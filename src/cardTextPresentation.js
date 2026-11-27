@@ -9,6 +9,9 @@ import {probeHammerVariant} from './probeHammerSpec.js';
 import {cardWords,textFields} from './probeHammerCardText.js';
 import {commandLanceVariant} from './commandLanceSpec.js';
 import {cardWords as lanceWords,textFields as lanceFields} from './commandLanceCardText.js';
+import {stormCapacitorVariant} from './stormCapacitorSpec.js';
+import {cardWords as stormWords,textFields as stormFields,stormCardTextSvg} from './stormCapacitorCardText.js';
+const stormCard=id=>{const v=stormCapacitorVariant(id),p=WEAPON_NEAR_FINAL_BY_ID[id]?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.perSupportDamage};};
 const dictionaries={en,it};
 const probeCard=id=>{const v=probeHammerVariant(id),c=WEAPON_NEAR_FINAL_BY_ID[id],p=c?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.comboBonusDamage||0};};
 const lanceCard=id=>{const v=commandLanceVariant(id),p=WEAPON_NEAR_FINAL_BY_ID[id]?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.characterBonusDamage};};
@@ -16,6 +19,7 @@ const format=(text,values)=>text.replace(/\{(\w+)\}/g,(_,key)=>String(values[key
 export function localizedCardText(definition,locale=getCardTextLocale()){
  if(!definition)return null;
  const dictionary=dictionaries[normalizeCardTextLocale(locale)];
+ if(stormCapacitorVariant(definition.id)){const w=stormWords(stormCard(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(commandLanceVariant(definition.id)){const w=lanceWords(lanceCard(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(probeHammerVariant(definition.id)){const c=probeCard(definition.id),w=cardWords(c,normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(hasCardTextLayer(definition.id)){
@@ -34,6 +38,7 @@ export const cardTextName=definition=>localizedCardText(definition)?.name||defin
 export const cardTextDescription=(definition,fallback)=>localizedCardText(definition)?.description||fallback;
 export function cardTextFields(id,locale=getCardTextLocale()){
  if(!hasCardTextLayer(id))return null;
+ if(stormCapacitorVariant(id))return stormFields(stormCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(commandLanceVariant(id))return lanceFields(lanceCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(probeHammerVariant(id))return textFields(probeCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  const d=dictionaries[normalizeCardTextLocale(locale)],c=WEAPON_NEAR_FINAL_BY_ID[id],p=c.effectSpec.weaponProfile;
@@ -55,6 +60,7 @@ export function cardTextFields(id,locale=getCardTextLocale()){
 const colors={Comune:['#e5edf1','#a9b9c4','#d0dce2'],Rara:['#fff0d6','#d38c5b','#f3c393'],Epica:['#ffffff','#8799a9','#e4edf4'],Leggendaria:['#ffffff','#74dafa','#d99ff3']};
 const xml=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 export function cardTextSvgContents(id,locale=getCardTextLocale(),unique='card'){
+ if(stormCapacitorVariant(id))return stormCardTextSvg(stormCard(id),normalizeCardTextLocale(locale),unique).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
  const fields=cardTextFields(id,locale);if(!fields)return '';
  const c=WEAPON_NEAR_FINAL_BY_ID[id],p=colors[c.rarita],prism=c.rarita==='Leggendaria';
  const prefix='card-text-'+unique.replace(/[^a-zA-Z0-9_-]/g,''),gradient=prefix+'-material',shadow=prefix+'-shadow',clip=prefix+'-clip';

@@ -1,5 +1,6 @@
 import {playMetalWeaponSound} from './metalWeaponSounds.js';
 import {playProbeHammerSound} from './probeHammerAudio.js';
+import {playStormCapacitorSound} from './stormCapacitorAudio.js';
 import {playCommandLanceSound} from './commandLanceAudio.js';
 import {playCoreThunderSound} from './coreThunderAudio.js';
 // 2.0 MOTORE AUDIO SINTETICO PROCEDURALE AVANZATO (WEB AUDIO API & SYNTHWAVE)
@@ -444,6 +445,7 @@ const playSound = (type, pitchSemitones = 0, pan = 0, level = 1, timeScale = 1) 
     const pitchFactor = Math.pow(2, (Number(pitchSemitones) || 0) / 12);
     const applyPitch = (freq) => freq * pitchFactor;
 
+    if(playStormCapacitorSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan,level,timeScale))return;
     if(playCommandLanceSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan,level,timeScale))return;
     if(playProbeHammerSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan,level,timeScale))return;
     if(playCoreThunderSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan,level,timeScale))return;

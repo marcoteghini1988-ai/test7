@@ -9,6 +9,7 @@ import {stormAudioCues} from './stormCapacitorAudio.js';
 import {textFields} from './stormCapacitorCardText.js';
 import {createMaglioReviewBattle} from '../scripts/maglioReviewBattle.js';
 import {resolvePreparedFleetTurn} from './fleetNext/combat.js';
+import {stormCapacitorNominal} from './fleetNext/stormCapacitorNominals.js';
 import {stormFormation} from '../scripts/previews/condensatore-tempesta-20261127/visuals.mjs';
 test('Storm: destroying the first support preserves the second support position and the arrival point',()=>{
  const side={ships:[{id:'mother',hp:100}],escorts:[{id:'first',hp:0,destroyed:true},{id:'second',hp:100,destroyed:false}]};
@@ -29,7 +30,7 @@ test('Storm: only physically living allied supports contribute; no HP is sacrifi
    for(const before of f.initial.sides.A.escorts)assert.equal(f.battle.sides.A.escorts.find(e=>e.id===before.id).hp,before.hp);
    assert.equal(f.battle.sides.A.ships[0].hp,f.initial.sides.A.ships[0].hp);
    const m=f.battle.sides.A.machines.find(m=>m.sourceCardId===s.cardId);
-   assert.equal(f.event.impacts[0].nominalDamage,m.weaponProfile.baseDamage+supportCount*m.weaponProfile.perSupportDamage);
+   assert.equal(f.event.impacts[0].nominalDamage,stormCapacitorNominal(f.battle.sides.A,m,supportCount));
   }
  }
 });
@@ -53,10 +54,10 @@ test('Storm: Defense produces one shield contact, zero damage and zero damage re
  const blocked=stormSequence({mode:'disabled'});assert.ok(blocked.frames.every(f=>stormFramePlan(f,blocked.rarity,blocked.who).hits.length===0));
  assert.ok(blocked.frames.every(f=>f.plan.energySpent===1),'Preserve the current engine: a disabled attempt still spends its charge.');
 });
-test('Storm: localized card fields use official print candidates; previews never replace the 50 approved fronts',()=>{
+test('Storm: localized card fields use official print candidates; the two approved fronts are now promoted without changing the other 50',()=>{
  const cards=previewCards();assert.deepEqual(cards.map(c=>[c.rarity,c.damage,c.bonus]),[['Epica',31,14],['Leggendaria',43,19]]);
  for(const c of cards)for(const l of ['en','it']){const fields=textFields(c,l);assert.equal(fields.length,18);assert.ok(fields.every(f=>f.size>30&&f.advance*f.size+f.spacing*(f.text.length-1)+f.stroke*2<=f.maxWidth+.001));}
- const live=JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json'));assert.equal(live.cards.length,50);assert.ok(!live.cards.some(c=>c.id.startsWith(STORM_CAPACITOR_FAMILY)));
+ const live=JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json'));assert.equal(live.cards.length,52);assert.equal(live.cards.filter(c=>c.id.startsWith(STORM_CAPACITOR_FAMILY)).length,2);
 });
 test('Storm: finite cloud rendering balances Canvas state; audio and haptics contain exactly the actual contacts',()=>{
  let depth=0,count=0;const gradient={addColorStop(){}};

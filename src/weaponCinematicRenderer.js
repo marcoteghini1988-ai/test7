@@ -3,6 +3,8 @@ import {drawScenicPreparation,drawScenicFlight,drawScenicContact} from './coreTh
 import {isProbeHammerKind,probeHammerVisualHit} from './probeHammerSpec.js';
 import {drawProbeHammerProjectile,drawProbeHammerContact} from './probeHammerRenderer.js';
 import {COMMAND_LANCE_KIND,commandLanceVisualHit} from './commandLanceSpec.js';
+import {STORM_CAPACITOR_KIND,stormVisualHit} from './stormCapacitorSpec.js';
+import {drawStormCloud,drawStormContact} from './stormCapacitorRenderer.js';
 import {drawCommandLanceProjectile,drawCommandLanceContact} from './commandLanceRenderer.js';
 import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import {Vector3} from 'three';
@@ -602,6 +604,12 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 }
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
+ if(p.kind===STORM_CAPACITOR_KIND){
+  const h=stormVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs;
+  if(ms<0){drawStormCloud(air,h,elapsed,e.to,{reduced});return;}
+  if(reduced&&ms>=250)return;
+  drawStormContact(air,h,reduced?80:ms,weaponHullContactPoint(e.to,contactPose||{x:0,y:0,lift:0}),{reduced});return;
+ }
  if(p.kind===COMMAND_LANCE_KIND){
   const h=commandLanceVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs;
   if(ms<0){if(!reduced)drawCommandLanceProjectile(air,h,elapsed,e.to);return;}

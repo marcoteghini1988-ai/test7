@@ -9,22 +9,25 @@ Lo Stratega di flotta, Personaggio generico n.11 nella revisione del 27/11, è L
 Stato: specifica salvata, non modifica né certifica il motore o il collaudo. Priorità fra azioni equivalenti e tempi esatti di animazione da definire in implementazione.
 
 
-## Carte Arma — Condensatore della Tempesta, due fronti da approvare
+## Carte Arma — Condensatore della Tempesta, due fronti approvati il 27/11
 
-L'utente ha approvato con «procediamo» la direzione della nube temporalesca
-per Epica e Leggendaria. Sono creati i due fronti 3072×4608, le basi senza
-testo e i livelli EN/IT; video con audio di 32,9 secondi e pagina con 12
-casi del motore. Sono anteprime, non nuovi fronti giocabili: il registro
-resta di 50 varianti e il collaudo StackBlitz di questa famiglia è pendente.
-Leggere `docs/FULMINE_09_CONDENSATORE_TEMPESTA_2026-11-27.md` prima della
-promozione: consumo reale Energia, supporti vivi, salto/ripresa, scadenza,
-difese e arrotondamenti tra valori di stampa e profili legacy. Il motore
-ha ricevuto solo metadati per la presentazione; danni e costi invariati.
-30 test mirati, build e preflight passati. Prima dell'inserimento mostrare
-e ottenere la conferma dei due fronti; poi promuovere esattamente quei PNG,
-collegare renderer/audio/aptica e collaudare la partita sulla copia esistente.
-La direzione dell'effetto è già approvata. La vibrazione fisica resta da
-verificare su telefono. La prossima famiglia sarà Giudizio Temporale.
+L'utente ha confermato «confermo» dopo i due fronti completi Epica e
+Leggendaria e il video dello studio. Fronte e direzione della nube sono
+approvati: nessuna nuova conferma e nessuna rigenerazione. I quattro PNG
+(fronti EN e basi senza testo) sono conservati byte per byte in
+`asset-sources/weapon-fronts/condensatore-tempesta-2026-11-27` e ripristinati
+con verifica delle parti, SHA-256, dimensioni e RGBA. Registro: 52 varianti,
+22 Metallo e 30 Fulmine. Partita e studio condividono nube, contatto,
+contraccolpo, suoni e aptica; la Leggendaria intreccia tre correnti nella
+stessa nube, senza aggiungere attacchi. Energia spesa e supporti vivi sono
+segnalati solo dagli eventi reali. Nominali allineati ai fronti per questa
+famiglia: Epica 31 +14/supporto, Leggendaria 43 +19/supporto; il fattore di
+rarità non viene applicato due volte. Le altre Armi restano invariate.
+Leggere `docs/FULMINE_09_CONDENSATORE_TEMPESTA_2026-11-27.md`.
+Il collaudo della partita StackBlitz è ancora da completare e registrare;
+non confondere il video dello studio con una cattura della partita.
+La vibrazione fisica resta da verificare su telefono. La prossima famiglia
+sarà Giudizio Temporale, da leggere prima di proporne la direzione.
 
 ## Carte Arma — Lancia del Comando Ionico, direzione approvata il 27/11
 

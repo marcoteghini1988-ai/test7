@@ -1,3 +1,10 @@
+> Aggiornamento: due fronti e direzione confermati con «confermo» il
+> 27/11/2026 e inserimento autorizzato. Registro attuale: 52 varianti. I
+> moduli condivisi sono collegati alla partita; gli stessi quattro PNG
+> sono conservati nell'archivio di ripristino. Le attese di approvazione
+> nelle note di preparazione sotto sono storiche. Il video dello studio
+> rimane distinto dal successivo collaudo della partita.
+
 # Stellar Storm Capacitor Cannon — anteprime del 27 novembre 2026
 
 Direzione della nube approvata con «procediamo». Epica e Leggendaria sono

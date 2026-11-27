@@ -1,6 +1,7 @@
 // Coreografia di presentazione: nessun evento HP viene creato qui.
 // Ogni riga corrisponde a una variante già approvata e a una dinamica diversa.
 const motifs=Object.freeze({
+ 'storm-capacitor-cloud':[null,null,'single-volumetric-thundercloud','three-interwoven-cloud-currents'],
  'ionic-command-lance':[null,'bronze-command-electric-lance','silver-command-electric-lance','prismatic-command-electric-lance'],
  'ionic-probe':Array(4).fill('precision-impulse-reticle'),
  'thunder-hammer':[null,'bronze-crescent-cross-slash','silver-crescent-cross-slash','prismatic-crescent-cross-slash'],
@@ -19,6 +20,7 @@ const motifs=Object.freeze({
  'wandering-shrapnel':[null,'indexed-fragment','recoil-splinter','prismatic-fracture']
 });
 const weights=Object.freeze({
+ 'storm-capacitor-cloud':1,
  'ionic-command-lance':.55,
  'ionic-probe':.35,'thunder-hammer':1,
  'growing-thunder-core':1,

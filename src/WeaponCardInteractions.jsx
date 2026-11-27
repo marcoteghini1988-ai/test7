@@ -5,6 +5,7 @@ import {weaponEffectProfile} from './maglioBattleVisuals.js';
 import './WeaponCardInteractions.css';
 import {cardTextName} from './cardTextPresentation.js';
 import {COMMAND_LANCE_KIND} from './commandLanceSpec.js';
+import {STORM_CAPACITOR_KIND,STORM_TIMING,stormContributionPlan} from './stormCapacitorSpec.js';
 
 export default function WeaponCardInteractions({events,paths,startedAt}){
  const host=useRef(null);
@@ -14,6 +15,14 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
   const schedule=(time,fn)=>timers.push(window.setTimeout(fn,Math.max(0,time-(performance.now()-startedAt))));
   const mark=(element,key,value)=>{if(!element)return;const attr='data-weapon-'+key;if(!restore.has(element))restore.set(element,new Map());const old=restore.get(element);if(!old.has(attr))old.set(attr,element.getAttribute(attr));element.setAttribute(attr,value);};
   const slots=[...root.querySelectorAll('[data-fleet-card-slot]')];
+  for(const p of paths.filter(p=>p.profile.kind===STORM_CAPACITOR_KIND)){
+   const fleet=root.querySelector('[data-fleet-side="'+p.shot.who+'"]');
+   for(const step of stormContributionPlan(p.shot,p.start).filter(s=>s.phase==='support')){
+    const support=[...(fleet?.querySelectorAll('.live-escort[data-combat-id]')||[])].find(el=>el.dataset.combatId===step.id);
+    schedule(step.at,()=>mark(support,'support','storm-capacitor'));
+    schedule(step.at+650,()=>mark(support,'support','idle'));
+   }
+  }
   for(const p of paths.filter(p=>p.profile.kind===COMMAND_LANCE_KIND)){
    const slot=slots.find(s=>s.dataset.fleetCardSlot===p.shot.who+'-0'&&s.dataset.cardId===p.shot.characterCardId);
    const at=Math.max(0,p.start-p.profile.chargeMs);
@@ -26,7 +35,7 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
    const first=matching[0];if(!first)continue;
    if(event.energyContributions?.length){
     const transfer=event.kind==='weapon-cascade',leg=transfer?matching.find(p=>p.shot.cascadeIndex===event.cascadeIndex):first;
-    if(!leg)continue;const at=transfer?leg.start:Math.max(0,first.start-(profile.chargeMs||0));
+    if(!leg)continue;const at=transfer?leg.start:Math.max(0,first.start-(profile.chargeMs||0)+(profile.kind===STORM_CAPACITOR_KIND?STORM_TIMING.energyAt:0));
     const slot=slots.find(s=>s.dataset.fleetCardSlot===event.who+'-5');
     const participating=event.energyContributions.map(c=>c.pileIndex).join(','),cards=event.energyContributions.map(c=>c.cardId).join(',');
     const shown=[];

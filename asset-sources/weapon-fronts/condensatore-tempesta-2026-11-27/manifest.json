@@ -1,0 +1,125 @@
+{
+  "approvalDate": "2026-11-27",
+  "approvalQuote": "confermo",
+  "artworkRegenerated": false,
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta.png",
+      "sha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959",
+      "bytes": 23545710,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta.part-000",
+          "bytes": 8388608,
+          "sha256": "5472d0739e46a9b0547d55b971e4e56d034b53a7a528a6752acaaeda0fe56bc1"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta.part-001",
+          "bytes": 8388608,
+          "sha256": "3f578dcdb10b6f3bd351577925ced72d0c06ad7100bcaad25a67aad98a53212c"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta.part-002",
+          "bytes": 6768494,
+          "sha256": "b0f1288948ad5e32bb3020dda5f2aece6e7a0f6c3744663304863f586d58f0ef"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-text-base.png",
+      "sha256": "6ed152eb38e25dc35980a713192b1695336860f6fb18460af539473954d1da5e",
+      "bytes": 23305510,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-text-base.part-000",
+          "bytes": 8388608,
+          "sha256": "5524536cd8b933a15686a2b5a982431f92f4a79248358c371d3700709cb19ebb"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-text-base.part-001",
+          "bytes": 8388608,
+          "sha256": "bb096569d861074b8ad99933c401d2de27fae959d7522dbd26a4628349198547"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-text-base.part-002",
+          "bytes": 6528294,
+          "sha256": "8712f70d4da8213af30f844493f99bfe5a08e9972e6def5995169a5263ec7ee6"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l.png",
+      "sha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
+      "bytes": 25955489,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l.part-000",
+          "bytes": 8388608,
+          "sha256": "f90ede09b325a2ef8c1b484722e706c9e44007bd45ded55bb0e0751dead24877"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l.part-001",
+          "bytes": 8388608,
+          "sha256": "2dadae42c1a691c7a6c4eed633d641dd3bf8e6e59311e591d476c5f65cda1d55"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l.part-002",
+          "bytes": 8388608,
+          "sha256": "d2dcb15a094245a8d919a9f7dd037d08f38e2c7f32d06e1d35838f65bfa983f6"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l.part-003",
+          "bytes": 789665,
+          "sha256": "605d7bcbec43265c68e886044fac8cdfd626b33629d3379e7909613e679942eb"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.png",
+      "sha256": "c346de611be88c56618ecee1ba1e811287c9ce82b7c2524ac81e1cf62c7255ba",
+      "bytes": 25719009,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.part-000",
+          "bytes": 8388608,
+          "sha256": "4379b1b8876e3c3439c60a986d83cbed7635bddeecab6753607bf7b2d6772ccd"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.part-001",
+          "bytes": 8388608,
+          "sha256": "0f278c8706951d9f8bec5c6010bfa9fb8880c83be5419334d4f084ea5dd8f89c"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.part-002",
+          "bytes": 8388608,
+          "sha256": "47555c021616b53372e1f36f359c50f2917ce492d3825e0921450a8f78ea9cfc"
+        },
+        {
+          "name": "weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.part-003",
+          "bytes": 553185,
+          "sha256": "baa56f7ec98959fa802f6cc9a9f0cbf2aa8562a886911e060145cc572a237386"
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,7 @@ import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import {probeHammerVariant} from './src/probeHammerSpec.js';
 import {commandLanceVariant} from './src/commandLanceSpec.js';
+import {stormCapacitorVariant} from './src/stormCapacitorSpec.js';
 import {CORE_FAMILY} from './src/coreThunderSpec.js';
 import {useCardTextLocale} from './src/CardTextLayer.jsx';
 import {setCardTextLocale} from './src/cardTextLocale.js';
@@ -90,7 +91,7 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0,probeHammerMode:'single'})}>
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0,probeHammerMode:'single',stormMode:'fed'})}>
     {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{cardTextName(WEAPON_NEAR_FINAL_BY_ID[id])+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
@@ -131,6 +132,20 @@ function Review(){
      <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
      <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
+   </>}
+   {stormCapacitorVariant(setup.cardId)&&<>
+    <span>Una nube · nuova Energia Fulmine ogni turno · supporti senza sacrificio HP</span>
+    <label>Scenario Tempesta <select aria-label="Scenario Tempesta" value={setup.stormMode||'fed'} onChange={e=>reset({stormMode:e.target.value,blocked:false,withDefense:false})}>
+     <option value="fed">Energia nuova ogni turno</option><option value="skip-middle">Salta la seconda alimentazione</option>
+     <option value="missing">Nessuna Energia</option><option value="old-only">Solo Energie vecchie</option>
+     <option value="defense">Difesa bloccante</option><option value="disabled">Arma disabilitata</option>
+    </select></label>
+    <label>Turno Tempesta <select aria-label="Turno Tempesta" value={setup.ownStage||1} onChange={e=>reset({ownStage:Number(e.target.value),blocked:false})}>
+     {[1,2,3,4].map(n=><option key={n} value={n}>{n===4?'4 — scaduta':n}</option>)}
+    </select></label>
+    <label>Supporti Tempesta <select aria-label="Supporti Tempesta" value={setup.supports?(setup.supportCount??2):0} onChange={e=>reset({supportCount:Number(e.target.value),supports:Number(e.target.value)>0,ownStage:1,wounded:false})}>
+     {[0,1,2].map(n=><option key={n} value={n}>{n}</option>)}
+    </select></label>
    </>}
    {commandLanceVariant(setup.cardId)&&<>
     <span>1 Personaggio attivo · 1 lancia · nessun costo Energia</span>

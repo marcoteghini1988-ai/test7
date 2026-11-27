@@ -1,4 +1,4 @@
-# Stellar Storm Capacitor Cannon — due fronti da approvare
+# Stellar Storm Capacitor Cannon — due fronti approvati
 
 L'utente ha approvato la direzione proposta con «procediamo»: richiamo della
 Carta Energia realmente coinvolta, impulso sui supporti vivi contribuenti,
@@ -6,6 +6,32 @@ nube elettrica compatta e volumetrica dal proprio bordo, compressione sul
 vero bersaglio, boato e contraccolpo sincronizzati con l'aptica. Epica e
 Leggendaria mantengono un colpo; la Leggendaria intreccia tre correnti
 all'interno della stessa nube. Nessun attacco autonomo dei supporti.
+
+## Inserimento autorizzato — 27 novembre 2026
+
+«Confermo» approva i due fronti mostrati e il loro inserimento nel solo
+`test7/main`, con l'effetto già approvato e il collaudo in partita. Gli
+stessi quattro PNG (due fronti EN e due basi senza testo) sono promossi
+senza rigenerazione; gli SHA-256 originali sono nel manifest. Registro
+aggiornato a 52 varianti: 22 Metallo e 30 Fulmine. Livelli EN/IT separati.
+
+Il renderer, il contatto sul vero scafo, il contraccolpo e le partiture
+PCM/aptiche riusano i moduli dello studio. La carta Energia realmente
+spesa pulsa prima dei supporti vivi; un supporto non lancia un attacco.
+Le sequenze delle due Armi attendono contatto e rilascio precedenti.
+Suoni e vibrazione sono cancellati se la pagina diventa nascosta.
+
+È risolta la differenza di arrotondamento dei vecchi profili: la famiglia
+Tempesta arrotonda base e bonus separatamente come i fronti approvati,
+poi applica Arsenale, Difesa, affinità e Terreno. I nominali finali non
+ricevono di nuovo il fattore strategico. Gli altri profili rimangono
+invariati. I numeri legacy e i rapporti dello studio sotto restano storia
+della preparazione. Il collaudo StackBlitz dell'inserimento è pendente.
+
+## Archivio della preparazione prima della conferma
+
+Le attese di approvazione e di allineamento numerico nelle sezioni seguenti
+sono storiche, superate dall'inserimento autorizzato sopra.
 
 ## Meccanica verificata prima della grafica
 

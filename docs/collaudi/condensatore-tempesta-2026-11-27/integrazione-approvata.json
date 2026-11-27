@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-27",
+  "approvalQuote": "confermo",
+  "visualApprovalReceived": true,
+  "artworkRegenerated": false,
+  "approvedWeaponVariants": 52,
+  "ionicVariants": 30,
+  "targetedTests": {
+    "passed": 38,
+    "failed": 0
+  },
+  "buildPassed": true,
+  "preflightPassed": true,
+  "fullSuiteStatus": "RUNNING_INITIAL_PASS_TWO_OBSOLETE_EXPECTATIONS_FIXED_AND_38_TARGETED_RETESTS_PASSED",
+  "actualStackblitzBattleVerified": false,
+  "physicalHapticsVerified": false,
+  "nominalDamageByLivingSupports": {
+    "Epica": [
+      31,
+      45,
+      59
+    ],
+    "Leggendaria": [
+      43,
+      62,
+      81
+    ]
+  },
+  "rarityMultiplierAppliedTwice": false,
+  "originalFrontHashesRetained": true,
+  "audioScoreSharedWithStudio": true,
+  "hapticScoreSharedWithStudio": true,
+  "nativePngPublication": "GitHub workflow restores exact versioned parts; check native PNG commit before StackBlitz sync"
+}
