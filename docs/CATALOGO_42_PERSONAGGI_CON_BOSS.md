@@ -272,9 +272,9 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos resta da approvare.
+Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos ha la prima abilità di ricambio a inizio turno confermata; seconda abilità e versione sbloccabile da definire.
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime otto schede, da Gaia all'Idra Criogenica, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; le altre quattro sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime otto schede, da Gaia all'Idra Criogenica, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; il Generatore del Caos è parzialmente confermato e gli altri tre sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
 ### 31. Guardiano di Gaia — Terra · settore 10 · Comune
 
@@ -396,16 +396,15 @@ ID conservato: `boss-character-11`. Meccaniche e durata confermate, dettagli ope
 
 ### 39. Generatore del Caos — Proxima b · settore 90 · Epica
 
+Nave madre: Tempesta (E02).
+
 **Durante lo scontro (permanente):**
-- Alterna in sequenza pubblica un turno di potenziamento Armi, uno di potenziamento Difese e uno di potenziamento Energia.
-- Nella fase attiva una categoria diversa è temporaneamente limitata per il giocatore; ordine e icona annunciati prima della scelta delle carte.
+- Prima abilità, ricambio tattico: All'inizio di ogni proprio turno, il Personaggio può scegliere fino a due carte della propria mano, rimetterle in fondo al proprio mazzo e pescarne altrettante. Le nuove carte sono disponibili per le giocate di quello stesso turno; il limite ordinario di giocate non aumenta.
+- Da precisare l'ordine rispetto alla pesca ordinaria, l'avvio del timer e il caso di mazzo insufficiente. Seconda abilità e versione sbloccabile da definire.
 
-**Dopo lo sblocco (Epica confermata; 3 turni proposti, abilità da approvare):**
-- Prima di risolvere il turno sceglie una modalità di potenziamento: Arma, Difesa o Energia, una modalità differente nei tre turni.
-- Nella modalità Difesa neutralizza una sola volta un sabotaggio.
-- Nella modalità Energia recupera una sola volta una carica virtuale del medesimo elemento effettivamente speso.
+**Dopo lo sblocco:** Epica confermata; abilità e durata da definire. Le vecchie ipotesi di alternanza delle categorie sono archiviate nel registro JSON, non approvate.
 
-ID conservato: `boss-character-14`.
+ID conservato: `boss-character-14`. Specifica parziale, non implementata.
 
 ### 40. Cristallo di Risonanza — Haumea · settore 100 · Leggendaria
 
