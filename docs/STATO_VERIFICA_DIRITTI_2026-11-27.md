@@ -4,6 +4,8 @@
 
 **Aggiornamento nomi:** `E01` **Nefelarca** (ex Nebulosa), `E02` **Vortiluce** (ex Tempesta), `pilot_rare_3` **Mazziere dell'Etere** (ex Il Baro), `pilot_leg_3` **Armiere dei Tre Fronti** (ex Il Fissatore). Anche le etichette delle navi, gli eventi e le carte esclusive collegate sono stati aggiornati; ID, effetti, statistiche e immagini sono conservati. Le ricerche esatte UIBM e di base EUIPO sui quattro nuovi nomi non hanno restituito risultati pubblicabili; non certificano assenza di segni simili o libertà commerciale. I nomi precedenti nelle righe seguenti sono evidenze storiche della verifica.
 
+**Portata nel gioco:** le due navi `E01` e `E02` sono nella battaglia 3D corrente. I due `pilot_*` sono ancora presenti nei menu/cataloghi precedenti dell'app, ma non sono carte Personaggio del catalogo `fleetNext` e il componente della battaglia ufficiale non usa il pilota selezionato. Vedere la [verifica dettagliata](VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md).
+
 ## Evidenze controllate in questo passaggio
 
 | Area | Esito documentato | Cosa resta aperto |

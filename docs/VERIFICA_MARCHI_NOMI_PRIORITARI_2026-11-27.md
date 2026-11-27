@@ -21,6 +21,12 @@ Dopo il mancato caricamento di TMview, ho usato l'altra banca dati ufficiale [EU
 
 I quattro nomi sono stati sostituiti nei cataloghi, nella UI, negli eventi di battaglia e nei testi direttamente dipendenti dalle due navi. ID, statistiche, effetti e immagini non sono stati modificati. I risultati di ricerca **non attestano libertà d'uso**: il messaggio UIBM ammette anche risultati non pubblicabili, la ricerca EUIPO di base non copre ogni marchio nazionale o internazionale e restano da esaminare segni simili, classi, territori e usi commerciali. Le corrispondenze storiche sotto spiegano la decisione di sostituirli, non descrivono i nomi correnti.
 
+### Quali appartengono alla battaglia attuale
+
+`E01` **Nefelarca** e `E02` **Vortiluce** sono due delle dodici navi madri della battaglia ufficiale 3D: il motore `fleetNext/combat.js` le crea e il catalogo corrente ne mostra i nomi e le esclusive. `pilot_rare_3` **Mazziere dell'Etere** e `pilot_leg_3` **Armiere dei Tre Fronti** sono invece record del catalogo piloti precedente (`pilotsSystem.jsx`, `phase16GPilots.js`). L'app continua a richiamare quel catalogo nei menu e nella scelta del pilota, quindi i nomi possono ancora essere visibili. Tuttavia la schermata della battaglia attuale (`App.tsx` → `MathDuelBattle.jsx` → `OfficialFleetBattle3D.jsx`) passa `selectedPilot` al wrapper, mentre il componente finale non lo riceve né lo applica; il catalogo `fleetNext` non contiene questi due ID come carte Personaggio giocabili. **Non sono stati confermati come Personaggi ufficiali del nuovo combattimento.** La decisione futura di mantenerli o rimuoverli dai menu è separata dalla rinomina prudenziale già eseguita.
+
+Per le nuove denominazioni non esiste una garanzia ottenibile inventando parole: [l'EUIPO spiega che un marchio può essere contestato anche se una ricerca non restituisce risultati](https://www.euipo.europa.eu/it/help-centre/tm/faq-search-availability). Una verifica di disponibilità per la pubblicazione richiede almeno il confronto di segni identici e simili, prodotti/servizi e territori pertinenti, idealmente con un professionista prima del lancio.
+
 ## Risultati da interpretare
 
 | Nome interno | Riscontro UIBM osservato | Valutazione e azione |
