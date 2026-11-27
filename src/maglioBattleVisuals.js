@@ -6,6 +6,7 @@ import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
 import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisionWeaponBattleVisuals.js';
 import {ionicWeaponEffectProfile} from './ionicWeaponBattleVisuals.js';
+import {probeHammerEffectProfile,probeHammerVariant,PROBE_HAMMER_TIMING} from './probeHammerSpec.js';
 import {coreThunderEffectProfile} from './coreThunderBattleVisuals.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
@@ -61,7 +62,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot),...probeHammerEffectProfile(id,shot)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -105,6 +106,8 @@ export function fleetWeaponShots(events=[]){
     fires:!event.blocked&&event.actualDamage>0&&!!event.targetKind&&!!event.targetId});
   }else if(['weapon-multi-shot','weapon-designed-shot','weapon-provisional-shot'].includes(event.kind)){
    let groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
+   const pair=probeHammerVariant(event.cardId),preceding=shots.filter(s=>pair||probeHammerVariant(s.cardId));
+   if(preceding.length)groupStart=Math.max(groupStart,...preceding.map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||470)+(s.projectileHits?.at(-1)?.delayMs||0)+PROBE_HAMMER_TIMING.betweenActivations));
    if(event.jawCombo){
     const arrivals=shots.filter(s=>s.who===event.who&&event.jawMachineIds?.includes(s.machineId))
      .map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||1450));
@@ -116,7 +119,7 @@ export function fleetWeaponShots(events=[]){
      events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
     nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,destroyed:!!hit.destroyed,
-    delayMs:event.jawCombo?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
+    delayMs:pair?groupStart+impactIndex*PROBE_HAMMER_TIMING.betweenSlashes:event.jawCombo?groupStart:Math.max(groupStart,shots.length*MAGLIO_SHOT_GAP_MS),
     ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){

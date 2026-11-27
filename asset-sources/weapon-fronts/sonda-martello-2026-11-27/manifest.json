@@ -1,0 +1,449 @@
+{
+  "approvalDate": "2026-11-27",
+  "approvalQuote": "si",
+  "originalBytesPreserved": true,
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica.png",
+      "bytes": 17055979,
+      "sha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica.part-001",
+          "bytes": 6000000,
+          "sha256": "fb0134d2861a579dbad3df4c92405fd1a6cb54639d7b431f885cff3eb4c8f0e3"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica.part-002",
+          "bytes": 6000000,
+          "sha256": "366c12a5256be6027edefe85de47378d423fc04337d47ae8fe618e2175311114"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica.part-003",
+          "bytes": 5055979,
+          "sha256": "fafbb94dacc026310f344d339e34133f7513554439f746be75bbe45c8dc7f12a"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-text-base.png",
+      "bytes": 16887911,
+      "sha256": "e5e49e91b2a6dab3f2119cd6b9092ee087c0c7b3d6077f47b8dcf791e48d0775",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "293ddd65ac92891249217d36d3e9606b16dd5717a0549287b6896758c271737a"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "566072d0add86e1ab58fdad3cd4c795946e568e0230eabcd7dacb977ae10d0cd"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-text-base.part-003",
+          "bytes": 4887911,
+          "sha256": "f87efacffb62aedea242cedfcb77922c53879a78076238727d1032d4bbe059a4"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono.png",
+      "bytes": 19602619,
+      "sha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono.part-001",
+          "bytes": 6000000,
+          "sha256": "71e70b67b82946aef39230a227c6f8cf48cf91ab3df8a5b4c11febaebb1d0bf7"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono.part-002",
+          "bytes": 6000000,
+          "sha256": "80ea965b952f402968d1980a4874686b291dce143e52f0a871f6f8cf58327c41"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono.part-003",
+          "bytes": 6000000,
+          "sha256": "a1eecb49f38cba255b3ab79db39918eb874f1a2b6235ab23607b038607d7ea9f"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono.part-004",
+          "bytes": 1602619,
+          "sha256": "a31f2f5e15384a3cd95fb788ec27d0b9c61a366c3be11cf850282c44ba19fa37"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-text-base.png",
+      "bytes": 19445303,
+      "sha256": "ce1bca00f12a3cfcac93275815cf1df6b67a9490e73efbd8577bb0241dbdb752",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "09f40ef35d052ecb9a636147c80122097a5f46da054ea88c72dc04fb160817a0"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "95d91dd7db6ccc886cdb5c59e2dc2d66f094ddc570fe7a794f1d3df2c0a23e1d"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-text-base.part-003",
+          "bytes": 6000000,
+          "sha256": "e469b51564b98ac4b71f210bb8be8661477074af0571183bf92869fbd4e07a0b"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-text-base.part-004",
+          "bytes": 1445303,
+          "sha256": "1d16142cf3a4c433597ec4e6853c8c5f8e50e1eeaa9906d1c46c2827ece9857c"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-r.png",
+      "bytes": 17862873,
+      "sha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r.part-001",
+          "bytes": 6000000,
+          "sha256": "67854c583b197e193a3d3e599e4f0b8eb4f476204fd6831e811456c44622f866"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r.part-002",
+          "bytes": 6000000,
+          "sha256": "20e875fcaca6e0c9d84fb875941f3fe2d287a138bd637c27f66f20d3e8bf9a39"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r.part-003",
+          "bytes": 5862873,
+          "sha256": "718f2d3a8d4e0e0aec1bac50f53c97ed9a667b45212a303ea93d4a8afe75f561"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-r-text-base.png",
+      "bytes": 17703961,
+      "sha256": "e2bc0db6cb05aede246e54bccb128bf83fca71cf3652f294ab90bf239feb838e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "680e13c8e4d6dd7fd90828ad284fec88f66104458bf84c2c9c0c04e4ff11b33b"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "e598078444e5b1f30412a90b853c7cef0755c3a23430e55cb6462eda9d17856f"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-r-text-base.part-003",
+          "bytes": 5703961,
+          "sha256": "4cf25a06505a4f8a2e1392e15ba2d4fd1f2c3d65134658f3af2c263ed24684df"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-e.png",
+      "bytes": 18711450,
+      "sha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e.part-001",
+          "bytes": 6000000,
+          "sha256": "bfbb7635037ac67715f3721ffad8adc859cfaf00a55904c318efa9b140e69562"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e.part-002",
+          "bytes": 6000000,
+          "sha256": "6c4465337d83c3a297b0518228155df392881a2567efbbaebef5ee9daea576a9"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e.part-003",
+          "bytes": 6000000,
+          "sha256": "2a58d1b11a995508d77f8fe708e21cbe24b7db294838ed1c9899458cd9ebe4eb"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e.part-004",
+          "bytes": 711450,
+          "sha256": "80b496108b3d691b4f91f957ae4d941f97000877b7a9afcc124f17cd1614f27b"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-e-text-base.png",
+      "bytes": 18530630,
+      "sha256": "4625fc5ee82ce93fc2a6153d44ba468ca0e844e607e4c9eff40eb0ed19a46722",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "b0b23b94b1634dd5230a7ebf795abb42888ee8fb049d59ad36adfef390c1ce73"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "5af8eca87f4e1b6315556b5da0837eefd882be4f200989b80c85874b59fa1d99"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e-text-base.part-003",
+          "bytes": 6000000,
+          "sha256": "65d1914756cd74fe96ac9c9eb55521acf66eb3630fe9748889b691621670d667"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-e-text-base.part-004",
+          "bytes": 530630,
+          "sha256": "24a1100124ebb938d67c2ccfc345d49ec2dcd889ead1822a73211d873bf2d387"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-l.png",
+      "bytes": 21464067,
+      "sha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l.part-001",
+          "bytes": 6000000,
+          "sha256": "4022e8760e8926564a9b8b41ea2043502f11a2ef1de3c18daeee83e533187040"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l.part-002",
+          "bytes": 6000000,
+          "sha256": "953806930c6cd0c23560e11dde0fb7b0b8b94853a380d6c35b90018b51450440"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l.part-003",
+          "bytes": 6000000,
+          "sha256": "ccaf3f513dafacb5c18c1464222e6c0496f2b95e53d9863978cacdaee66f14a2"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l.part-004",
+          "bytes": 3464067,
+          "sha256": "0dfee4c589b1a542464a73f72b9303fd975a66ec0a1a4650f43f5286b4fcef2b"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-l-text-base.png",
+      "bytes": 21291076,
+      "sha256": "826aa50f38401a7df4d2846d54d44ced82b8b1e8b6d411016548372718428e55",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "6704c276672d528fd0383eeea1b2909e41eec331873cc91be20221adb38ec196"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "1524e706cf1994619fb34f76a284370d367c24956001aacebab647d927fb24e1"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l-text-base.part-003",
+          "bytes": 6000000,
+          "sha256": "03bf64a44e8248528f072288cb849f93a3b1045b327736c279574375ef55e781"
+        },
+        {
+          "name": "weapon-designed-ionic-sonda-ionica-rarity-l-text-base.part-004",
+          "bytes": 3291076,
+          "sha256": "b27c11fe68eaaef949fa5e1e94f4710c3f4ba62bed7ac4efc31f77c68c4a6ecb"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-e.png",
+      "bytes": 20626173,
+      "sha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e.part-001",
+          "bytes": 6000000,
+          "sha256": "fa456827e454585564471c5cecc9a70722758296aecb32ac365f0d4820c8f982"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e.part-002",
+          "bytes": 6000000,
+          "sha256": "4d733f2802b9be7f2f0797f7389bc530b870bf3f684d0449aa96afcef287f9dd"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e.part-003",
+          "bytes": 6000000,
+          "sha256": "8f6610be1153e8785395de7c8e59093fad66d3dfc09cf194c8cacc246c61f6a2"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e.part-004",
+          "bytes": 2626173,
+          "sha256": "3760ecf7ab2c6cb08b10f40a4d9fe8252ffacf65a9db013eba443ffb2a184bdf"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-e-text-base.png",
+      "bytes": 20445792,
+      "sha256": "49d7225d19a453d6e5414ebfdd6d10a83b5d70957a61f49b228b8d30909d47a8",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "8af4996bc5a428343d6ff5103a82365743d3cabcd72acecb674f8f42dd5f0bbe"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "97f43513993b81e890c85c333a48a0b5c04dc2608a63cd3b7b6c21d159d7d201"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e-text-base.part-003",
+          "bytes": 6000000,
+          "sha256": "51dc9e12ce7dde92ffa27f7d9d9b4d7a184f4eef79c6512bc5c292c53667be2f"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-e-text-base.part-004",
+          "bytes": 2445792,
+          "sha256": "3749dc7abe8a0ea6060c6aee41a5b7d1378a635386ed99ba2ee4f0095ce9a527"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "role": "approved-front",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-l.png",
+      "bytes": 23010203,
+      "sha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l.part-001",
+          "bytes": 6000000,
+          "sha256": "27865a2d88a5d1cbe55967e1feb741f47f7e94c00dfbbff38b6e383881e97949"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l.part-002",
+          "bytes": 6000000,
+          "sha256": "ba751da9a8467faba0e7e6776458b4e754bf18689e35a8e89b349c2baf193275"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l.part-003",
+          "bytes": 6000000,
+          "sha256": "01af5a062a85a37fc66c762f82f5b4bdfc90bd69354f7755fc5579d70f66beb2"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l.part-004",
+          "bytes": 5010203,
+          "sha256": "d9a5599e6663920548082e048a8b16aa8dba95f9760cac03e954cc3454ddec90"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-l-text-base.png",
+      "bytes": 22833263,
+      "sha256": "a65cc490de6c20bdff4e5bb723d43587692043c4cb815799cdbb12c301fa6daa",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l-text-base.part-001",
+          "bytes": 6000000,
+          "sha256": "988fc8bcfb50d6e22bae9e61b3aa90416fec8e1d95d6513a92863347f649962b"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l-text-base.part-002",
+          "bytes": 6000000,
+          "sha256": "5085743492198e83b26bdd842241cf38c607ec2e085c899262d460b55bcbfafa"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l-text-base.part-003",
+          "bytes": 6000000,
+          "sha256": "7ba9c422f1ddac9bae84ee8a0a7b8cdbeddb35ac9c5e5e9be3f6eb08d442a745"
+        },
+        {
+          "name": "weapon-designed-ionic-martello-tuono-rarity-l-text-base.part-004",
+          "bytes": 4833263,
+          "sha256": "99dc8a0626466faa2d2b20c7ab80f1ca155a0a170b31ded6f9d0b2b007891df1"
+        }
+      ]
+    }
+  ]
+}

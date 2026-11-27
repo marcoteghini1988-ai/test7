@@ -1,8 +1,8 @@
 {
   "choice": "B",
   "directionApproved": true,
-  "cardVisualApproval": false,
-  "inGame": false,
+  "cardVisualApproval": true,
+  "inGame": true,
   "art": {
     "probe-common": {
       "path": "art/probe-common.png",
@@ -52,5 +52,12 @@
     ]
   },
   "storyboard": "direction-b-storyboard.png",
-  "storyboardSha256": "dd8f00ecbacece17dc1ac4b8464a64af6c2870ee1e57dcc3ed8b94f44ce63ace"
+  "storyboardSha256": "dd8f00ecbacece17dc1ac4b8464a64af6c2870ee1e57dcc3ed8b94f44ce63ace",
+  "finalApproval": {
+    "received": true,
+    "date": "2026-11-27",
+    "quote": "si",
+    "scope": "seven complete fronts and direction B, authorized for game insertion"
+  },
+  "promotedArchive": "asset-sources/weapon-fronts/sonda-martello-2026-11-27/manifest.json"
 }

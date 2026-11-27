@@ -1,5 +1,6 @@
 // Ricompone i PNG approvati dalle parti binarie versionate. Nessuna modifica
 // a risoluzione, colori, trasparenza o compressione del file originale.
+import {restoreProbeHammerFronts} from './restore-probe-hammer-fronts.mjs';
 import {readFile,writeFile,mkdir,access,rename} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
@@ -13,6 +14,7 @@ try{remoteAssets||=(await readFile(path.join(root,'.env.local'),'utf8')).match(/
 try{await access(path.join(sources,'manifest.json'));}catch(e){
  if(e.code==='ENOENT'&&/^https:\/\/raw\.githubusercontent\.com\/marcoteghini1988-ai\/test7\/(?:main|[a-f0-9]{40})\/public\/assets\/?$/.test(remoteAssets)){
   console.log('StackBlitz: PNG HD serviti dal repository Test7; archivio binario locale non necessario.');
+  await restoreProbeHammerFronts({root,remoteAssets});
   process.exit(0);
  }
  throw e;
@@ -79,3 +81,5 @@ for(const card of textManifest.cards){
  await writeFile(temporary,png);await rename(temporary,target);textRestored++;
 }
 console.log('Basi traducibili HD verificate: '+textManifest.cards.length+'; ricomposte: '+textRestored+'.');
+
+await restoreProbeHammerFronts({root,remoteAssets});

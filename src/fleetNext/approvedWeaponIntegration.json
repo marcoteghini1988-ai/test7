@@ -1,5 +1,5 @@
 {
-  "approvalDate": "2026-11-26",
+  "approvalDate": "2026-11-27",
   "sourceCommit": "96d5de471e59beb07e614e4f4e07dcbe9957d42c",
   "visualApprovalReceived": true,
   "deferred": [],
@@ -773,6 +773,153 @@
       "alphaUnchanged": true,
       "protectedTextAndSymbolsUnchanged": true,
       "scenicRevision": 2
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica.png",
+      "sha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9",
+      "bytes": 17055979,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-sonda-ionica",
+      "rarity": "Comune",
+      "elementId": "ionic",
+      "kind": "ionic-probe",
+      "sourceApprovalSha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono.png",
+      "sha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033",
+      "bytes": 19602619,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-martello-tuono",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "thunder-hammer",
+      "sourceApprovalSha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-r.png",
+      "sha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a",
+      "bytes": 17862873,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-sonda-ionica",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-probe",
+      "sourceApprovalSha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-e.png",
+      "sha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3",
+      "bytes": 18711450,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-sonda-ionica",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-probe",
+      "sourceApprovalSha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-l.png",
+      "sha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426",
+      "bytes": 21464067,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-sonda-ionica",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-probe",
+      "sourceApprovalSha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-e.png",
+      "sha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25",
+      "bytes": 20626173,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-martello-tuono",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "thunder-hammer",
+      "sourceApprovalSha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-l.png",
+      "sha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8",
+      "bytes": 23010203,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "familyId": "weapon-designed-ionic-martello-tuono",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "thunder-hammer",
+      "sourceApprovalSha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "visualDirection": "B",
+      "approvalDate": "2026-11-27"
     }
   ],
   "rulesConfirmed": {
@@ -793,6 +940,13 @@
       "oneHitPerOwnTurn": true,
       "scenicRevision": 2,
       "visualApprovalReceived": true
+    },
+    "probeHammer": {
+      "direction": "B",
+      "visualApprovalReceived": true,
+      "defaultLocale": "en",
+      "secondHitOnlyFromEngine": true,
+      "persistentMark": true
     }
   }
 }

@@ -1,3 +1,10 @@
+> **Approvazione successiva:** l'utente ha confermato i sette fronti e
+> l'inserimento il 27/11/2026 con «si». Il renderer, il testo e l'audio
+> condivisi sono ora in `src/probeHammer*`; le carte sono nel registro
+> delle 47 varianti. L'HTML/video già consegnato conserva lo studio
+> storico precedente all'inserimento. Per la partita usare
+> `/.maglio-review.html` e leggere il documento Sonda/Martello.
+
 # Sonda / Martello: anteprima B, 27 novembre 2026
 
 La risposta «ok per B» approva la direzione visiva: reticolo elettrico,

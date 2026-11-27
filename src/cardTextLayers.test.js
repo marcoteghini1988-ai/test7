@@ -6,11 +6,12 @@ import {card,ENERGY_CARDS} from './fleetNext/rules.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {LOCALIZED_WEAPON_CARD_IDS,cardTextFields,cardTextSvgContents,cardTextBasePath,localizedCardText} from './cardTextPresentation.js';
 import {getCardTextLocale,setCardTextLocale,subscribeCardTextLocale} from './cardTextLocale.js';
+import {CORE_FAMILY} from './coreThunderSpec.js';
 import metrics from './fleetNext/cardTextFontMetrics.json' with {type:'json'};
 
 test('English is the default for every core text, including name, full effect and rarity',()=>{
  setCardTextLocale('en');assert.equal(getCardTextLocale(),'en');
- for(const id of LOCALIZED_WEAPON_CARD_IDS){
+ for(const id of LOCALIZED_WEAPON_CARD_IDS.filter(id=>id.startsWith(CORE_FAMILY))){
   const fields=cardTextFields(id),text=localizedCardText(card(id));
   assert.deepEqual(fields.slice(0,2).map(f=>f.text),['GROWING THUNDER','CORE CANNON']);
   assert.equal(text.name,'Growing Thunder Core Cannon');assert.match(text.description,/play a new Lightning Energy card/);

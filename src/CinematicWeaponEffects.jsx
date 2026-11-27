@@ -7,6 +7,8 @@ import {clamp01} from './weaponCinematicStyle.js';
 import {weaponImpactHullFrame,weaponHullImpactProfile} from './weaponHullImpacts.js';
 import {weaponFlightFrame} from './weaponKinematics.js';
 import {coreScenicPose} from './coreThunderRenderer.js';
+import {isProbeHammerKind,probeHammerVisualHit} from './probeHammerSpec.js';
+import {probeHammerFlightPosition} from './probeHammerRenderer.js';
 import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import './CinematicWeaponEffects.css';
 
@@ -57,9 +59,9 @@ export default function CinematicWeaponEffects({paths,startedAt}){
     active++;visible.push(entry);
     element.dataset.phase=elapsed<0?'charge':hitAge<0?'flight':shot.defenseBlocked?'shield-contact':'contact';
     element.dataset.motif=entry.style.motif;element.dataset.targetId=shot.targetId;
-    const moving=(p.kind===CORE_KIND?coreScenicPose(coreFrame(p,shot),elapsed,entry.from,entry.to,p.flightMs).point:
+    const pair=isProbeHammerKind(p.kind),moving=pair?probeHammerFlightPosition(probeHammerVisualHit(p,shot,entry.from),elapsed,entry.to).point:(p.kind===CORE_KIND?coreScenicPose(coreFrame(p,shot),elapsed,entry.from,entry.to,p.flightMs).point:
      weaponFlightFrame(entry.from,entry.to,elapsed/p.flightMs,camera,0,{shot,kind:p.kind}).nose).project(camera);
-    moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;
+    if(!pair){moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;}
     for(const ship of ships){
      if(ship.target.dataset.collisionMotion)continue;
      const hit=entry.target===ship.target&&shot.fires&&!shot.defenseBlocked;

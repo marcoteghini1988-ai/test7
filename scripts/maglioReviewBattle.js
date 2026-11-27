@@ -5,13 +5,14 @@ import {MAGLIO_CARD_ID,maglioVariant} from '../src/maglioBattleVisuals.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from '../src/fleetNext/weaponRarityEvolutions.js';
 import {chainWeaponVariant,GRAPPLE_ID,COLLISION_ID} from '../src/chainWeaponBattleVisuals.js';
 import {precisionWeaponVariant} from '../src/precisionWeaponBattleVisuals.js';
+import {configureProbeHammerReview} from './probeHammerReviewBattle.js';
 import {CORE_FAMILY} from '../src/coreThunderSpec.js';
 
 export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
  shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false,secondTurn=false,
  supportCount=2,energyCards=0,withDefense=false,expiredCombo=false,
- cascadeMode='none',ownStage=1,jawCombo=false,coreMode='charged'}={}){
+ cascadeMode='none',ownStage=1,jawCombo=false,coreMode='charged',probeHammerMode='single'}={}){
  const chain=chainWeaponVariant(cardId),collision=chain?.kind==='alloy-collision'&&jawCombo;
  const precision=precisionWeaponVariant(cardId);
  const core=cardId===CORE_FAMILY||cardId.startsWith(CORE_FAMILY+'-rarity-'),energyId=core?'energy-ionic':'energy-metallic';
@@ -107,7 +108,7 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
    }
   }
  }
- return state;
+ return configureProbeHammerReview(state,{cardId,probeHammerMode,blocked,withDefense,nowMs});
 }
 function rarityGrapple(id){
  return id.endsWith('-rarity-l')?GRAPPLE_ID+'-rarity-l':id===COLLISION_ID?GRAPPLE_ID+'-rarity-e':GRAPPLE_ID;

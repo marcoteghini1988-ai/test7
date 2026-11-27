@@ -1,6 +1,8 @@
 // Coreografia di presentazione: nessun evento HP viene creato qui.
 // Ogni riga corrisponde a una variante già approvata e a una dinamica diversa.
 const motifs=Object.freeze({
+ 'ionic-probe':Array(4).fill('precision-impulse-reticle'),
+ 'thunder-hammer':[null,'bronze-crescent-cross-slash','silver-crescent-cross-slash','prismatic-crescent-cross-slash'],
  'growing-thunder-core':[null,'precessing-core-bloom','silver-core-bloom','prismatic-core-bloom'],
  'ionic-comb':Array(4).fill('five-arcs-one-discharge'),
  'ionic-dart':Array(4).fill('double-helix-dart'),
@@ -16,6 +18,7 @@ const motifs=Object.freeze({
  'wandering-shrapnel':[null,'indexed-fragment','recoil-splinter','prismatic-fracture']
 });
 const weights=Object.freeze({
+ 'ionic-probe':.35,'thunder-hammer':1,
  'growing-thunder-core':1,
  'ionic-comb':.48,'ionic-dart':.48,'ionic-whip':.48,'ionic-flash':.48,
  'gravity-maul':1.3,'steel-rail':.62,'thermal-reclaimer':.95,

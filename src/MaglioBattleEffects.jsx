@@ -99,7 +99,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    const cue=weaponSalvoAudioCue(profile,shot,phase);
    playSound(cue.type,cue.pitchSemitones,pan,cue.level,cue.timeScale);
    const result=requestWeaponHaptic(profile.kind,phase,profile.tier,{salvoCount:shot.salvoCount,
-    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed,jawPhase:shot.jawPhase,inductionBonusPercent:shot.inductionBonusPercent,coreStage:shot.coreChargeStage||1});
+    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed,jawPhase:shot.jawPhase,inductionBonusPercent:shot.inductionBonusPercent,coreStage:shot.coreChargeStage||1,comboBonus:profile.kind==='thunder-hammer'&&shot.impactIndex===1});
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
     ref.current.dataset.hapticPhase=phase;ref.current.dataset.hapticPattern=JSON.stringify(result.pattern);}
@@ -124,6 +124,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    if(!shot.fires&&!shot.defenseBlocked)continue;
    cue(profile,shot.cascadeTransfer?'transfer':'fire',start,shot);
    cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
+   if(profile.kind==='ionic-probe'&&shot.fires&&!shot.defenseBlocked&&!shot.destroyed)cue(profile,'mark',start+profile.flightMs+35,shot);
    if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+COLLISION_RELEASE_AFTER_MS,shot);
    if(profile.kind==='magnetic-grapple'&&['tear','release'].includes(shot.jawPhase)&&!shot.jawReleaseAfterCombo)
     cue(profile,'release',start+profile.flightMs+420,shot);

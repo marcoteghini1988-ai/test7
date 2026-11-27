@@ -5,11 +5,15 @@ import {getCardTextLocale,normalizeCardTextLocale} from './cardTextLocale.js';
 import {LOCALIZED_WEAPON_CARD_IDS,hasCardTextLayer,cardTextBasePath,CARD_TEXT_REGIONS} from './cardTextAssets.js';
 export {LOCALIZED_WEAPON_CARD_IDS,hasCardTextLayer,cardTextBasePath} from './cardTextAssets.js';
 import fontMetrics from './fleetNext/cardTextFontMetrics.json' with {type:'json'};
+import {probeHammerVariant} from './probeHammerSpec.js';
+import {cardWords,textFields} from './probeHammerCardText.js';
 const dictionaries={en,it};
+const probeCard=id=>{const v=probeHammerVariant(id),c=WEAPON_NEAR_FINAL_BY_ID[id],p=c?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.comboBonusDamage||0};};
 const format=(text,values)=>text.replace(/\{(\w+)\}/g,(_,key)=>String(values[key]??''));
 export function localizedCardText(definition,locale=getCardTextLocale()){
  if(!definition)return null;
  const dictionary=dictionaries[normalizeCardTextLocale(locale)];
+ if(probeHammerVariant(definition.id)){const c=probeCard(definition.id),w=cardWords(c,normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(hasCardTextLayer(definition.id)){
   const source=WEAPON_NEAR_FINAL_BY_ID[definition.id],p=source.effectSpec.weaponProfile;
   return {name:dictionary.coreName,description:format(dictionary.coreDescription,{stages:p.damageStages.join(' / '),turns:p.durationTurns}),
@@ -26,6 +30,7 @@ export const cardTextName=definition=>localizedCardText(definition)?.name||defin
 export const cardTextDescription=(definition,fallback)=>localizedCardText(definition)?.description||fallback;
 export function cardTextFields(id,locale=getCardTextLocale()){
  if(!hasCardTextLayer(id))return null;
+ if(probeHammerVariant(id))return textFields(probeCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  const d=dictionaries[normalizeCardTextLocale(locale)],c=WEAPON_NEAR_FINAL_BY_ID[id],p=c.effectSpec.weaponProfile;
  const values=[...d.coreTitle,d.weapon,d.rarities[c.rarita],d.elementLabel,d.lightning,d.durationLabel,
   p.durationTurns,p.durationTurns===1?d.turn:d.turns,d.damageLabel,p.damageStages.join(' / '),d.rechargeLabel,
@@ -42,7 +47,7 @@ export function cardTextFields(id,locale=getCardTextLocale()){
   return {x,y,size:Number(fitted.toFixed(3)),weight,text,maxWidth:widths[i]};
  });
 }
-const colors={Rara:['#fff0d6','#d38c5b','#f3c393'],Epica:['#ffffff','#8799a9','#e4edf4'],Leggendaria:['#ffffff','#74dafa','#d99ff3']};
+const colors={Comune:['#e5edf1','#a9b9c4','#d0dce2'],Rara:['#fff0d6','#d38c5b','#f3c393'],Epica:['#ffffff','#8799a9','#e4edf4'],Leggendaria:['#ffffff','#74dafa','#d99ff3']};
 const xml=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 export function cardTextSvgContents(id,locale=getCardTextLocale(),unique='card'){
  const fields=cardTextFields(id,locale);if(!fields)return '';

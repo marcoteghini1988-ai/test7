@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-27",
+  "approvalQuote": "si",
+  "nativeCardFronts": 7,
+  "nativeTextlessBases": 7,
+  "activeFronts": 47,
+  "elements": {
+    "metallic": 22,
+    "ionic": 25
+  },
+  "nativeCanvas": [
+    3072,
+    4608
+  ],
+  "originalApprovedPngBytesPreserved": true,
+  "defaultLocale": "en",
+  "locales": [
+    "en",
+    "it"
+  ],
+  "sharedStudioAndLive": [
+    "text metrics",
+    "volumetric geometry",
+    "electrical reticle",
+    "contact and boom",
+    "PCM audio score",
+    "haptic patterns"
+  ],
+  "tests": {
+    "fullSuite": 2455,
+    "passed": 2455,
+    "failed": 0,
+    "targetedArchiveAndLiveAndCatalog": 21
+  },
+  "archive": {
+    "parts": 52,
+    "shaVerified": true
+  },
+  "stackblitzBattleQa": "pending; separate from prior isolated studio report",
+  "physicalHapticsVerified": false
+}

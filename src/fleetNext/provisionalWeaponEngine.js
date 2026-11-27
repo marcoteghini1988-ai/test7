@@ -126,7 +126,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
-  let planned=[],coreFeedback=null;
+  let planned=[],coreFeedback=null,probeFeedback=null;
   if(pattern==='magma-mortar'){
    const extras=ctx.provisionalMortarShots?.[m.id]||0;
    planned=[{base:p.baseDamage},...Array.from({length:extras},()=>({base:p.extraDamage}))];
@@ -220,6 +220,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   }else if(pattern==='ion-probe')planned=[{base:p.baseDamage}];
   else if(pattern==='thunder-hammer'){
    const signal=comboSide.ionProbe;
+   probeFeedback={probeMarkBefore:signal?{...signal}:null,probeMarkConsumed:!!signal};
    // Il segnale segue il vero bersaglio colpito, compresi gli altri
    // componenti della madre. Una presa non più valida lascia il tiro base.
    let marked=null;
@@ -255,7 +256,10 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(pattern==='wandering-shrapnel')m.previousTargetId=r.target.unit?.id;
    if(jawRole(m))m.jawLatch={targetKind:r.target.kind,targetId:r.target.unit.id,launchPly:m.deployedPly,
     untilPly:m.deployedPly+2*p.durationTurns};
-   if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,targetKind:r.target.kind,ply:b.ply,expiresPly:b.ply+3};
+   if(pattern==='ion-probe'){
+    comboSide.ionProbe={id:r.target.unit.id,targetKind:r.target.kind,ply:b.ply,expiresPly:b.ply+3,sourceCardId:m.sourceCardId};
+    probeFeedback={probeMarkAfter:{...comboSide.ionProbe}};
+   }
    if(pattern==='incinerator'&&stage===1){
     const discarded=(side.discard||[]).filter(id=>h.card(id)?.kind==='attack').length;
     const burn=Math.min(p.burnMaxDamage??Number.POSITIVE_INFINITY,
@@ -293,6 +297,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   event(m,'weapon-provisional-shot',m.name+' · '+sum+' HP',{
    pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true,
    ...(coreFeedback||{}),
+   ...(probeFeedback||{}),
    ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),
   });
  }

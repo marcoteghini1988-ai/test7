@@ -98,3 +98,37 @@ passati. Report: `collaudi/sonda-martello-2026-11-27/verifica-stackblitz.json`.
 Questo collaudo non equivale all’integrazione nella partita. I 40 fronti
 già approvati restano gli unici promossi; questi sette nuovi fronti
 aspettano conferma visiva. La vibrazione fisica resta da verificare.
+
+
+## Approvazione e inserimento — 27 novembre 2026
+
+Dopo la consegna delle due tavole dei sette fronti, del video con audio
+e della prova dello studio su StackBlitz, l'utente ha risposto «si» alla
+conferma dell'inserimento. Sette fronti e direzione B sono approvati.
+La precedente attesa di conferma descrive il passaggio storico ed è superata.
+
+- Registro attivo: **47 varianti, 22 Metallo e 25 Fulmine**.
+- Sette fronti PNG HD e sette basi senza testo: stessi byte del pacchetto
+  approvato `libfile_3b7aecb835808191a5a67f33f557e2ab`. Nessuna rigenerazione.
+- Archivio versionato con ricomposizione e SHA-256 delle parti e dei file;
+  anche il WebContainer della copia esistente ricompone i PNG HD locali.
+- Dizionari inglese/italiano e metriche condivisi con lo studio. La carta
+  completa inglese rimane recuperabile, la partita sovrappone il solo testo.
+- Renderer volumetrico condiviso: un impulso della Sonda, reticolo soltanto
+  su danno effettivo e bersaglio vivo; un fendente del Martello, oppure
+  due se realmente emessi. Il secondo impatto riuscito concentra il BOOM.
+- Il segnale segue la nave anche fra i turni; consumo, bersaglio distrutto
+  e scadenza interrompono il reticolo. La Difesa reagisce senza fingere
+  danno allo scafo. Nessun colpo aggiunto se il primo fendente è letale.
+- Ingressi variabili dai bordi corretti e scala prospettica A/B. Il contatto
+  e il contraccolpo condividono la posizione del vero scafo.
+- Audio PCM e pattern aptici derivano dalla stessa partitura dello studio;
+  richieste rispettano visibilità e preferenze. Il movimento ridotto
+  conserva un contatto breve e fermo. La prova fisica della vibrazione
+  resta distinta dal collaudo software.
+
+`/.maglio-review.html` usa `OfficialFleetBattle3D` e il motore reali e
+permette combo nello stesso turno/successivo, ordine inverso, segnale
+scaduto, doppia Difesa, bersaglio distrutto, primo colpo letale e segnale
+sul Generatore. Lo studio HTML/video precedente rimane un archivio della
+proposta; non sostituisce il nuovo collaudo della partita.

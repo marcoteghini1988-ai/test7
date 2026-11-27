@@ -1,5 +1,7 @@
 // Collaudo del Maglio nella partita ufficiale, senza modelli Arma sulla plancia.
 import {writeFileSync} from 'node:fs';
+import {restoreProbeHammerFronts} from './restore-probe-hammer-fronts.mjs';
+await restoreProbeHammerFronts();
 writeFileSync('.maglio-review.html',`<!doctype html><html lang="it"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Armi Metallo — plancia ufficiale</title><style>
@@ -18,6 +20,7 @@ import {OFFICIAL_WEAPON_FRONT_BY_ID} from './src/fleetNext/officialWeaponArt.js'
 import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
+import {probeHammerVariant} from './src/probeHammerSpec.js';
 import {CORE_FAMILY} from './src/coreThunderSpec.js';
 import {useCardTextLocale} from './src/CardTextLayer.jsx';
 import {setCardTextLocale} from './src/cardTextLocale.js';
@@ -88,7 +91,7 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0})}>
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0,probeHammerMode:'single'})}>
     {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{cardTextName(WEAPON_NEAR_FINAL_BY_ID[id])+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
@@ -129,6 +132,19 @@ function Review(){
      <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
      <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
+   </>}
+   {probeHammerVariant(setup.cardId)&&<>
+    <span>Sonda: segnale su danno · Martello: uno o due impatti reali</span>
+    <label>Scenario Sonda / Martello <select aria-label="Scenario Sonda / Martello" value={setup.probeHammerMode||'single'} onChange={e=>reset({probeHammerMode:e.target.value,slot:0,blocked:false,withDefense:false,supports:['marked-dead','first-hit-kills'].includes(e.target.value)})}>
+     <option value="single">Arma autonoma</option>
+     {probeHammerVariant(setup.cardId).rarity!=='Comune'&&<>
+      <option value="combo">Sonda + Martello nello stesso turno</option><option value="next-turn">Segnale dal turno precedente</option>
+      <option value="reverse">Martello prima della Sonda</option><option value="expired">Segnale scaduto</option>
+      <option value="double-defense">Due fendenti intercettati</option><option value="marked-dead">Bersaglio già distrutto</option>
+      <option value="first-hit-kills">Primo fendente letale</option><option value="generator-mark">Segnale sul Generatore</option>
+     </>}
+    </select></label>
+    <label><input type="checkbox" aria-label="Difesa pubblica Sonda Martello" checked={setup.withDefense||false} onChange={e=>reset({withDefense:e.target.checked})}/>Difesa pubblica</label>
    </>}
    {setup.cardId.startsWith(CORE_FAMILY)&&<>
     <span>1 nucleo per turno · tre turni · nuova Energia per crescere</span>

@@ -1,26 +1,26 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
-## Sonda / Martello — direzione B confermata il 27/11/2026
+## Sonda / Martello — sette fronti e direzione B approvati il 27/11/2026
 
-L'utente ha scelto «ok per B»: reticolo elettrico della Sonda, lama rotante
-per il Martello e secondo fendente con detonazione elettrica, contraccolpo
-e consumo del segnale. Sono preparati sette nuovi fronti (Sonda C/R/E/L;
-Martello R/E/L) con basi HD senza scritte e livelli EN/IT. **La direzione
-è confermata; i sette fronti completi e l'animazione di studio aspettano
-la revisione visiva prima di essere promossi nella partita.** Non cambiare
-il registro delle 40 varianti approvate fino alla conferma dei fronti.
-Leggere `docs/FULMINE_06_07_SONDA_MARTELLO_2026-11-26.md` e
-`scripts/previews/sonda-martello-20261127/README.md`. Le illustrazioni
-originali sono archiviate in `asset-sources/weapon-previews/sonda-martello-2026-11-27`.
-La correzione del motore riguarda solo il segnale: conserva il vero tipo
-di bersaglio (anche altri componenti della madre) e lascia il tiro base
-al Martello se il bersaglio segnato non è più valido. Non aggiunge danni,
-turni, costi o colpi. Video/HTML di studio usano eventi reali, non sono
-registrazioni della partita StackBlitz né attestano vibrazione hardware.
-La pagina isolata è stata collaudata nella copia StackBlitz esistente:
-sei casi A/B/Difesa/disabilitata, galleria EN/IT e nessun errore pagina.
-Avvio persistente verificato al commit `db6327b81a369a6f8a743d87c6d71938398f4769`,
-725 sorgenti. Registro: `docs/collaudi/sonda-martello-2026-11-27/verifica-stackblitz.json`.
+L'utente ha confermato «si» dopo aver visto i sette fronti completi e il
+video della direzione B. L'approvazione è definitiva: non rigenerare arte,
+cornici o testi rasterizzati e non richiedere un'altra conferma.
+Sono promosse **47 varianti Arma: 22 Metallo e 25 Fulmine**. Sonda C/R/E/L;
+Martello R/E/L. I PNG HD originali approvati e le basi senza testo sono
+conservati byte per byte nell'archivio
+`asset-sources/weapon-fronts/sonda-martello-2026-11-27`; il ripristino
+verifica parti, file completo e RGBA 3072×4608 anche su StackBlitz.
+I sette nuovi fronti hanno testo inglese predefinito e livelli EN/IT,
+insieme alle tre varianti già tradotte del Nucleo: dieci Armi localizzate.
+Reticolo persistente sul vero bersaglio, lama volumetrica rotante, secondo
+fendente con BOOM elettrico e contraccolpo soltanto se il motore lo emette.
+Partita e studio condividono geometrie, suoni e pattern aptici. Origini
+variabili dai bordi A/B; nessuna macchina Arma montata sulla plancia.
+Danni, costi, durata e quantità dei colpi restano quelli del motore.
+La verifica precedente `verifica-stackblitz.json` è dello studio isolato;
+il nuovo collaudo nella partita ufficiale va registrato separatamente.
+La vibrazione fisica resta da provare su un telefono compatibile.
+Dettagli in `docs/FULMINE_06_07_SONDA_MARTELLO_2026-11-26.md`.
 
 ## Catalogo Personaggi — 42, inclusi 12 Boss
 

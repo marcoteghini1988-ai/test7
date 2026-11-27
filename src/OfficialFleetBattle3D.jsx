@@ -59,6 +59,7 @@ import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turn
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
+import ProbeHammerMarks from './ProbeHammerMarks.jsx';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
 import {fleetWeaponProjectiles,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
@@ -1221,6 +1222,7 @@ export default function OfficialFleetBattle3D({
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
    <MagneticGrappleTethers battle={battle} resolving={resolving} fx={lastFx}/>
+   <ProbeHammerMarks battle={battle} resolving={resolving} fx={lastFx}/>
    {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0||lastFx?.events?.some(e=>['weapon-break-defense','weapon-core-expired'].includes(e.kind)))&&<MaglioBattleEffects
     key={lastFx.nonce} shots={lastFx.weaponShots} selectedCards={lastFx.selectedCards}
     playerSide={player} ply={battle.ply} nonce={lastFx.nonce} events={lastFx.events}

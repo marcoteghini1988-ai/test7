@@ -1,8 +1,11 @@
 // I browser non confermano la presenza di un motore aptico: true = richiesta
 // accettata, mai prova di una vibrazione fisica. Preferenza separata dai suoni.
+import {probeHammerCue} from './probeHammerAudio.js';
+import {isProbeHammerKind} from './probeHammerSpec.js';
 import {coreThunderSoundPlan} from './coreThunderAudio.js';
 export const HAPTICS_KEY='eclissi_haptics_enabled';
-export function weaponHapticPattern(kind,phase,tier=2,coreStage=1){
+export function weaponHapticPattern(kind,phase,tier=2,coreStage=1,comboBonus=false){
+ if(isProbeHammerKind(kind))return probeHammerCue(kind==='ionic-probe'?'probe':'hammer',phase,{bonus:comboBonus}).haptic;
  if(kind==='growing-thunder-core')return coreThunderSoundPlan('thunder-core_'+phase+'_'+['common','rare','epic','legendary'][tier]+'_'+coreStage)?.cue.haptic||[];
  if(kind?.startsWith('ionic-'))return phase==='charge'?[7]:phase==='fire'?[9]:phase==='impact'?[12]:phase==='block'?[7,15,7]:[];
  if(kind==='gravity-maul')return phase==='charge'?[8,65,12]:phase==='fire'?[24+tier*3]:
@@ -34,13 +37,13 @@ export function setHapticsEnabled(enabled){
  if(!enabled)cancelWeaponHaptics();return !!enabled;
 }
 export function requestWeaponHaptic(kind,phase,tier,{nav=globalThis.navigator,
- doc=globalThis.document,storage=globalThis.localStorage,salvoCount=1,finisher=false,salvoLast=false,destroyed=false,jawPhase,inductionBonusPercent=0,coreStage=1}={}){
- let pattern=weaponHapticPattern(kind,phase,tier,coreStage);
+ doc=globalThis.document,storage=globalThis.localStorage,salvoCount=1,finisher=false,salvoLast=false,destroyed=false,jawPhase,inductionBonusPercent=0,coreStage=1,comboBonus=false}={}){
+ let pattern=weaponHapticPattern(kind,phase,tier,coreStage,comboBonus);
  if(salvoCount>1){
   if(['fire','transfer'].includes(phase))pattern=[6+tier];
   if(phase==='impact')pattern=finisher?[40,25,14]:salvoLast?[28,22,10]:[9+tier*2];
  }
- if(destroyed&&kind!=='alloy-collision'&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
+ if(destroyed&&!isProbeHammerKind(kind)&&kind!=='alloy-collision'&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
  if(jawPhase==='tear'&&phase==='impact')pattern=[38,22,15];
  if(inductionBonusPercent&&phase==='impact'&&pattern.length)pattern=[Math.min(60,pattern[0]+Math.round(inductionBonusPercent/5)),...pattern.slice(1)];
  const result=status=>({status,pattern,physicalVerified:false});
