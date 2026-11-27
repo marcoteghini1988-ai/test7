@@ -1,0 +1,23 @@
+{
+  "status": "PREVIEW_ONLY_AWAITING_FRONT_APPROVAL",
+  "directionApproved": true,
+  "frontsCreated": 2,
+  "cardVisualApproval": false,
+  "promotedToGame": false,
+  "approvedVariantsUnchanged": 50,
+  "targetedTestsPassed": 30,
+  "targetedTestsFailed": 0,
+  "buildPassed": true,
+  "preflightPassed": true,
+  "fullSuiteRerun": false,
+  "originalFrameProtectedPixelsChanged": 0,
+  "outerAlphaUnchanged": true,
+  "enItChangesOutsideDeclaredTextRegions": 0,
+  "interactiveHTMLCompiled": true,
+  "interactiveBrowserVerified": false,
+  "videoDurationSeconds": 32.9,
+  "actualBattleRecording": false,
+  "stackblitzVerified": false,
+  "physicalHapticsVerified": false,
+  "legacyNumericAlignmentPendingBeforePromotion": true
+}

@@ -126,7 +126,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
-  let planned=[],coreFeedback=null,probeFeedback=null,commandFeedback=null;
+  let planned=[],coreFeedback=null,probeFeedback=null,commandFeedback=null,stormFeedback=null;
   if(pattern==='magma-mortar'){
    const extras=ctx.provisionalMortarShots?.[m.id]||0;
    planned=[{base:p.baseDamage},...Array.from({length:extras},()=>({base:p.extraDamage}))];
@@ -241,10 +241,15 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    }
   }
   else if(pattern==='storm-capacitor'){
+   const contributors=weaponEnergyContributions(side,'ionic',{cost:p.energyCost},h.card);
    if(!spendFreshIonic(p.energyCost)){
     event(m,'weapon-no-energy',m.name+' · Energia Fulmine insufficiente',{stage});
-   }else planned=[{base:p.baseDamage+(side.escorts||[]).filter(physical).length*
-    p.perSupportDamage}];
+   }else{
+    const supports=(side.escorts||[]).filter(physical);
+    stormFeedback={energySpent:p.energyCost,energyContributions:contributors,
+     contributingSupportIds:supports.map(unit=>unit.id),supportCount:supports.length};
+    planned=[{base:p.baseDamage+supports.length*p.perSupportDamage}];
+   }
   }else if(pattern==='wind-cycloreactor'){
    planned=every().map(target=>({target,base:p.damageStages[stage-1],
     ignoreCover:target.kind==='part'}));
@@ -301,6 +306,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    ...(commandFeedback||{}),
    ...(coreFeedback||{}),
    ...(probeFeedback||{}),
+   ...(stormFeedback||{}),
    ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),
   });
  }

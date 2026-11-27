@@ -1,0 +1,57 @@
+{
+  "directionApproved": true,
+  "cardVisualApproval": false,
+  "inGame": false,
+  "actualBattleRecording": false,
+  "files": [
+    {
+      "filename": "condensatore-tempesta-epica-HD.png",
+      "library_file_id": "libfile_bb96158c9c4c8191bdf1465a569ec04e",
+      "version": 0,
+      "bytes": 23545710,
+      "sha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959"
+    },
+    {
+      "filename": "condensatore-tempesta-leggendaria-HD.png",
+      "library_file_id": "libfile_bbcd41ffaee881918b9388100ceeaf95",
+      "version": 0,
+      "bytes": 25955489,
+      "sha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c"
+    },
+    {
+      "filename": "condensatore-tempesta-epica-base-senza-testo.png",
+      "library_file_id": "libfile_5efb65a56b0081919b58172c10ac1d82",
+      "version": 0,
+      "bytes": 23305510,
+      "sha256": "6ed152eb38e25dc35980a713192b1695336860f6fb18460af539473954d1da5e"
+    },
+    {
+      "filename": "condensatore-tempesta-leggendaria-base-senza-testo.png",
+      "library_file_id": "libfile_95fc4c2cfbe08191b52db8727899f09f",
+      "version": 0,
+      "bytes": 25719009,
+      "sha256": "c346de611be88c56618ecee1ba1e811287c9ce82b7c2524ac81e1cf62c7255ba"
+    },
+    {
+      "filename": "condensatore-tempesta-due-rarita.png",
+      "library_file_id": "libfile_adaa52e3667881918c00ae4a8b946986",
+      "version": 0,
+      "bytes": 3365561,
+      "sha256": "25cca429f5e7ad1bc932c9a92cfcae9b5964714958ccda7b5f4b601bc3728602"
+    },
+    {
+      "filename": "condensatore-tempesta-anteprima.html",
+      "library_file_id": "libfile_d9c83cf0fd708191977a5f211b7a4a77",
+      "version": 1,
+      "bytes": 11596646,
+      "sha256": "8e18cd89a6c3d72c156c0ea1285dd4637482691f755d39d1b1b50836513875f4"
+    },
+    {
+      "filename": "condensatore-tempesta-effetto-con-audio.mp4",
+      "library_file_id": "libfile_070565bc716c819191e1d031c2e4a580",
+      "version": 0,
+      "bytes": 2302780,
+      "sha256": "6c971ef09e361e19635f62761b6a27335648445205feeb87ba9d6e94f7957dc8"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "outsideDeclaredTextRegionsPixelDifferences": 0,
+      "textRegions": [
+        {
+          "left": 680,
+          "top": 350,
+          "width": 1710,
+          "height": 210
+        },
+        {
+          "left": 1090,
+          "top": 2855,
+          "width": 892,
+          "height": 140
+        },
+        {
+          "left": 440,
+          "top": 3140,
+          "width": 2195,
+          "height": 930
+        },
+        {
+          "left": 1110,
+          "top": 4180,
+          "width": 852,
+          "height": 140
+        }
+      ],
+      "nativeArtSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "outsideDeclaredTextRegionsPixelDifferences": 0,
+      "textRegions": [
+        {
+          "left": 680,
+          "top": 350,
+          "width": 1710,
+          "height": 210
+        },
+        {
+          "left": 1090,
+          "top": 2855,
+          "width": 892,
+          "height": 140
+        },
+        {
+          "left": 440,
+          "top": 3140,
+          "width": 2195,
+          "height": 930
+        },
+        {
+          "left": 1110,
+          "top": 4180,
+          "width": 852,
+          "height": 140
+        }
+      ],
+      "nativeArtSize": [
+        1448,
+        1086
+      ]
+    }
+  ]
+}

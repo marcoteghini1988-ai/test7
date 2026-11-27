@@ -1,0 +1,46 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959",
+      "bytes": 23545710,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "b58f6065b280b673565b0b38fb09ac5f6351f1f3055197e96925d2759bcc8ac3",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
+      "bytes": 25955489,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "9584930d40a27f948f66e38ecf314d8d53b13a07c8a5002180577e45d0bc8a87",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    }
+  ],
+  "inGame": false,
+  "finalVisualApproval": false
+}
