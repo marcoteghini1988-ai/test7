@@ -681,7 +681,7 @@ export const PILOTS_DATABASE = Object.freeze([
   // --- 6 LEGGENDARI (ARCHETIPI COMPLESSI D'ÉLITE) ---
   {
     id: 'pilot_leg_1',
-    name: 'Il Gran Maestro',
+    name: 'Stratega delle Tre Figure',
     rarity: 'Leggendaria',
     rarityColor: '#facc15',
     color: '#facc15',
