@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "asOf": "2026-11-27",
-  "scope": "Nomi interni al gioco; titolo commerciale volutamente escluso su richiesta dell'utente",
+  "scope": "Tutti i nomi delle 17 famiglie di cataloghi principali; non include il nome commerciale del gioco, che si deciderà solo al termine dello sviluppo",
   "repo": "marcoteghini1988-ai/test7",
   "recordsCount": 453,
   "proposalCount": 167,
@@ -24,215 +24,8 @@
     "armi_native": 27,
     "carta_sistema_speciale": 1
   },
-  "identicalNamesAcrossDefinitions": [
-    {
-      "normalizedName": "obice nero",
-      "entries": [
-        {
-          "id": "nx-l03-02",
-          "group": "carte_esclusive_madri",
-          "name": "Obice nero"
-        },
-        {
-          "id": "W38",
-          "group": "armi_native",
-          "name": "Obice Nero"
-        }
-      ]
-    }
-  ],
-  "duplicateStableIds": [
-    {
-      "id": "N00",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "N00",
-          "name": "Aurora-0",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "N00",
-          "name": "Velo Aurora",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "C01",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "C01",
-          "name": "Lince Solare",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "C01",
-          "name": "Bastione Solare",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "C02",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "C02",
-          "name": "Vespa di Vetro",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "C02",
-          "name": "Prisma Silente",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "C03",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "C03",
-          "name": "Corvo a Impulsi",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "C03",
-          "name": "Corvo Esploratore",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "R01",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "R01",
-          "name": "Falco Binario",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "R01",
-          "name": "Armeria Binaria",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "R02",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "R02",
-          "name": "Manta Ionica",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "R02",
-          "name": "Relè Ionico",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "E01",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "E01",
-          "name": "Nebulosa",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "E01",
-          "name": "Scudo Nebuloso",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "L01",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "L01",
-          "name": "Eclisse Reale",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "L01",
-          "name": "Eclisse Sacrificale",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "L03",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "L03",
-          "name": "Titano Ossidiana",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "L03",
-          "name": "Titano della Tempesta",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    },
-    {
-      "id": "L04",
-      "values": [
-        {
-          "group": "navi_madri",
-          "id": "L04",
-          "name": "Arca Astrale",
-          "source": "src/phase1FleetCatalog.js",
-          "kind": "current"
-        },
-        {
-          "group": "supporti",
-          "id": "L04",
-          "name": "Arca Condensatrice",
-          "source": "src/fleetNext/supportModelRegistry.js",
-          "kind": "current"
-        }
-      ]
-    }
-  ],
+  "identicalNamesAcrossDefinitions": [],
+  "duplicateStableIds": [],
   "crossRegistryMismatches": {
     "exclusiveCharacterNames": [],
     "genericCharacters": []
@@ -1230,7 +1023,7 @@
     {
       "group": "carte_esclusive_madri",
       "id": "nx-l03-02",
-      "name": "Obice nero",
+      "name": "Tiro d’Assedio Ossidiano",
       "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
       "kind": "current"
     },
@@ -4596,5 +4389,40 @@
       "source": "docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json",
       "kind": "draft"
     }
-  ]
+  ],
+  "sharedTemplateMotherIds": [
+    "N00",
+    "C01",
+    "C02",
+    "C03",
+    "R01",
+    "R02",
+    "E01",
+    "L01",
+    "L03",
+    "L04"
+  ],
+  "identifierClarification": "supportModelRegistry.shipId identifica il modello di nave da cui deriva il supporto; non coincide con l'ID persistente della carta supporto. La coincidenza delle chiavi madri è prevista.",
+  "reviewedNameChanges": [
+    {
+      "cardId": "ex-l04-01",
+      "designId": "nx-l04-04",
+      "previousName": "Custode Astrale",
+      "newName": "Vegliatore delle Rotte Celesti",
+      "category": "Personaggio",
+      "reason": "Titolo italiano identico a un gioco Steam preesistente; rinominata l'etichetta senza alterare il funzionamento",
+      "url": "https://store.steampowered.com/app/2346320/Astral_Guardian/?l=italian"
+    },
+    {
+      "cardId": "nx-l03-02",
+      "previousName": "Obice nero",
+      "newName": "Tiro d’Assedio Ossidiano",
+      "category": "Attacco",
+      "reason": "Evitato duplicato con arma nativa W38 Obice Nero della medesima nave; nome Attacco diverso da macchina",
+      "status": "corretto"
+    }
+  ],
+  "namesCompared": 453,
+  "distinctCurrentNames": 453,
+  "titleExcluded": true
 }
