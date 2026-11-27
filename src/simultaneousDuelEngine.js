@@ -211,7 +211,7 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA,equipmentLevelsA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB,equipmentLevelsB)},
   history:[],lastEvents:bossPlanetB===20?[
-   'B: Custode dell'Antispazio · seme dominante '+exclusiveVoidDominantSuit(1)+
+   'B: Custode dell’Antispazio · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
   ]:bossPlanetB===19?[
    'B: Divoratore delle Scorie · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
@@ -855,10 +855,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': Divoratore delle Scorie (mazzo numerico) · Forgia moltiplicatrice +'+
    magmaVital.percentage+'% ('+magmaVital.extra+' HP prima delle difese)');
  if(rememberExclusiveVoidCounter(def,hit.damage,cards,round))
-  log.push(other(key)+': Custode dell'Antispazio · seme dominante '+exclusiveVoidDominantSuit(round)+
+  log.push(other(key)+': Custode dell’Antispazio · seme dominante '+exclusiveVoidDominantSuit(round)+
    ' contrastato da un vero colpo vitale, bonus disattivato nel prossimo ciclo');
  if(voidBonus.active&&hit.damage>0)
-  log.push(key+': Custode dell'Antispazio · '+voidBonus.suit+
+  log.push(key+': Custode dell’Antispazio · '+voidBonus.suit+
    ' dominante: +7% sul colpo valido ('+voidBonus.extra+' HP prima delle difese)');
  if(cancelExclusiveIdraByHeart(def,hit.damage,cards,round))
   log.push(other(key)+': Idra Criogenica · Rigenerazione annullata da Cuori su vitale esposto');
@@ -1091,7 +1091,7 @@ export function advanceTacticalDuel(battle,nowMs=0){
   return {...battle,phase:'planning',round:nextRound,orders:{A:null,B:null},
    deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null,
    lastEvents:bossSuit?[...battle.lastEvents,
-    'B: Custode dell'Antispazio · seme dominante '+bossSuit+' per il ciclo '+nextRound
+    'B: Custode dell’Antispazio · seme dominante '+bossSuit+' per il ciclo '+nextRound
    ]:bossMagma?[...battle.lastEvents,
     'B: Divoratore delle Scorie · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
    ]:battle.lastEvents};
