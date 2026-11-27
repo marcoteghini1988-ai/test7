@@ -1264,7 +1264,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_5': // P5 Giove (Occhio del Vortice)
+      case 'planet_char_5': // P5 Giove (Vegliardo del Vortice)
         return (
           <g>
             <circle cx="50" cy="75" r="28" stroke={c} strokeWidth="3" fill={`${c}15`} />
