@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v2-2026-11-27",
+  "revision": "personaggi-42-v3-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
     "Comune": 6,
-    "Rara": 11,
+    "Rara": 10,
     "Epica": 8,
-    "Leggendaria": 17
+    "Leggendaria": 18
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
-  "genericConfirmed": 13,
-  "genericProposed": 17,
+  "genericConfirmed": 14,
+  "genericProposed": 16,
   "bossReworkProposed": 12,
   "characters": [
     {
@@ -293,8 +293,8 @@
     },
     {
       "id": "character-general-14",
-      "name": "Tecnico del raffreddamento",
-      "rarity": "Rara",
+      "name": "Maestro dell'energia",
+      "rarity": "Leggendaria",
       "category": "Personaggio",
       "element": null,
       "evolution": false,
@@ -303,13 +303,16 @@
         "turns": 3
       },
       "abilities": [
-        "Una volta per turno proprio può smontare e sacrificare un'intera Carta Energia installata per dissipare il calore del Generatore, riducendo di un turno il suo raffreddamento residuo. Non riattiva un Generatore disattivato e non concede un attacco aggiuntivo."
+        "Dimezza l'Energia richiesta dagli attacchi speciali della madre, arrotondando per eccesso: da 2 a 1 e da 4 a 2. Non modifica potenza o ricarica.",
+        "Una volta per turno proprio rigenera una carica Energia del tipo appena utilizzato: la carta Energia resta nel suo slot e la carica torna disponibile, non viene pescata dagli scarti.",
+        "Una volta per turno proprio sacrifica una Carta Energia fisica installata, inviandola negli scarti, e converte una carica di un'altra Energia rimasta nell'elemento richiesto. Esempio approvato: da due Fuoco e due Ghiaccio, sacrifica un Ghiaccio e converte l'altro Ghiaccio in Fuoco; rimangono tre Fuoco."
       ],
-      "status": "proposed",
+      "status": "confirmed",
       "playable": false,
       "balancePending": true,
       "open": [
-        "Costo, disponibilità e limite da verificare; proposta non confermata."
+        "Tutte e tre le abilità possono operare nello stesso turno, ciascuna secondo i propri limiti e costi; nessun limite comune di un intervento per turno.",
+        "Preservare le schede singole 8, 9 e 12. Verificare le interazioni fra le tre abilità, le cariche effettive, il costo speciale della madre e la persistenza delle conversioni."
       ],
       "number": 14
     },
@@ -1177,6 +1180,6 @@
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.",
-    "Per i generici vale la revisione 27/11: 13 confermati e 17 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione."
+    "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione."
   ]
 }
