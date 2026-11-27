@@ -1,8 +1,12 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Ambito audit dei nomi e decisione sul titolo — 27/11/2026
+
+Decisione dell'utente: **il titolo del gioco verrà scelto solo dopo che il progetto sarà finito**. «Eclissi Stellare» è un nome di lavorazione. Non avviare ricerche o proposte sul titolo adesso e non rinominare il progetto/il repository. Controllare invece tutti i nomi **interni**: personaggi (devono sembrare personaggi, non dispositivi), Boss, carte, armi, navi, supporti, moduli, esclusive, carte Fusione e loro etichette visibili. Conservare ID e abilità. Consultare il manifest `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json` e l'audit di interpretazione legale `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Inventariate 453 etichette attuali e 167 bozze non approvate; zero duplicati esatti nei cataloghi censiti dopo le correzioni. Personaggio Arca Astrale `ex-l04-01` ora **Vegliatore delle Rotte Celesti**; Attacco `nx-l03-02` ora **Tiro d’Assedio Ossidiano** per differenziarlo dall'arma nativa W38 «Obice Nero». La verifica ufficiale dei marchi non è conclusa; non dichiarare mai i nomi «certificati liberi».
+
 ## Rinomine per originalità — 27/11/2026
 
-I nomi pubblici di sei Boss sono stati aggiornati senza cambiare ID, abilità, rarità o sblocchi: Devastatore delle Ere (ID 6), Predone della Penombra (9), Sovvertitore del Caso (14), Boss del Sacrificio (17), Divoratore delle Scorie (19), Custode dell’Antispazio (20). Il Personaggio generico n.29 è Tracciatore del Buio Astrale, il Pilota epico n.4 è Comandante della Galaverna e il Pilota leggendario n.1 è Stratega delle Tre Figure. I riferimenti di documenti storici non modificati vanno interpretati tramite la mappatura contenuta nel registro `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Le etichette non sono certificazione di libertà di marchio commerciale. Non ripristinare i nomi precedenti durante la progettazione.
+I nomi pubblici di sette Boss sono stati aggiornati senza cambiare ID, abilità, rarità o sblocchi: Devastatore delle Ere (ID 6), Predone della Penombra (9), Sovvertitore del Caso (14), Boss del Sacrificio (17), Divoratore delle Scorie (19), Custode dell’Antispazio (20). Il Personaggio generico n.29 è Tracciatore del Buio Astrale, il Pilota epico n.4 è Comandante della Galaverna e il Pilota leggendario n.1 è Stratega delle Tre Figure. I riferimenti di documenti storici non modificati vanno interpretati tramite la mappatura contenuta nel registro `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Le etichette non sono certificazione di libertà di marchio commerciale. Non ripristinare i nomi precedenti durante la progettazione.
 
 
 
