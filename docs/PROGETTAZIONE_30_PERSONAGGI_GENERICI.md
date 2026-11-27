@@ -258,7 +258,7 @@ Durata: 3 turni propri. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 29. Signore delle ombre — Leggendaria
+### 29. Tracciatore del Buio Astrale — Leggendaria
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
