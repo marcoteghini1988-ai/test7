@@ -1,5 +1,5 @@
 {
-  "status": "INTEGRATED_LIVE_CHECK_PENDING",
+  "status": "INTEGRATED_AND_VISUALLY_VERIFIED",
   "frontApproval": true,
   "publicationExplicitlyAuthorized": true,
   "activeVariants": 50,
@@ -10,7 +10,17 @@
   "catalogTestsPassed": 15,
   "buildPassed": true,
   "preflightPassed": true,
-  "fullSuitePending": true,
-  "stackblitzVerified": false,
-  "physicalHapticsVerified": false
+  "fullSuitePending": false,
+  "stackblitzVerified": true,
+  "physicalHapticsVerified": false,
+  "fullSuitePassed": 2470,
+  "fullSuiteFailures": 0,
+  "fullSuiteSourceCommit": "fa79d47dd1789d0c57acdb979eb22fa1dcfb94b7",
+  "postAssetFixTargetedTestsPassed": 20,
+  "assetRootCheckPassed": true,
+  "stackblitzSourceCommit": "bd2e96fab68688e159ae5af0845b696827d63448",
+  "liveCasesPassed": 8,
+  "savedReloadVerified": true,
+  "actualBattleAudioVideoSaved": true,
+  "actualBattleVideoLibraryId": "libfile_1b957eda591c8191b75bff2522e4ed5b"
 }

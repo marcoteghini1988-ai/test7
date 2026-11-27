@@ -1,0 +1,322 @@
+{
+  "date": "2026-11-27",
+  "status": "PASS",
+  "scope": "OfficialFleetBattle3D actual prepared-turn battle in existing saved StackBlitz project",
+  "sourceCommit": "bd2e96fab68688e159ae5af0845b696827d63448",
+  "nativeAssetsCommit": "6c678f87966580714494f354b66fbf48a49198d5",
+  "integrationCommit": "fa79d47dd1789d0c57acdb979eb22fa1dcfb94b7",
+  "savedProject": "https://stackblitz.com/edit/github-edu2s6xy?file=package.json",
+  "reviewPath": "/.maglio-review.html",
+  "persistence": {
+    "editorSavedBeforeBootstrap": true,
+    "saveDisabledAfterSuccess": true,
+    "fullEditorReloadVerified": true,
+    "savedCommitObserved": "bd2e96fab68688e159ae5af0845b696827d63448",
+    "verifiedSourceFiles": 765,
+    "updatedSourceFiles": 329,
+    "selectorVariants": 50,
+    "runtimeOnlyWritesUsedForPersistence": false
+  },
+  "cases": [
+    {
+      "id": "rare-mother-slot1",
+      "sides": [
+        "A",
+        "B"
+      ],
+      "rarity": "Rara",
+      "targetKind": "part",
+      "targets": [
+        "weapons",
+        "generator"
+      ],
+      "actualDamages": [
+        37,
+        35
+      ],
+      "characterPulseSlots": [
+        "A-0",
+        "B-0"
+      ],
+      "hpBefore": [
+        451,
+        578
+      ],
+      "hpAfter": [
+        415,
+        543
+      ],
+      "impactPattern": [
+        15
+      ],
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "epic-supports-slot1",
+      "sides": [
+        "A",
+        "B"
+      ],
+      "rarity": "Epica",
+      "targetKind": "escort",
+      "targets": [
+        "escort:maglio-review-B-0",
+        "escort:maglio-review-A-0"
+      ],
+      "actualDamages": [
+        115,
+        115
+      ],
+      "characterPulseSlots": [
+        "A-0",
+        "B-0"
+      ],
+      "targetHpBefore": [
+        125,
+        125
+      ],
+      "targetHpAfter": [
+        10,
+        10
+      ],
+      "impactPattern": [
+        18
+      ],
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "legendary-mother-slot2",
+      "sides": [
+        "A",
+        "B"
+      ],
+      "rarity": "Leggendaria",
+      "targetKind": "part",
+      "targets": [
+        "weapons",
+        "command"
+      ],
+      "actualDamages": [
+        122,
+        114
+      ],
+      "characterPulseSlots": [
+        "A-0",
+        "B-0"
+      ],
+      "hpBefore": [
+        820,
+        1050
+      ],
+      "hpAfter": [
+        699,
+        936
+      ],
+      "impactPattern": [
+        21
+      ],
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "defense-supports",
+      "sides": [
+        "A",
+        "B"
+      ],
+      "rarity": "Rara",
+      "actualDamages": [
+        0,
+        0
+      ],
+      "phase": "shield-contact",
+      "characterPulseSlots": [
+        "A-0",
+        "B-0"
+      ],
+      "defenseReactionSlots": [
+        "B-1",
+        "A-1"
+      ],
+      "targetHpBefore": [
+        96,
+        96
+      ],
+      "targetHpAfter": [
+        96,
+        96
+      ],
+      "hullRecoil": false,
+      "blockPattern": [
+        6,
+        18,
+        6
+      ],
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "character-missing",
+      "weaponButtonEnabled": false,
+      "visualShots": 0,
+      "characterPulses": 0,
+      "haptics": 0,
+      "hpChanged": false,
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "character-expired",
+      "weaponButtonEnabled": false,
+      "visualShots": 0,
+      "characterPulses": 0,
+      "haptics": 0,
+      "hpChanged": false,
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "weapon-disabled-A",
+      "visualShotsA": 0,
+      "visualShotsB": 1,
+      "actualDamageB": 47,
+      "targetHpBefore": 96,
+      "targetHpAfter": 49,
+      "characterPulseSlots": [
+        "B-0"
+      ],
+      "passed": true,
+      "transientAttributesRestored": true
+    },
+    {
+      "id": "character-same-turn-A",
+      "visualShotsA": 1,
+      "actualDamageA": 47,
+      "targetHpBefore": 96,
+      "targetHpAfter": 49,
+      "characterPulseSlots": [
+        "A-0"
+      ],
+      "impactAtMs": 3400,
+      "note": "Current prepared-turn resolver; does not certify the separate new immediate-play specification.",
+      "passed": true,
+      "transientAttributesRestored": true
+    }
+  ],
+  "caseCount": 8,
+  "visual": {
+    "nativeLanceBaseDimensions": [
+      3072,
+      4608
+    ],
+    "characterImageLoaded": [
+      512,
+      768
+    ],
+    "allThreeRaritiesObserved": true,
+    "origins": {
+      "A": "player-launch-band",
+      "B": "opponent-launch-band"
+    },
+    "flightMs": 1380,
+    "chargePulseMs": 600,
+    "energySpent": 0,
+    "successfulPhases": [
+      "waiting",
+      "charge",
+      "flight",
+      "contact"
+    ],
+    "defensePhase": "shield-contact",
+    "noMountedWeaponMachine": true,
+    "realTargetHullMotionAndCleanupObserved": true
+  },
+  "localization": {
+    "defaultLocale": "en",
+    "locales": [
+      "en",
+      "it"
+    ],
+    "cards": 3,
+    "textFieldsPerLocale": 17,
+    "sameNativeBaseURLOnLocaleChange": true,
+    "printedNominalTotals": [
+      38,
+      92,
+      127
+    ]
+  },
+  "audio": {
+    "sharedPCMScoreAndSoftwareParityPassed": true,
+    "actualTabAudioCaptured": true,
+    "addedOrReplacedAudioInVideo": false,
+    "captureChannels": 1,
+    "captureSampleRate": 48000,
+    "nonSilentAudioVerified": true,
+    "physicalSpeakerAssessment": false
+  },
+  "haptics": {
+    "softwareRequestsObserved": true,
+    "charge": [
+      4
+    ],
+    "fire": [
+      6
+    ],
+    "impactsByRarity": {
+      "Rara": [
+        15
+      ],
+      "Epica": [
+        18
+      ],
+      "Leggendaria": [
+        21
+      ]
+    },
+    "block": [
+      6,
+      18,
+      6
+    ],
+    "physicalPhoneVerified": false
+  },
+  "runtime": {
+    "sourceModuleErrorsObserved": 0,
+    "notes": [
+      "Browser extension metadata errors and WebContainer HMR reconnect errors occurred during server restart; excluded from source-module errors.",
+      "Cloud frame rate varies; no constant 30 FPS claim.",
+      "Meccanico di Bordo may repair 1 HP after impact, so final mother HP delta need not equal the shot event damage."
+    ]
+  },
+  "actualBattleVideo": {
+    "library_file_id": "libfile_1b957eda591c8191b75bff2522e4ed5b",
+    "filename": "lancia-comando-battaglia-stackblitz-con-audio.mp4",
+    "bytes": 7649813,
+    "sha256": "142e06d2ca4828c05ad14497588fdcef3412b3e07e68f23b4e4bb1818f3186c2",
+    "sourceWebMBytes": 20334883,
+    "sourceWebMSha256": "29b47e588e2d99db0123398e2bdf0408506bd8ae9e4c39f41013d9468c39ea84",
+    "durationSeconds": 62.889,
+    "dimensions": [
+      900,
+      1600
+    ],
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "speed": 1,
+    "trimmedOnlyInitialIdleSeconds": 30.39,
+    "scenarios": [
+      "Rara A/B",
+      "Epica A/B supports",
+      "Leggendaria A/B slot2",
+      "Defense A/B"
+    ],
+    "studioDemonstration": false
+  },
+  "limitations": [
+    "Physical vibration on a compatible phone is still unverified.",
+    "This does not certify implementation of the separately documented immediate-play and global sequential-combat rules."
+  ]
+}

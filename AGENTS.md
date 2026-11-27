@@ -20,10 +20,21 @@ Leggere `docs/FULMINE_08_LANCIA_COMANDO_2026-11-27.md`. Tre fronti R/E/L
 autorizza esplicitamente l'inserimento nel repository pubblico test7/main.
 Registro aggiornato a 50 varianti: 22 Metallo e 28 Fulmine. Gli originali
 e le basi senza testo sono archiviati byte per byte; nessuna rigenerazione.
-Renderer, suono e piano aptico sono condivisi con lo studio. Il nuovo
-collaudo in partita su StackBlitz è ancora da eseguire. Lo studio usa eventi
-del motore e non è una registrazione della partita. Non
-riaprire la direzione approvata o confondere questa chat con i Personaggi.
+Renderer, suono e piano aptico sono condivisi con lo studio. Il collaudo in partita su StackBlitz è completato su
+`bd2e96fab68688e159ae5af0845b696827d63448`: otto casi, tre rarità, A/B,
+madre/supporti, slot 2, Personaggio nello stesso turno, assente/scaduto,
+Arma disabilitata e Difesa. Personaggio e Difesa leggono ora i fronti
+dallo stesso riferimento remoto; salvataggio e reload della copia
+esistente verificati con 765 sorgenti e 50 varianti. Registro:
+`docs/collaudi/lancia-comando-2026-11-27/verifica-partita-stackblitz.json`.
+Suite 2470/2470; dopo la correzione dei percorsi, 20 test mirati, build
+e preflight passati. Video REALE della partita con audio della scheda,
+900×1600 e velocità nativa, salvato come
+`lancia-comando-battaglia-stackblitz-con-audio.mp4`
+(`libfile_1b957eda591c8191b75bff2522e4ed5b`). Lo studio precedente rimane
+separato. La vibrazione fisica sul telefono resta da verificare. Questo
+collaudo non certifica la distinta nuova specifica sugli effetti immediati.
+Non riaprire la direzione approvata o confondere questa chat con i Personaggi.
 
 ## Sonda / Martello — sette fronti e direzione B approvati il 27/11/2026
 

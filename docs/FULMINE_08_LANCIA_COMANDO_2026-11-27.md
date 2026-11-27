@@ -19,9 +19,42 @@ prima del lancio. Assenza/scadenza/disabilitazione non creano spari; una
 Difesa bloccante reagisce sulla propria carta e sullo scudo senza danno
 o contraccolpo sullo scafo. Nessuna nuova abilità Personaggio, consumo
 Energia, quantità di colpi o modifica dei danni. Le sequenze con altre
-Armi attendono il contatto precedente. Il collaudo della nuova versione
-nella partita StackBlitz rimane da completare; la verifica fisica della
-vibrazione richiede un telefono compatibile.
+Armi attendono il contatto precedente. Il collaudo della versione finale
+nella partita StackBlitz è completato: otto casi reali sul commit
+`bd2e96fab68688e159ae5af0845b696827d63448`. La verifica fisica della
+vibrazione richiede ancora un telefono compatibile.
+
+## Collaudo concluso e pubblicazione
+
+Codice ed effetti: `fa79d47dd1789d0c57acdb979eb22fa1dcfb94b7`. Sei PNG nativi
+materializzati senza cambiare i byte: `6c678f87966580714494f354b66fbf48a49198d5`.
+Correzione dei percorsi remoti Personaggio/Difesa e versione visiva finale:
+`bd2e96fab68688e159ae5af0845b696827d63448`. La copia StackBlitz esistente
+è stata salvata nell’editor e ricaricata: riferimento persistente, 765
+sorgenti verificati, selettore di 50 varianti. Nessuna copia nuova.
+
+Otto casi: Rara A/B sulla madre; Epica A/B sui supporti; Leggendaria A/B
+dal secondo slot; Difesa A/B; Personaggio assente; scaduto; Arma A
+disabilitata; Personaggio e Lancia nello stesso turno A. Richiamo sui
+veri slot A-0/B-0, contatti e contraccolpo sui veri scafi, Difesa nei
+suoi slot, zero danni e zero rinculo in caso di blocco, pulizia finale
+verificati. Le tre basi native caricano a 3072×4608 e i 17 campi EN/IT
+cambiano lasciando invariata l’immagine. Il requisito Energia resta zero.
+
+Suite completa: 2470/2470. Dopo la correzione del percorso delle carte,
+20 test mirati, verifica del riferimento remoto, build e preflight passati.
+Video reale di 62,889 secondi, 900×1600 H.264/AAC mono 48 kHz: tre
+rarità A/B e Difesa, audio acquisito dalla scheda, nessun audio aggiunto
+e nessuna modifica della velocità. File:
+`lancia-comando-battaglia-stackblitz-con-audio.mp4`,
+`libfile_1b957eda591c8191b75bff2522e4ed5b`. Non confonderlo con lo studio
+precedente. La fluidità dipende dal browser cloud; nessuna certificazione
+di 30 FPS costanti o della vibrazione hardware. Il caso dello stesso turno
+verifica il motore corrente, non la distinta nuova specifica sugli effetti
+immediati ancora da implementare. Dati in
+`docs/collaudi/lancia-comando-2026-11-27/verifica-partita-stackblitz.json`.
+
+## Archivio della preparazione precedente
 
 Le sezioni seguenti conservano la preparazione precedente all'approvazione;
 le relative attese di conferma sono storiche e superate.
@@ -33,8 +66,9 @@ proprio lato, scariche ramificate sulla corazza, scintille, contraccolpo,
 schiocco elettrico e richiesta aptica sincronizzati. La macchina rimane
 nell'illustrazione, insieme al suo colpo. Non è montata sulla plancia.
 
-**La direzione è approvata. I tre nuovi fronti completi attendono la prima
-approvazione visiva; non sono nel registro giocabile delle 47 varianti.**
+**Stato storico prima della conferma finale:** i tre fronti erano in attesa
+di approvazione e il registro contava 47 varianti; questi stati sono superati
+dall’inserimento e dal collaudo documentati sopra.
 
 ## Catalogo e meccanica corrente
 
@@ -109,8 +143,7 @@ era accessibile. Non dichiarare quel collaudo completato. Dati e hash in
 
 ## Prosecuzione
 
-Alla conferma dei tre fronti, promuovere esattamente questi PNG e le basi
-senza testo, collegare gli stessi renderer e partitura alla partita e
-collaudare su StackBlitz. Non rigenerare le illustrazioni già confermate.
+La famiglia è inserita e collaudata. Non rigenerare i PNG, le basi senza
+testo o le illustrazioni già confermate.
 Restano dopo questa famiglia Condensatore della Tempesta e Giudizio Temporale;
 le loro meccaniche vanno lette prima della proposta grafica.
