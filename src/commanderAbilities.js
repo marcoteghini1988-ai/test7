@@ -15,7 +15,7 @@ const definitions=[
  ['pilot_boss_2','Colosso di Tharsis','Attacco','Due colpi efficaci di seguito allo stesso vitale','repeat_vital',STANDARD],
  ['pilot_boss_3','Matriarca Tossica','Attacco','Colpo a un avversario con scudo corroso','corroded_enemy',STANDARD],
  ['pilot_boss_4','Arconte Solare','Attacco','Formula con tre numeriche verso un vitale','three_vital',STANDARD],
- ['pilot_boss_5','Occhio del Vortice','Attacco','Colpo potenziato da vera carta Impulso Ionico','ion_shot',STANDARD],
+ ['pilot_boss_5','Vegliardo del Vortice','Attacco','Colpo potenziato da vera carta Impulso Ionico','ion_shot',STANDARD],
  ['pilot_boss_6','Devastatore delle Ere','Attacco','Primo colpo efficace dopo un riciclo numerico','recycled_shot',STANDARD],
  ['pilot_boss_7','Sentinella Ionica','Difesa','Madre colpita mentre è ionizzata','ionized_self',STANDARD],
  ['pilot_boss_8','Leviatano Abissale','Difesa','Scudo madre ancora sopra il 50%','high_shield',STANDARD],
