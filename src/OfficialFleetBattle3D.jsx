@@ -11,6 +11,7 @@ import {readShipCollection} from './shipCollection.js';
 import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
  SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
@@ -503,7 +504,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  control:'/assets/special-cards/tactic-suppress.png'
 };
  const fallbackArt=fallbackImages[role]||fallbackImages.support;
- const displayArt=art||fallbackArt;
+ const displayArt=isBossCharacterCard(type)?null:art||fallbackArt;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   data-fleet-hand-index={index}
@@ -513,12 +514,12 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
   aria-label={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
   aria-disabled={!!unavailableReason||disabled}
   aria-pressed={selected} onClick={onClick}>
-  <img src={displayArt} alt="" draggable={false}
+  {displayArt?<img src={displayArt} alt="" draggable={false}
    onError={event=>{
     if(art&&event.currentTarget.getAttribute('src')!==fallbackArt){
      event.currentTarget.src=fallbackArt;
     }
-   }}/>
+   }}/>:<span className="live-card-pending-art" aria-hidden="true">ILLUSTRAZIONE DA CREARE</span>}
   {art&&<WeaponSalvoCardMarks cardId={type}/>}
   <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity" title={localizedCardText(def)?.rarity||'Rarità '+rarity}>{categoryLabel}</span>

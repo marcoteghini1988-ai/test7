@@ -139,7 +139,7 @@ export function cardFacePath(id,level=1){
  const approvedWeaponArt=officialWeaponFacePath(id);
  if(approvedWeaponArt)return approvedWeaponArt;
  if(definition.nativeFace)return null;
- if(bossCard(id))return CARD_ASSET_ROOT+'/fleet-next-boss-cards/'+id+'.svg';
+ if(bossCard(id))return null; // Personaggi Boss: illustrazioni ancora da creare.
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
   CARD_ASSET_ROOT+'/fleet-next-card-upgrades/'+id+'-g'+grade+'.svg':

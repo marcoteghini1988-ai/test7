@@ -232,7 +232,8 @@
 .es-math-scope .official-duel-3d .special-board-boss-portrait img[hidden]{display:none}
 .es-math-scope .official-duel-3d .special-board-boss-portrait .boss-character-portrait-fallback{
  position:absolute;inset:0;display:grid;place-items:center;
- font-size:24px;color:#dfbfff;background:linear-gradient(145deg,#352254,#0e203a);
+ padding:3px;text-align:center;font-size:7px;line-height:1.2;font-weight:700;
+ color:#dfbfff;background:linear-gradient(145deg,#352254,#0e203a);
 }
 .es-math-scope .official-duel-3d .special-board-card.boss-character-card strong{
  position:absolute;bottom:0;left:0;right:0;z-index:2;max-width:100%;

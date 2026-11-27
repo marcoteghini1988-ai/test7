@@ -78,17 +78,13 @@ for(const card of exclusive)for(const grade of [2,3]){
  }
 }
 const bossRoot=resolve(ROOT,'public/assets/fleet-next-boss-cards');
-const bossCards=Object.values(BOSS_CARDS),bossFiles=readdirSync(bossRoot).filter(f=>f.endsWith('.svg'));
-if(bossCards.length!==12||bossFiles.length!==12)fail('Fronti Boss mancanti o extra');
-for(const card of bossCards){
- const svg=readFileSync(resolve(bossRoot,card.id+'.svg'),'utf8');checkEffect(svg,card);
- if(!svg.includes('data-boss-portrait="'+card.id+'"'))fail('Ritratto Boss originale mancante '+card.id);
- if(!svg.includes('>BOSS</text>')||!svg.includes('>PERSONAGGIO</text>'))fail('Ruolo o rarità Boss errati '+card.id);
- if(svg.includes('ECLISSI STELLARE'))fail('Marchio non consentito sul fronte Boss '+card.id);
-}
+const bossCards=Object.values(BOSS_CARDS);
+if(bossCards.length!==12)fail('Catalogo Personaggi Boss incompleto');
+if(existsSync(bossRoot)||existsSync(resolve(ROOT,'public/assets/boss-characters')))
+ fail('Fronti Personaggio Boss provvisori ancora presenti');
 if(assets.some(f=>!src.has(f.slice(0,-5))))fail('WebP orfana');
 if(hdIds.length!==assets.length)fail('Conteggio HD divergente');
-const state={total:cards.length,hd:hdIds.length,approved:0,pending:missing.length,upgradeFaces:upgradeFiles.length,bossFaces:bossCards.length,rulesChecked:cards.length+upgradeFiles.length+bossCards.length,perFunction,
+const state={total:cards.length,hd:hdIds.length,approved:0,pending:missing.length,upgradeFaces:upgradeFiles.length,bossFaces:0,bossArtworkPending:bossCards.length,rulesChecked:cards.length+upgradeFiles.length,perFunction,
  next:missing.slice(0,15),updatedFrom:'repository'};
 if(process.argv.includes('--json'))console.log(JSON.stringify(state,null,2));
 else console.log('CARTE: '+state.hd+'/'+state.total+' HD, '+state.pending+' ancora vettoriali; '+Object.entries(perFunction).map(([k,v])=>k+':'+v.hd+'/'+v.total).join(' | '));

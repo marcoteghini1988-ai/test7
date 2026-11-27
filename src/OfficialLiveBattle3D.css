@@ -169,6 +169,8 @@
 .es-math-scope .live-root .live-hand-special:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .es-math-scope .live-root .live-hand-special .live-special-art{position:absolute;top:0;left:0;right:0;
  font-size:26px;line-height:1.22;color:var(--family);text-shadow:0 0 9px var(--family)}
+.es-math-scope .live-root .live-card-pending-art{position:absolute;top:18px;left:2px;right:2px;
+ color:#e7d2ff;text-align:center;font-size:6px;line-height:1.15;font-weight:800;pointer-events:none}
 .es-math-scope .live-root .live-hand-special img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
  object-position:50% 43%;filter:saturate(1.1) contrast(1.04);transition:filter .16s ease-out,transform .16s ease-out}
 .es-math-scope .live-root .live-hand-special:hover:not(:disabled) img,

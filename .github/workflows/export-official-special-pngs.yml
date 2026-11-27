@@ -1,11 +1,10 @@
-name: PNG HD dalle 82 carte realmente presenti
+name: PNG HD dalle 70 carte illustrate presenti
 on:
   push:
     branches: [main]
     paths:
-      - 'scripts/export-official-special-pngs.sh'
-      - 'scripts/align-official-special-labels.mjs'
-      - '.github/workflows/export-official-special-pngs.yml'
+      - 'public/assets/special-cards/*.svg'
+      - 'public/assets/terrain-pvp/*.svg'
   workflow_dispatch:
 
 permissions:
@@ -23,7 +22,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq librsvg2-bin
-      - name: Allinea i nomi SVG alle 78 carte reali, poi crea 82 PNG
+      - name: Allinea i nomi dei 66 fronti speciali, poi crea 70 PNG
         run: |
           node scripts/align-official-special-labels.mjs
           bash scripts/export-official-special-pngs.sh
@@ -32,23 +31,23 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import struct
-          dirs=('special-cards','boss-characters','terrain-pvp')
+          dirs=('special-cards','terrain-pvp')
           files=[p for d in dirs for p in (Path('public/assets')/d).glob('*.png')]
-          assert len(files)==82, f"PNG attesi: 82, trovati: {len(files)}"
+          assert len(files)==70, f"PNG attesi: 70, trovati: {len(files)}"
           for path in files:
               with path.open('rb') as f:
                   magic=f.read(24)
               assert magic[:8]==b'\x89PNG\r\n\x1a\n',path
               assert struct.unpack('>II',magic[16:24])==(512,768),path
-          print("OK: 82 PNG ufficiali 512x768")
+          print("OK: 70 PNG illustrati 512x768; Personaggi Boss in attesa")
           PY
           git config user.name "eclissi-asset-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add public/assets/special-cards/*.png public/assets/boss-characters/*.png public/assets/terrain-pvp/*.png
-          git add public/assets/special-cards/*.svg public/assets/boss-characters/*.svg
+          git add public/assets/special-cards/*.png public/assets/terrain-pvp/*.png
+          git add public/assets/special-cards/*.svg
           if git diff --cached --quiet; then
             echo "Tutti i PNG ufficiali sono gia' aggiornati"
           else
-            git commit -m "Renderizza 82 illustrazioni ufficiali esistenti in PNG HD"
+            git commit -m "Renderizza le 70 illustrazioni presenti in PNG HD"
             git push origin HEAD:main
           fi

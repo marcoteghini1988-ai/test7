@@ -265,9 +265,12 @@ for(const fx of LIVE_FX_SPRITES){
  verify(exists(`public/assets/battle-fx/${fx}.png`),
   'Effetto grafico LIVE mancante: '+fx);
 }
-// Ogni illustrazione ufficiale deve avere il PNG mostrato nel gioco e
-// il sorgente SVG da cui rigenerarlo: 66 speciali + 12 boss + 4 terreni.
-for(const directory of ['special-cards','boss-characters','terrain-pvp']){
+// Le 66 speciali e i 4 terreni illustrati hanno PNG e sorgente SVG.
+// I fronti Personaggio Boss restano assenti finché non saranno creati e approvati.
+verify(!exists('public/assets/boss-characters')&&
+ !exists('public/assets/fleet-next-boss-cards'),
+ 'Fronti provvisori Personaggio Boss ancora presenti');
+for(const directory of ['special-cards','terrain-pvp']){
  const files=readdirSync(resolve(root,'public/assets',directory));
  const pngs=new Set(files.filter(f=>f.endsWith('.png')).map(f=>f.slice(0,-4)));
  const svgs=new Set(files.filter(f=>f.endsWith('.svg')).map(f=>f.slice(0,-4)));

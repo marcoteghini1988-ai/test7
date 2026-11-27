@@ -16,7 +16,7 @@ import {readSpecialCollection} from './specialDeckBuilder.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {readLegacyModuleLevels,TACTICAL_MODULE_CARDS,isModuleCard} from './tacticalEquipmentCards.js';
-import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
 import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
@@ -139,12 +139,8 @@ function Slot({kind,index,side,card,onActivate,selected}){
    (visual?.rarity?' · '+visual.rarity:'')+' · '+face.effect:label}
   aria-label={label+(card?' · '+(face?.name??'coperta'):' · vuoto')}
   onClick={onActivate}>
-  {visible&&(officialSpecialArtPath(card?.type)||
-    (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:null)||
-    (isPvpTerrain(card?.type)?pvpTerrainDefinition(card.type)?.imagePath:null))?
-    <img className="live-slot-art" src={officialSpecialArtPath(card?.type)||
-     (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:
-      pvpTerrainDefinition(card.type)?.imagePath)} alt="" draggable={false}/>:
+  {visible&&officialSpecialArtPath(card?.type)?
+    <img className="live-slot-art" src={officialSpecialArtPath(card.type)} alt="" draggable={false}/>:
     <span>{face?.symbol??(card?'?':symbol)}</span>}
   {!card&&<small className="live-slot-role" aria-hidden="true">{slotBadge}</small>}
   {face&&<small className="live-slot-caption" aria-hidden="true">{visual?.role??face.category}</small>}
