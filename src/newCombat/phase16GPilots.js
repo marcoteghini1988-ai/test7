@@ -20,7 +20,7 @@ export const PHASE16G_PILOTS=Object.freeze(Object.fromEntries([
  pilot('pilot_rare_1','Corsaro della Rivalsa','risposta_perdente','Perdi rispondendo ma resisti a una salva: recuperi una parte degli HP.'),
  pilot('pilot_rare_2',"L'Adrenalinico",'pressione_hp','Sotto il 40% HP, una salva valida rigenera munizioni e Boost.'),
  pilot('pilot_rare_3','Il Baro','jolly_vincente','Vinci sparando con un Jolly nella figura: guadagni Etere e Boost.'),
- pilot('pilot_rare_4','Il Collezionista di Specchi','pareggio_armato','Pareggio Poker con due salve valide: recuperi HP e Boost.'),
+ pilot('pilot_rare_4','Mercante dei Riflessi Gemelli','pareggio_armato','Pareggio Poker con due salve valide: recuperi HP e Boost.'),
  pilot('pilot_epic_1',"L'Artificiere di Bordo",'risposta_dopo_colpo','Dopo aver subito una salva, vinci rispondendo: recuperi HP e munizioni.'),
  pilot('pilot_epic_2',"L'Alchimista Aurico",'tre_semi','Spari con almeno tre semi diversi: recuperi munizioni del serbatoio più scarico e Boost.'),
  pilot('pilot_epic_3','Il Viaggiatore del Tempo','figura_grande_persa','Perdi usando una figura valida di quattro o cinque carte: recuperi Etere e Boost.'),
