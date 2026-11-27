@@ -46,8 +46,8 @@
 | Epiche | L'Artificiere di Bordo | Attacco: vera speciale Perforante/Corrosione sulla scarica |
 | Epiche | L'Alchimista Aurico | Attacco: due effetti speciali differenti sulla scarica |
 | Epiche | Il Viaggiatore del Tempo | Attacco: vitale nemico non ancora colpito dal comandante |
-| Epiche | Il Re del Ghiaccio | Difesa: proprio scudo madre a zero |
-| Leggendarie | Il Gran Maestro | Attacco: operazione diversa dall'ultima andata a segno |
+| Epiche | Comandante della Galaverna | Difesa: proprio scudo madre a zero |
+| Leggendarie | Stratega delle Tre Figure | Attacco: operazione diversa dall'ultima andata a segno |
 | Leggendarie | Il Veggente Supremo | Attacco: colpire una scudiera diversa dalla precedente |
 | Leggendarie | Il Fissatore | Attacco: terzo colpo consecutivo sullo stesso vitale |
 | Leggendarie | Il Lottatore di Sumo | Attacco: formula tripla con moltiplicazione o divisione |
