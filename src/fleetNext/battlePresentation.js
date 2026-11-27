@@ -2,6 +2,7 @@ import {card,cardRole} from './rules.js';
 import {isTrapCard} from './simpleEffects.js';
 import {supportWeaponCharge,arsenalBonus} from './newCardEffects.js';
 import {stormCapacitorNominal,withFinalStormNominal} from './stormCapacitorNominals.js';
+import {approvedBatchNominal,withFinalBatchNominal} from './approvedBatchNominals.js';
 import {hasBalancedMother} from './confirmedCardBalance.js';
 import {CAMPAIGN_SHIP_ORDER} from './progression.js';
 
@@ -74,6 +75,8 @@ function designedWeaponPreview(side,machine,ply){
  if(!profile)return null;
  if(profile.pattern==='percent')return {damagePercent:profile.damagePercent};
  const stage=Math.max(0,Math.floor((ply-machine.deployedPly)/2));
+ const batchNominal=approvedBatchNominal(machine,{stage:stage+1});
+ if(batchNominal!==null)return {nominalDamage:arsenalBonus(side,withFinalBatchNominal(machine),ply,batchNominal)};
  if(profile.pattern==='binary-overload')return stage===1||stage===3?
   {damageFormula:'Costo: '+(stage===1?profile.motherCostPercent:profile.allyCostPercent)+'% HP alleati'}:
   {damagePercent:profile.damageStages[stage]};

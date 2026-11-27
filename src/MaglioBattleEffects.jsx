@@ -23,6 +23,8 @@ import {commandLanceVariant} from './commandLanceSpec.js';
 import {cancelCommandLanceSounds} from './commandLanceAudio.js';
 import {stormCapacitorVariant,STORM_CAPACITOR_KIND,stormContributionPlan} from './stormCapacitorSpec.js';
 import {cancelStormCapacitorSounds} from './stormCapacitorAudio.js';
+import {batchWeaponVariant,BATCH_KINDS} from './weaponBatchSpec.js';
+import {cancelBatchWeaponSounds} from './weaponBatchAudio.js';
 import './MaglioBattleEffects.css';
 
 const point=(rect,board)=>({
@@ -91,9 +93,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
  // durante i ricalcoli delle coordinate del ResizeObserver.
  useEffect(()=>{
   const timers=[],collisionKeys=new Set();let requested=false;
-  const lance=shots.some(s=>commandLanceVariant(s.cardId)),storm=shots.some(s=>stormCapacitorVariant(s.cardId));
-  const visibility=()=>{if(document.visibilityState!=='visible'){cancelCommandLanceSounds();cancelStormCapacitorSounds();cancelWeaponHaptics();}};
-  if(lance||storm)document.addEventListener('visibilitychange',visibility);
+  const lance=shots.some(s=>commandLanceVariant(s.cardId)),storm=shots.some(s=>stormCapacitorVariant(s.cardId)),batch=shots.some(s=>batchWeaponVariant(s.cardId));
+  const visibility=()=>{if(document.visibilityState!=='visible'){cancelCommandLanceSounds();cancelStormCapacitorSounds();cancelBatchWeaponSounds();cancelWeaponHaptics();}};
+  if(lance||storm||batch)document.addEventListener('visibilitychange',visibility);
   const schedule=(delay,callback)=>timers.push(window.setTimeout(callback,
    Math.max(0,delay-(performance.now()-startedAt))));
   const cue=(profile,phase,time,shot)=>schedule(time,()=>{
@@ -122,6 +124,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
     collisionKeys.add(shot.visualGroupId);
    }
    const start=shotStart+(shot.delayMs||0);
+   if(shot.burnTick){cue(profile,'impact',start,shot);continue;}
+   if(profile.kind===BATCH_KINDS.judgment&&shot.fires&&!shot.defenseBlocked)cue(profile,'alignment',start+profile.flightMs-220,shot);
+   if(profile.kind===BATCH_KINDS.mortar&&shot.impactIndex===0&&shot.energySpent>0)cue(profile,'energy',start-300,shot);
    if(profile.kind===STORM_CAPACITOR_KIND)for(const step of stormContributionPlan(shot,start))cue(profile,step.phase,step.at,shot);
    if(profile.kind!==STORM_CAPACITOR_KIND&&profile.sound.charge&&(profile.kind!=='growing-thunder-core'||shot.energySpent>0))
     cue(profile,'charge',Math.max(0,start-profile.chargeMs)+(profile.kind==='growing-thunder-core'?20:0),shot);
@@ -142,7 +147,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   }
   for(const event of events.filter(e=>e.kind==='weapon-core-expired'))
    cue(weaponEffectProfile(event.cardId),'release',weaponExpiryStartMs(shots,shotStart),event);
-  return ()=>{timers.forEach(id=>window.clearTimeout(id));if(requested)cancelWeaponHaptics();if(lance||storm){document.removeEventListener('visibilitychange',visibility);cancelCommandLanceSounds();cancelStormCapacitorSounds();}};
+  return ()=>{timers.forEach(id=>window.clearTimeout(id));if(requested)cancelWeaponHaptics();if(lance||storm||batch){document.removeEventListener('visibilitychange',visibility);cancelCommandLanceSounds();cancelStormCapacitorSounds();cancelBatchWeaponSounds();}};
  },[nonce,shots,shotStart]);
  useLayoutEffect(()=>{
   const root=ref.current?.closest('.f3d-approved-layout');

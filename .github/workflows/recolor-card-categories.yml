@@ -9,6 +9,7 @@ on:
       - 'asset-sources/weapon-fronts/approved-2026-11-26/**'
       - 'asset-sources/weapon-fronts/lancia-comando-2026-11-27/**'
       - 'asset-sources/weapon-fronts/condensatore-tempesta-2026-11-27/**'
+      - 'asset-sources/weapon-fronts/lotto-giudizio-fuoco-2026-11-27/**'
       - 'src/fleetNext/approvedWeaponIntegration.json'
       - '.github/workflows/recolor-card-categories.yml'
   workflow_dispatch:
@@ -52,6 +53,9 @@ jobs:
           git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono*.png
           git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico*.png
           git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta*.png
+          git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale*.png
+          git add -f public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico*.png
+          git add -f public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante*.png
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Materializza i PNG approvati e le basi HD traducibili senza alterarne i byte'
           git pull --rebase origin main

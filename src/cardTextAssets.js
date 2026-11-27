@@ -1,8 +1,9 @@
+import {BATCH_WEAPON_CARD_IDS} from './weaponBatchSpec.js';
 import {PROBE_HAMMER_CARD_IDS} from './probeHammerSpec.js';
 import {CORE_FAMILY} from './coreThunderSpec.js';
 import {STORM_CAPACITOR_CARD_IDS} from './stormCapacitorSpec.js';
 import {COMMAND_LANCE_CARD_IDS} from './commandLanceSpec.js';
-export const LOCALIZED_WEAPON_CARD_IDS=Object.freeze([CORE_FAMILY,CORE_FAMILY+'-rarity-e',CORE_FAMILY+'-rarity-l',...PROBE_HAMMER_CARD_IDS,...COMMAND_LANCE_CARD_IDS,...STORM_CAPACITOR_CARD_IDS]);
+export const LOCALIZED_WEAPON_CARD_IDS=Object.freeze([CORE_FAMILY,CORE_FAMILY+'-rarity-e',CORE_FAMILY+'-rarity-l',...PROBE_HAMMER_CARD_IDS,...COMMAND_LANCE_CARD_IDS,...STORM_CAPACITOR_CARD_IDS,...BATCH_WEAPON_CARD_IDS]);
 export const hasCardTextLayer=id=>LOCALIZED_WEAPON_CARD_IDS.includes(id);
 const ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 export const cardTextBasePath=id=>hasCardTextLayer(id)?ASSET_ROOT+'/fleet-weapon-fronts/'+id+'-text-base.png':null;

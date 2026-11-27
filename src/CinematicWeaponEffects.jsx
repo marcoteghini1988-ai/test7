@@ -13,6 +13,9 @@ import {COMMAND_LANCE_KIND,commandLanceVisualHit} from './commandLanceSpec.js';
 import {commandLanceFlight} from './commandLanceRenderer.js';
 import {STORM_CAPACITOR_KIND,stormVisualHit} from './stormCapacitorSpec.js';
 import {stormFlight} from './stormCapacitorRenderer.js';
+import {isBatchWeaponKind,batchVisualHit} from './weaponBatchSpec.js';
+import {judgmentFlight} from './judgmentTemporalRenderer.js';
+import {magmaFlight} from './fireWeaponRenderer.js';
 import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import './CinematicWeaponEffects.css';
 
@@ -66,9 +69,10 @@ export default function CinematicWeaponEffects({paths,startedAt}){
     element.dataset.motif=entry.style.motif;element.dataset.targetId=shot.targetId;
     element.dataset.activeWeapon=p.kind;element.dataset.impactIndex=String(shot.impactIndex||0);
     element.dataset.comboContact=String(p.kind==='thunder-hammer'&&shot.impactIndex===1&&hitAge>=0&&shot.fires&&!shot.defenseBlocked);
-    const pair=isProbeHammerKind(p.kind),lance=p.kind===COMMAND_LANCE_KIND,storm=p.kind===STORM_CAPACITOR_KIND,moving=storm?stormFlight(stormVisualHit(p,shot,entry.from),elapsed,entry.to).point:lance?commandLanceFlight(commandLanceVisualHit(p,shot,entry.from),elapsed,entry.to).point:pair?probeHammerFlightPosition(probeHammerVisualHit(p,shot,entry.from),elapsed,entry.to).point:(p.kind===CORE_KIND?coreScenicPose(coreFrame(p,shot),elapsed,entry.from,entry.to,p.flightMs).point:
+    const batch=isBatchWeaponKind(p.kind),batchHit=batch?batchVisualHit(p,shot,entry.from):null,
+     pair=isProbeHammerKind(p.kind),lance=p.kind===COMMAND_LANCE_KIND,storm=p.kind===STORM_CAPACITOR_KIND,moving=batch?(shot.burnTick?entry.to:batchHit.kind==='mortar'?magmaFlight(batchHit,elapsed,entry.to).point:judgmentFlight(batchHit,elapsed,entry.to).point):storm?stormFlight(stormVisualHit(p,shot,entry.from),elapsed,entry.to).point:lance?commandLanceFlight(commandLanceVisualHit(p,shot,entry.from),elapsed,entry.to).point:pair?probeHammerFlightPosition(probeHammerVisualHit(p,shot,entry.from),elapsed,entry.to).point:(p.kind===CORE_KIND?coreScenicPose(coreFrame(p,shot),elapsed,entry.from,entry.to,p.flightMs).point:
      weaponFlightFrame(entry.from,entry.to,elapsed/p.flightMs,camera,0,{shot,kind:p.kind}).nose).project(camera);
-    if(!pair&&!lance&&!storm){moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;}
+    if(!pair&&!lance&&!storm&&!batch){moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;}
     for(const ship of ships){
      if(ship.target.dataset.collisionMotion)continue;
      const hit=entry.target===ship.target&&shot.fires&&!shot.defenseBlocked;

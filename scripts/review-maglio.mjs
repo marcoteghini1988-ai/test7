@@ -21,6 +21,7 @@ import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js
 import {probeHammerVariant} from './src/probeHammerSpec.js';
 import {commandLanceVariant} from './src/commandLanceSpec.js';
 import {stormCapacitorVariant} from './src/stormCapacitorSpec.js';
+import {batchWeaponVariant} from './src/weaponBatchSpec.js';
 import {CORE_FAMILY} from './src/coreThunderSpec.js';
 import {useCardTextLocale} from './src/CardTextLayer.jsx';
 import {setCardTextLocale} from './src/cardTextLocale.js';
@@ -34,7 +35,8 @@ function Review(){
   {name:'Binaria / Manta',shipA:'R01',shipB:'R02',supportModels:['C04','E03']},
   {name:'Squalo / Tempesta',shipA:'R04',shipB:'E02',supportModels:['E01','L02']},
   {name:'Regina / Titano',shipA:'L01',shipB:'L03',supportModels:['L04','N00']},
-  {name:'Nebula / Arca',shipA:'E01',shipB:'L04',supportModels:['L01','L03']}
+  {name:'Nebula / Arca',shipA:'E01',shipB:'L04',supportModels:['L01','L03']},
+  {name:'Lince / Lince — Fuoco',shipA:'C01',shipB:'C01',supportModels:['C02','C03']}
  ];
  const capture=useRef(null);
  const [recording,setRecording]=useState(false);
@@ -91,7 +93,7 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0,probeHammerMode:'single',stormMode:'fed'})}>
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0,probeHammerMode:'single',stormMode:'fed',batchMode:'normal',discardedStrategies:0})}>
     {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{cardTextName(WEAPON_NEAR_FINAL_BY_ID[id])+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
@@ -132,6 +134,20 @@ function Review(){
      <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
      <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
+   </>}
+   {batchWeaponVariant(setup.cardId)&&<>
+    <label>Turno Arma <select aria-label="Turno Arma" value={setup.ownStage||1} onChange={e=>reset({ownStage:Number(e.target.value),blocked:false})}>
+     {[1,2,3,4].map(n=><option key={n} value={n}>{n}</option>)}
+    </select></label>
+    <label>Scenario Arma <select aria-label="Scenario Arma" value={setup.batchMode||'normal'} onChange={e=>reset({batchMode:e.target.value,blocked:false,withDefense:false})}>
+     <option value="normal">Normale</option><option value="defense">Difesa bloccante</option><option value="disabled">Arma disabilitata</option>
+    </select></label>
+    {batchWeaponVariant(setup.cardId).kind==='mortar'&&<label>Cariche Fuoco <select aria-label="Cariche Fuoco" value={setup.energyCards||0} onChange={e=>reset({energyCards:Number(e.target.value),ownStage:1})}>
+     {[0,1,2,3].map(n=><option key={n} value={n}>{n}</option>)}
+    </select></label>}
+    {batchWeaponVariant(setup.cardId).kind==='incinerator'&&<label>Strategie scartate <select aria-label="Strategie scartate" value={setup.discardedStrategies||0} onChange={e=>reset({discardedStrategies:Number(e.target.value),ownStage:1})}>
+     {[0,2,8].map(n=><option key={n} value={n}>{n}</option>)}
+    </select></label>}
    </>}
    {stormCapacitorVariant(setup.cardId)&&<>
     <span>Una nube · nuova Energia Fulmine ogni turno · supporti senza sacrificio HP</span>

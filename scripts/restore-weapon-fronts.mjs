@@ -2,6 +2,7 @@
 // a risoluzione, colori, trasparenza o compressione del file originale.
 import {restoreProbeHammerFronts} from './restore-probe-hammer-fronts.mjs';
 import {restoreStormCapacitorFronts} from './restore-storm-capacitor-fronts.mjs';
+import {restoreJudgmentFireFronts} from './restore-judgment-fire-fronts.mjs';
 import {restoreCommandLanceFronts} from './restore-command-lance-fronts.mjs';
 import {readFile,writeFile,mkdir,access,rename} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -87,3 +88,4 @@ await restoreProbeHammerFronts({root,remoteAssets});
 await restoreCommandLanceFronts({root});
 
 await restoreStormCapacitorFronts({root});
+await restoreJudgmentFireFronts({root});

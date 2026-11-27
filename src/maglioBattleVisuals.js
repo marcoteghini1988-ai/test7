@@ -9,6 +9,7 @@ import {ionicWeaponEffectProfile} from './ionicWeaponBattleVisuals.js';
 import {probeHammerEffectProfile,probeHammerVariant,PROBE_HAMMER_TIMING} from './probeHammerSpec.js';
 import {commandLanceEffectProfile,commandLanceVariant} from './commandLanceSpec.js';
 import {stormCapacitorEffectProfile,stormCapacitorVariant} from './stormCapacitorSpec.js';
+import {batchWeaponEffectProfile,batchWeaponVariant} from './weaponBatchSpec.js';
 import {coreThunderEffectProfile} from './coreThunderBattleVisuals.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
@@ -64,7 +65,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot),...probeHammerEffectProfile(id,shot),...commandLanceEffectProfile(id),...stormCapacitorEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot),...probeHammerEffectProfile(id,shot),...commandLanceEffectProfile(id),...stormCapacitorEffectProfile(id),...batchWeaponEffectProfile(id,shot)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -110,7 +111,7 @@ export function fleetWeaponShots(events=[]){
    let groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
    const pair=probeHammerVariant(event.cardId),lance=commandLanceVariant(event.cardId),preceding=shots.filter(s=>pair||lance||probeHammerVariant(s.cardId)||commandLanceVariant(s.cardId));
    if(preceding.length)groupStart=Math.max(groupStart,...preceding.map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||470)+(s.projectileHits?.at(-1)?.delayMs||0)+PROBE_HAMMER_TIMING.betweenActivations));
-   const storm=stormCapacitorVariant(event.cardId),stormPreceding=shots.filter(s=>storm||stormCapacitorVariant(s.cardId));
+   const storm=stormCapacitorVariant(event.cardId)||batchWeaponVariant(event.cardId),stormPreceding=shots.filter(s=>storm||stormCapacitorVariant(s.cardId)||batchWeaponVariant(s.cardId));
    if(stormPreceding.length)groupStart=Math.max(groupStart,...stormPreceding.map(s=>{
     const p=weaponEffectProfile(s.cardId,s),next=weaponEffectProfile(event.cardId);
     return (s.delayMs||0)+p.flightMs+p.impactMs+(next.chargeMs||0)+150;
@@ -126,9 +127,13 @@ export function fleetWeaponShots(events=[]){
      events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
     nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,destroyed:!!hit.destroyed,
-    delayMs:pair?groupStart+impactIndex*PROBE_HAMMER_TIMING.betweenSlashes:event.jawCombo?groupStart:Math.max(groupStart,shots.length*MAGLIO_SHOT_GAP_MS),
+    delayMs:batchWeaponVariant(event.cardId)?.kind==='mortar'?groupStart+impactIndex*480:pair?groupStart+impactIndex*PROBE_HAMMER_TIMING.betweenSlashes:event.jawCombo?groupStart:Math.max(groupStart,shots.length*MAGLIO_SHOT_GAP_MS),
     ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
+  }else if(event.kind==='weapon-burn'&&batchWeaponVariant(event.cardId)){
+   const delayMs=Math.max(0,...shots.map(s=>{const p=weaponEffectProfile(s.cardId,s);return (s.delayMs||0)+p.flightMs+p.impactMs;}))+150;
+   shots.push({...event,who:event.who==='A'?'B':'A',damagedSide:event.who,burnTick:true,targetKind:'part',targetId:'weapons',delayMs,
+    fires:event.actualDamage>0,defenseBlocked:false,actualDamage:event.actualDamage});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){
    // Le Armi storiche sommano il danno in un solo impatto: una traiettoria
    // per ogni bersaglio reale, senza inventare proiettili o danni separati.
@@ -170,7 +175,7 @@ export function maglioResolutionMs(events=[],selectedCards=[]){
 // scelti restano due carte; un'Arma già sul tavolo aggiunge una sola anteprima.
 export function weaponVisualCards(shots=[],selectedCards=[]){
  const cards=selectedCards.map(c=>typeof c==='string'?{id:c,grade:1}:c);
- for(const shot of shots)if(!cards.some(c=>c.id===shot.cardId))
+ for(const shot of shots)if(!shot.burnTick&&!cards.some(c=>c.id===shot.cardId))
   cards.push({id:shot.cardId,grade:1});
  return cards;
 }
@@ -201,6 +206,7 @@ export function weaponExpiryStartMs(shots=[],start=0){
 export function maglioPresentationBerths(unit,chosenCards,ply,shots=[],resolvedUnit){
  const berths=projectMachineBerths(unit,chosenCards,ply);
  for(const shot of shots){
+  if(shot.burnTick)continue;
   if(!weaponEffectProfile(shot.cardId)?.approved)continue;
   const machine=resolvedUnit?.machines?.find(m=>m.id===shot.machineId);
   berths[shot.machineSlot]={...(machine||berths[shot.machineSlot]),

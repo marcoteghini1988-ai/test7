@@ -5326,7 +5326,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const holoHooks={unitEnabled,unitSilenced,weaponSlotLocked,arsenalBonus,emit};
  prepareHolographicReplica(b,ctx,events,holoHooks);
  prepareHolographicProjection(b,ctx,events,holoHooks);
- reserveProvisionalMortarFuel(b,ctx,{unitEnabled,unitSilenced,weaponSlotLocked});
+ reserveProvisionalMortarFuel(b,ctx,{unitEnabled,unitSilenced,weaponSlotLocked,card});
  if(!b.newGeneratorCombat)resolveElementalActivation(b,who,order,ctx,events);
  arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);

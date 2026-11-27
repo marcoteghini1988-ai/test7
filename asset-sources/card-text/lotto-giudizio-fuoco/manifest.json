@@ -1,0 +1,564 @@
+{
+  "approvalQuote": "procedi",
+  "artworkRegenerated": false,
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-giudizio-temporale",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+      "bytes": 25001383,
+      "sha256": "aef054e6384437c9980beb84e4c82355c06135746355d5adb008b10b8b6226f8",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "125a0cb231f6e12c1feba031680ceb63d63304a561182fc02adbda65da383c8f",
+          "gitBlobSha": "6defa0ccf76afb1658dbbc5b76d642c54494eebc"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "4346b1b9166c00f9b2af791e8b11028ab8bed5aa12601cb3c284e37eba71050d",
+          "gitBlobSha": "17232bf4df1cbe76ba61c03315af25663b2cfd5d"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "3bc573ef286132505ebe73010fb83c35c8c621925ba965fe2738388dbce2f13f",
+          "gitBlobSha": "4a9d56c2d0c2a7706445e7f7ed87c7b241b6a55e"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "fc454cdb6fb7287b7401f705ce153b2a0cfc12e976d2e690f955a4876f8f0212",
+          "gitBlobSha": "eb8633ed1c3a707821b9ff4c1341f106ed25181b"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "ee0f6eb3126751889de7b49a19fa71ee4ce5348656008f4fa8c76e38f0dfa54f",
+          "gitBlobSha": "e5e3704e99aad7ae60b1c2e51db27173dddf644d"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "1c2e116b1bbcd428e553d238367a215d7a713500a034399a15f6ff1a1e49e38f",
+          "gitBlobSha": "895885fa77cc884c8ea5bac7b79677fab0f7f20a"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "0cca1cf96126e152c9264f1b50ed063f75398561a1d4d37ba5d00f5fe2b1accd",
+          "gitBlobSha": "4d337f7b40fa41894b1632a25aea1dd92c3a9841"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "e42a592e1ccd9bd84ce776fd547f09d6c139ea801bb31e8d792737290a8f563f",
+          "gitBlobSha": "0316aab1647821bcafd978c2ac23e4687e1f8ce5"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "8cff0cb555e80f1e62e01c9d023f4395972fed51069efc3f63e1b15fd096bc3b",
+          "gitBlobSha": "ba16a9c673054adf04cabd8a8e770e4a3df9e28d"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "d9fa728036cdb4cd1b536e0bb9660aa6ad105123264e37738b5aba7baca2a4b6",
+          "gitBlobSha": "f1db8d3a35ef606ea387fc171834717d51a6412f"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "f51e8f9aaf18ff1c5a2d6c36e457d80764a46f955b5dbf75234318556371da39",
+          "gitBlobSha": "5d5fa32aa9829227e67ef338e06aab47d1d44664"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-011",
+          "bytes": 2000000,
+          "sha256": "1e6656837515370e3f64807f4f8d0eeea3faa4d95d3c78e1da295ac6aca44f6e",
+          "gitBlobSha": "dd31b971b8288a0e35b17bd97f9c12f03fd55c49"
+        },
+        {
+          "name": "weapon-designed-ionic-giudizio-temporale-text-base.part-012",
+          "bytes": 1001383,
+          "sha256": "0cab9fba52db50e2725af152aa30e6c8f6f8de9f5979ab04c6845d18c8112a01",
+          "gitBlobSha": "e0d969a3b038d08a72d15debc0545322f9300ede"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+      "approvedFrontSha256": "fe3f8e73099f9561b025da24dd10962bad7164f8904db1bfb6435abba860465c"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+      "bytes": 22633079,
+      "sha256": "00080699b3647f0c32d6956f974038a49c7d772bfc3a0b7ccfb49b71fd6ae906",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "69c0a6f3f4d94e9294faf214ed889d34b8d07746abd889cc782c1af778f7131e",
+          "gitBlobSha": "515cbece2f0f630eee21429a97c7753524bd2a23"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "26b7e72b976a4d0498dadfe359ee290bb66229f98555b8c2206e8144bd3ecc0a",
+          "gitBlobSha": "cb471f32e118e47b468a1d27dad8d6dca0d9753a"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "93cb5a5357999b99b44128e37b52ed993fdd8e2e7a588f7555f02d07a156a8e5",
+          "gitBlobSha": "7ef4a29b3960e948c1a8b89fe44e1061cfeadf46"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "46a458a78be4305556b15e98206e0191e91a978e53885d54793f21d98eb6e03f",
+          "gitBlobSha": "349a4380b826dd146de8a9604c5847171faad1e4"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "b4793fcc0441aa47cb6903a2100f70d21849b584bef6edb95d44bac6aaffc1fc",
+          "gitBlobSha": "6949e23360de502f5df0822de76daf834b50da30"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "2b21a6b5e47935aa2eb29ebae71ed2ee5622dadf06d532ed94d94ea34b59ea69",
+          "gitBlobSha": "9f3f4801e71735cb716d71d0c061b04d841bf686"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "8e3ca3b6d5b350324103ad8b857b5d360040488c95412806dfada2d3fcbf79d9",
+          "gitBlobSha": "b725e19c59200a533a05f832d24623607b16780f"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "85ca739261aea5a3a99b7b87827faa0f032434c16bb8a300024a4420e9401d42",
+          "gitBlobSha": "d526fec89baa9090f2236be75351110fcabd4c2f"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "5f70876b06d47729a9f14c1eb9454f9a9bfbe3b5c3d0bc0bf8c97dc4dd27d29f",
+          "gitBlobSha": "f42dfdef14fc021e11c3fdfa94bd7da917db7a70"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "0845a09067fb98380ea4f2029eee4a69c1985986ca0c24a227a14c966bc48b5d",
+          "gitBlobSha": "463eadd3fa1c775b4c8813bed0e3891415fee163"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "1df18518658fcddb1d3a38b72d9873bb0ac102cf4b4ee84d3d0263e396599d6a",
+          "gitBlobSha": "4932bcbd9adcf4fa35e650c680673603ddeaaae9"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-text-base.part-011",
+          "bytes": 633079,
+          "sha256": "11362c7293da0bedcabcd23f8e2125e7e374d405a05453d3f676b3aacc94714c",
+          "gitBlobSha": "6b282aa193b781562bb97c4593e73e6ab38258d0"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+      "approvedFrontSha256": "99c4e89fac4099decf0c7d55011486f40865a9332198df8592e1b19c5d0e9b91"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-e",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+      "bytes": 23365890,
+      "sha256": "0f9f172e531102b32fb745ba7c51954214579b41baff4df47551c6b44f2f6bb2",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "a277e0b1c62b1f335151cf6c45ff8ebfcbd04fd9dd354245c625a75198d2f94d",
+          "gitBlobSha": "d9ff1b823f49fc2ab067d35619c0b218a24d58e6"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "cbd298fd0362635b6260509604beb86a5cf0c532feb6e294ff8c4466929cbc9b",
+          "gitBlobSha": "7dc97d897c94fbfb924e6faeb27182f36f6577d7"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "782793c302ebe5877c906d169faf2fa58a90198183716f23e0462928621079e2",
+          "gitBlobSha": "1f6d425f48ccaf204a003e324272084543ff1300"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "96b60ca4f3341e1596b2ffd97acecbfe2b94233ba88bbc9ea4ce5e2b068eb0bb",
+          "gitBlobSha": "33a6c03f7b6baef4234ec8190cfba045af2a69fc"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "a39b28536e9e766c2f03086d0e557299af5065d4196b0846f03c7d84d39c3d58",
+          "gitBlobSha": "f173c5100c9918062098015c7c1b70b3644dce4f"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "25210a6b422d371f628e131fde80a2060527d231b198272b6044caa2eb198d53",
+          "gitBlobSha": "b6da7bffabc1943f2d2514ab21eb3585b80aa185"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "2ce96a5999d7e0d7f9dd186f3d3b112db9bbe3c3cadbf54e27fe315f3def8020",
+          "gitBlobSha": "dd415ec85993485664a09c3c4f9101bdcd1cc355"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "ba29e203b75c47e9f3fa225cf440ab14ae99c9b0a18ee9fdc12daa80e932b459",
+          "gitBlobSha": "9f030a0d03b23c12e357ba7c9a8df80298232a93"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "7d96d12ee76baeae8319ab61c1f28723517c81529228568d39a3d3a58463f439",
+          "gitBlobSha": "3f5a7f109bf90fac40e76ca37ddb7f5f03a4aac9"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "88267be823ae0da92bb71378b2155c253721e83710afa2efd36ccad48809543f",
+          "gitBlobSha": "9f5758db911f669e7d41c4c70093589684b8e03f"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "04923959d2240323a74d189b2f69ca8619389e3669ad5f1a460b45fb11234619",
+          "gitBlobSha": "7b0478366966fa4b0c616b911f5920c0304a0bce"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.part-011",
+          "bytes": 1365890,
+          "sha256": "12948aae5142894d7e53cd8bcaf30d3d2c43edfd7c0b750ba5b42dcc9a0d94e1",
+          "gitBlobSha": "17fa8029524bf37675b2de8e72013ca92b26a924"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+      "approvedFrontSha256": "ac488a8e823f45e6a768c447cb268796ffd6ed9b580749e83df892da5f2777ed"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+      "bytes": 25147629,
+      "sha256": "e3bf84e0c157fc408b669585ed5d370e7160d520706bd712f1378c7dd65ddb3b",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "54655e283558adb500949282d601c8415354a1f49d4428ae3b8e1ae2b4d57e62",
+          "gitBlobSha": "5c83308d2877eb327929ac3fe054a0413774689c"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "eafa24c2b2df7fb6f0214cd4a256e9bb6e3bb291fa0606d3c695d9772d1ad2de",
+          "gitBlobSha": "f3bb44fdc387bd762145ec794c211450f52d47af"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "8d8a45e5ffe5c304b3dcd5266de4eecac7cabd165084c71ce0338e69e76d3624",
+          "gitBlobSha": "f5cbc59484944e7c6c77b294b40821399f7429f6"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "29edad2cf7368afbfdd3534dd745ccfa7fce451bd21b9a2ffb3ffab0fa70e538",
+          "gitBlobSha": "48ee6d25454b0f7f59479091cfcda7ddd19cd80b"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "1ce6cf6cab2036d43b82727720f3e7c98755ee6af85afee74fca61e3045299f2",
+          "gitBlobSha": "afe16f67c2c90e1798b06913cd36593e9d8899a0"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "f3a5cfb2e76932dbdea1d97099a2412ea65d059d9cf2857fc80dd331bc6b4903",
+          "gitBlobSha": "cbf3b649ca7aa5862a48772456475bb3c9b05802"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "d7679f6f4978b16deb27243cbafa40360f3dc848370a6c2aeaeb3b91e000cdc0",
+          "gitBlobSha": "7a3fc609e44a27d4d8bac1573693d67d91b49406"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "8e52ec6110af32b753bb3032c68fa9a8050527bbb70a8c4422fb289b20dde7c2",
+          "gitBlobSha": "532ab20e4b1bd059ad77b38086f68a78bd619012"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "0d133bdbe1659eff3dafea99d4b990ae5f2714ab1a75dfa3b1434d6524d18de1",
+          "gitBlobSha": "564724e024ec7045482159c4e4447dcde6cc36e0"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "a94090696b4dd611c2b3c61e5824b80d9f508052c0e3d473111172da0968358a",
+          "gitBlobSha": "20ea91288c5dc535855f39d8c6618e2c196dcc6b"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "c04b381992f3ab25258208cb768d7bc742712992e0da758204362787dea5e8fe",
+          "gitBlobSha": "9f278d80244fd4148e7317601d9676eb0d9a0d1d"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-011",
+          "bytes": 2000000,
+          "sha256": "70798b4586291a9601780015dc40c005bdccadfc6f40f176601dcb185a407db4",
+          "gitBlobSha": "cd50d640e4667703315a7b50609c57774e769ae3"
+        },
+        {
+          "name": "weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.part-012",
+          "bytes": 1147629,
+          "sha256": "6d8fa9b80f421dac8ba0db5986616738a03eefca9288ba9537624c70ac24c832",
+          "gitBlobSha": "0371a5ffbba5aedc52e0e637927f56f3b2abbbcf"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+      "approvedFrontSha256": "3821e0f2c622f25d17dc0c161ee9fb7e103f5d7869c1770ebdfb70a3fd9e0f1c"
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+      "bytes": 24844974,
+      "sha256": "ace75731711e2a1006ca83d505d8a8d8b127c060677627ae29f0867280563dc3",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "a277e0b1c62b1f335151cf6c45ff8ebfcbd04fd9dd354245c625a75198d2f94d",
+          "gitBlobSha": "d9ff1b823f49fc2ab067d35619c0b218a24d58e6"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "6f3f8d637832fce1d0f637cd2da262a715e70fd518f26bd705176adac79d1d83",
+          "gitBlobSha": "4ca1d72a0614a439cdf6b2d80044678a9017b505"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "cebcc8c5f1cb8070c23af54a677e65cb6f7a5f62d41d7c46fda3211b5bc49e6c",
+          "gitBlobSha": "08e566e5ba26281c80741d1bb69bdfcb74486c7c"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "ca36b5b655147867013b3d3b27a548e6c7652829088544b4f8e561387aeb6863",
+          "gitBlobSha": "3b2ef91bc295f747ecbb8c07b4e4cc30747d4e09"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "5069b9d986c23ee382796a799998f61ef61b321bf755633671ba1fe0a786a91a",
+          "gitBlobSha": "7f64e65146f04ba0369c2fd37d7073902ef595ed"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "67770fa344fee36491194f83be3ed6075f7c67611b61dcb2ac0020190ef4c16e",
+          "gitBlobSha": "47e16cf1f10aab6077ef5a7989da666db6bf553d"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "8552dfec49623573b53f8930aaaf0d890a8402c839aa54107434b4ac91eb0eae",
+          "gitBlobSha": "1eebb64b9f73bff5f372f0fb37f9d24bf296fab6"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "93b7851f2c07511e9f8591f60668aa1bdf3f23cd77ba741592ba6599e5667fa9",
+          "gitBlobSha": "2887d389407e7a262a9494be275c58be038465bf"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "f33e25252fe47534d3d153052402830708aede608a2b6c9000182bd93dc33daf",
+          "gitBlobSha": "9caa2e856066348ed5ffe755438a7f923d1cab32"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "6bc03168718c732b454026c629b230c0bdf594e2784ee4b344869e301917d97a",
+          "gitBlobSha": "e566cf5db4c261ac8fa696f3712b9d965e3c5cb4"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "9ebfecf92444cbe929c44da677a8c4861822fd2c593482f56b6447c1b5b94726",
+          "gitBlobSha": "7a1bda56808557785bc7bbb4222a2db9e1cc551e"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-011",
+          "bytes": 2000000,
+          "sha256": "757b9e0bbf752957632b08aafa30f0c9ff986855935e5f94e7845fc872fb99f7",
+          "gitBlobSha": "892baec0bf309772aa8f79cb16d9cce6b51cd032"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-text-base.part-012",
+          "bytes": 844974,
+          "sha256": "cbd770a5430d1f7026db6c3ac1416e8d342ce4de0b6ebf4c6c25d00849bc6fa9",
+          "gitBlobSha": "de0f3f3fd647e46469d794445c8fbdb6f3dbfafe"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+      "approvedFrontSha256": "ad16e1ed415bdc99480e5d533cd834b4b68e677f27d7785a14c28c49a1a76e63"
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante-rarity-l",
+      "role": "text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+      "bytes": 26412270,
+      "sha256": "30c1e5a5ea74c38c64722607dbe193f95f1a5f9fbd83919d1b72efe63ff58a50",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "mode": "RGBA",
+      "parts": [
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-000",
+          "bytes": 2000000,
+          "sha256": "54655e283558adb500949282d601c8415354a1f49d4428ae3b8e1ae2b4d57e62",
+          "gitBlobSha": "5c83308d2877eb327929ac3fe054a0413774689c"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-001",
+          "bytes": 2000000,
+          "sha256": "48411b779ae89a5e8e70e290c0508559be4a7d32c519620bde31ff99671195fe",
+          "gitBlobSha": "a26f9b1275ce6d779d5bf937d50cb60dcb5a2aca"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-002",
+          "bytes": 2000000,
+          "sha256": "1e0907809f93343b46e943420649f8e433d0d8bc41dcb075a7b9d0d2748e28ba",
+          "gitBlobSha": "4b85bbe12c3aa77998d9eeaadc4ac0a5af17043b"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-003",
+          "bytes": 2000000,
+          "sha256": "a896413e671d610e50ac047874d021765eaf554577e3f22bb119c3cc73be7793",
+          "gitBlobSha": "d119689afc18e855fc714f87731e5bad8fe2082a"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-004",
+          "bytes": 2000000,
+          "sha256": "6ba884ad16e81680a58c466dc37965ea1ea96ccad4579133a2772f94e7025080",
+          "gitBlobSha": "a05012782e513293ca75c97bdf35f6b85415e79a"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-005",
+          "bytes": 2000000,
+          "sha256": "9ef240e2593f459f3a87f1196de6ab6ba49318951c967d6ba3dc8b67bae61a63",
+          "gitBlobSha": "4a2b5f5430a784a118ba6ab47c6de1b30182e373"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-006",
+          "bytes": 2000000,
+          "sha256": "07cc05473756b3335e2398fea61fda31889cce1d7531d86f9b9a957eec009196",
+          "gitBlobSha": "c5e4a07f96fcd2ac17571dbb896b6b3b08db477a"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-007",
+          "bytes": 2000000,
+          "sha256": "b6fabb1c8356993600f21c5119d52980ca22dba4bae1d0976eb49a66bf0e2e5f",
+          "gitBlobSha": "f7ac007c388a495cf2739ba1e5817b6df86125f3"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-008",
+          "bytes": 2000000,
+          "sha256": "9e1242a73b4e90c2124ebfcba6a5917cee5ae54b30b21ff9cb1e14a1482375d8",
+          "gitBlobSha": "5f4761e3e09a8cd747a0dfbb2e5559026a7bef33"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-009",
+          "bytes": 2000000,
+          "sha256": "664180e8ffc97a43e428f029219bda10ca71c6045397a7603b2e30c8b60d6be5",
+          "gitBlobSha": "4bbbc7bc80cc5266caccfd5d549e82818fee5485"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-010",
+          "bytes": 2000000,
+          "sha256": "7ef799da4d5e7b25625e854489846fe64ef602c11d8799c3135fbb10f03e6962",
+          "gitBlobSha": "10d5957d6070fa45cd0cce00793773a33d740c83"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-011",
+          "bytes": 2000000,
+          "sha256": "f91d3261c69a83259ec463eaa54f0ffbbe323abad0f6667b1799b20eac929426",
+          "gitBlobSha": "69e85eb3146f2a4c5cdac8b138f488c6e32ba380"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-012",
+          "bytes": 2000000,
+          "sha256": "d04331235fb6a8372a0aee906275b643de5366ce3d5b5f4c062f230c3b42990d",
+          "gitBlobSha": "c8feb6884fc0051ca810dc8778c8f927d888b7ff"
+        },
+        {
+          "name": "weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.part-013",
+          "bytes": 412270,
+          "sha256": "561579f057c9ed2f535fa819602458eff55b5049c72d1de14a8ac78b53fc49ce",
+          "gitBlobSha": "9f931b5636138372e8c4aea96fecfd0b3e431617"
+        }
+      ],
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+      "approvedFrontSha256": "44142b9930efb505bc5b8b1fa48148024ed3737deb2f9f4d3ad2c140461f70a2"
+    }
+  ]
+}

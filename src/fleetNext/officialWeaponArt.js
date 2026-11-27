@@ -1,3 +1,4 @@
+import {BATCH_WEAPON_CARD_IDS} from '../weaponBatchSpec.js';
 // Eclissi Stellare: fronti ufficiali approvati per Maglio, Slitta e Recuperatore.
 // La base della carta, le icone originali e le quattro evoluzioni 3D sono già
 // incorporate nei PNG HD. Le altre Armi conservano il fronte corrente.
@@ -15,6 +16,7 @@ const METAL_FRONT_ROOT=(import.meta.env?.VITE_METAL_FRONT_ROOT||ASSET_ROOT).repl
 const CHAIN_FRONT_ROOT=(import.meta.env?.VITE_CHAIN_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 const PRECISION_FRONT_ROOT=(import.meta.env?.VITE_PRECISION_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
+ ...Object.fromEntries(BATCH_WEAPON_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  ...Object.fromEntries(STORM_CAPACITOR_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  ...Object.fromEntries(COMMAND_LANCE_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  ...Object.fromEntries(PROBE_HAMMER_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),

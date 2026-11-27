@@ -1,5 +1,18 @@
 # Sei Carte Arma — Giudizio Temporale e Fuoco
 
+> Aggiornamento dopo la revisione: l’utente ha risposto «procedi» alla
+> conferma dei sei fronti e dell’inserimento su test7/main. Approvazione
+> definitiva, nessuna rigenerazione o nuova richiesta. I dodici PNG
+> (sei fronti EN e sei basi) sono conservati byte per byte nell’archivio
+> `asset-sources/weapon-fronts/lotto-giudizio-fuoco-2026-11-27`, con hash
+> per file e per parte. Registro a 58 varianti, 22 Metallo/31 Fulmine/5 Fuoco.
+> Partita e studio condividono renderer, suoni e piano aptico. I nominali
+> diretti Fuoco sono allineati ai fronti evitando il doppio fattore; la
+> Bruciatura conserva il valore fissato dal percorso eseguibile.
+> Le attese di approvazione sotto descrivono la preparazione storica.
+> Il collaudo reale StackBlitz deve essere registrato separatamente: non
+> confonderlo con il video dello studio già consegnato.
+
 Il 27 novembre l’utente ha approvato il Giudizio Temporale con «ok, ma
 lavora su piu carte contemporaneamente». La lavorazione passa a più
 famiglie e rarità insieme. Ha poi confermato con «Confermo entrambe le

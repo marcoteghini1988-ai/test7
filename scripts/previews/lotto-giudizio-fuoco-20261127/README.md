@@ -1,3 +1,9 @@
+> Sei fronti e inserimento su test7/main confermati con «procedi».
+> Registro aggiornato a 58 varianti. I moduli sono ora condivisi dalla
+> partita; gli originali PNG sono archiviati senza alterarne i byte.
+> Le attese nelle note storiche non richiedono una nuova approvazione.
+> Lo studio resta distinto dal collaudo reale della partita.
+
 # Lotto di sei Carte Arma, 27 novembre 2026
 
 Tre direzioni approvate: Giudizio Temporale, Mortaio Magmatico e

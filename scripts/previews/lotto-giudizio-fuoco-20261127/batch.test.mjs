@@ -12,11 +12,11 @@ import {batchFramePlan} from './batch-spec.mjs';
 import {batchAudioCues,synthesizeBatchAudio} from './batch-audio.mjs';
 import {drawMagmaFlight,drawPlasmaFlight,drawFireContact,drawBurnTick,magmaFlight} from './fire-renderer.mjs';
 const variants=previewCards();
-test('Batch contains six real variants with independent text layers and no playable promotion',()=>{
+test('Batch contains six real variants with independent text layers and approved playable promotion',()=>{
  assert.deepEqual(variants.map(c=>[c.kind,c.rarity]),[['judgment','Leggendaria'],['mortar','Rara'],['mortar','Epica'],['mortar','Leggendaria'],['incinerator','Epica'],['incinerator','Leggendaria']]);
  for(const c of variants)for(const lang of ['en','it']){const fields=textFields(c,lang);assert.equal(fields.length,18);assert.ok(fields.every(f=>f.size>30&&f.advance*f.size+f.spacing*(f.text.length-1)+f.stroke*2<=f.maxWidth+.001));}
- assert.equal(JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json')).cards.length,52);
- assert.ok(variants.every(c=>!c.frontApproved&&!c.inGame));
+ assert.equal(JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json')).cards.length,58);
+ assert.ok(variants.every(c=>c.frontApproved&&c.inGame));
 });
 test('Judgment uses target maximum HP, fires only on placement and leaves after three own turns',()=>{
  for(const s of judgmentCases().filter(s=>s.mode==='normal')){

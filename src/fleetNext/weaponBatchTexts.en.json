@@ -1,0 +1,170 @@
+{
+  "weapon-designed-ionic-giudizio-temporale": {
+    "title": [
+      "TEMPORAL JUDGMENT",
+      "CANNON"
+    ],
+    "name": "TEMPORAL JUDGMENT CANNON",
+    "description": "One attack on the deployment turn for 20% of the target maximum HP before modifiers. Holds its slot for three own turns. No Energy cost.",
+    "values": [
+      "TEMPORAL JUDGMENT",
+      "CANNON",
+      "WEAPON",
+      "LEGENDARY",
+      "ELEMENT",
+      "LIGHTNING",
+      "DURATION",
+      3,
+      "TURNS",
+      "DAMAGE / HP",
+      "20% MAX HP",
+      "BEFORE MODIFIERS",
+      "FIRES ON DEPLOYMENT TURN",
+      "ONE ATTACK ONLY",
+      "NO LATER AUTOMATIC SHOT",
+      "DEFENSES APPLY",
+      "1 TARGET / SHOT",
+      "1 SHOT ON PLAY"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico": {
+    "title": [
+      "MAGMATIC",
+      "MORTAR"
+    ],
+    "name": "MAGMATIC MORTAR",
+    "description": "For three own turns: one free shot for 20 HP; up to two extra shots for 8 HP each, spending one real Fire charge per extra. Defenses apply.",
+    "values": [
+      "MAGMATIC",
+      "MORTAR",
+      "WEAPON",
+      "RARE",
+      "COST / EXTRA SHOT",
+      "1 FIRE",
+      "DURATION",
+      3,
+      "TURNS",
+      "DAMAGE / HP",
+      "20 BASE",
+      "8 / EXTRA SHOT",
+      "1 FREE SHOT / TURN",
+      "UP TO 2 PAID EXTRAS",
+      "SPENDS REAL FIRE CHARGES",
+      "DEFENSES APPLY",
+      "1 TARGET / SHOT",
+      "1-3 SHOTS / TURN"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico-rarity-e": {
+    "title": [
+      "MAGMATIC",
+      "MORTAR"
+    ],
+    "name": "MAGMATIC MORTAR",
+    "description": "For three own turns: one free shot for 48 HP; up to two extra shots for 19 HP each, spending one real Fire charge per extra. Defenses apply.",
+    "values": [
+      "MAGMATIC",
+      "MORTAR",
+      "WEAPON",
+      "EPIC",
+      "COST / EXTRA SHOT",
+      "1 FIRE",
+      "DURATION",
+      3,
+      "TURNS",
+      "DAMAGE / HP",
+      "48 BASE",
+      "19 / EXTRA SHOT",
+      "1 FREE SHOT / TURN",
+      "UP TO 2 PAID EXTRAS",
+      "SPENDS REAL FIRE CHARGES",
+      "DEFENSES APPLY",
+      "1 TARGET / SHOT",
+      "1-3 SHOTS / TURN"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico-rarity-l": {
+    "title": [
+      "MAGMATIC",
+      "MORTAR"
+    ],
+    "name": "MAGMATIC MORTAR",
+    "description": "For three own turns: one free shot for 67 HP; up to two extra shots for 28 HP each, spending one real Fire charge per extra. Defenses apply.",
+    "values": [
+      "MAGMATIC",
+      "MORTAR",
+      "WEAPON",
+      "LEGENDARY",
+      "COST / EXTRA SHOT",
+      "1 FIRE",
+      "DURATION",
+      3,
+      "TURNS",
+      "DAMAGE / HP",
+      "67 BASE",
+      "28 / EXTRA SHOT",
+      "1 FREE SHOT / TURN",
+      "UP TO 2 PAID EXTRAS",
+      "SPENDS REAL FIRE CHARGES",
+      "DEFENSES APPLY",
+      "1 TARGET / SHOT",
+      "1-3 SHOTS / TURN"
+    ]
+  },
+  "weapon-designed-plasma-inceneritore-rotante": {
+    "title": [
+      "ROTATING PLASMA",
+      "INCINERATOR"
+    ],
+    "name": "ROTATING PLASMA INCINERATOR",
+    "description": "One shot on each of two own turns: 37, then 27 HP. A successful first hit locks five burn ticks from your discarded Strategy cards: 2 HP per card, min 2, max 12, before modifiers.",
+    "values": [
+      "ROTATING PLASMA",
+      "INCINERATOR",
+      "WEAPON",
+      "EPIC",
+      "ELEMENT",
+      "FIRE",
+      "DURATION",
+      2,
+      "TURNS",
+      "DAMAGE / HP",
+      "37 / 27 HP",
+      "TURN 1 / TURN 2",
+      "T1 HIT: 5 BURN TICKS",
+      "2 / STRATEGY DISCARDED",
+      "MIN 2 / MAX 12 HP",
+      "LOCKED WHEN APPLIED",
+      "1 TARGET / SHOT",
+      "1 SHOT / TURN"
+    ]
+  },
+  "weapon-designed-plasma-inceneritore-rotante-rarity-l": {
+    "title": [
+      "ROTATING PLASMA",
+      "INCINERATOR"
+    ],
+    "name": "ROTATING PLASMA INCINERATOR",
+    "description": "One shot on each of two own turns: 54, then 39 HP. A successful first hit locks five burn ticks from your discarded Strategy cards: 3 HP per card, min 3, max 16, before modifiers.",
+    "values": [
+      "ROTATING PLASMA",
+      "INCINERATOR",
+      "WEAPON",
+      "LEGENDARY",
+      "ELEMENT",
+      "FIRE",
+      "DURATION",
+      2,
+      "TURNS",
+      "DAMAGE / HP",
+      "54 / 39 HP",
+      "TURN 1 / TURN 2",
+      "T1 HIT: 5 BURN TICKS",
+      "3 / STRATEGY DISCARDED",
+      "MIN 3 / MAX 16 HP",
+      "LOCKED WHEN APPLIED",
+      "1 TARGET / SHOT",
+      "1 SHOT / TURN"
+    ]
+  }
+}

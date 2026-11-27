@@ -1,3 +1,5 @@
+import {batchWeaponVariant} from './weaponBatchSpec.js';
+import {cardWords as batchWords,textFields as batchFields,cardTextSvg as batchSvg} from './weaponBatchCardText.js';
 import en from './fleetNext/cardTexts.en.json' with {type:'json'};
 import it from './fleetNext/cardTexts.it.json' with {type:'json'};
 import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
@@ -19,6 +21,7 @@ const format=(text,values)=>text.replace(/\{(\w+)\}/g,(_,key)=>String(values[key
 export function localizedCardText(definition,locale=getCardTextLocale()){
  if(!definition)return null;
  const dictionary=dictionaries[normalizeCardTextLocale(locale)];
+ if(batchWeaponVariant(definition.id)){const w=batchWords(batchWeaponVariant(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(stormCapacitorVariant(definition.id)){const w=stormWords(stormCard(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(commandLanceVariant(definition.id)){const w=lanceWords(lanceCard(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(probeHammerVariant(definition.id)){const c=probeCard(definition.id),w=cardWords(c,normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
@@ -38,6 +41,7 @@ export const cardTextName=definition=>localizedCardText(definition)?.name||defin
 export const cardTextDescription=(definition,fallback)=>localizedCardText(definition)?.description||fallback;
 export function cardTextFields(id,locale=getCardTextLocale()){
  if(!hasCardTextLayer(id))return null;
+ if(batchWeaponVariant(id))return batchFields(batchWeaponVariant(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(stormCapacitorVariant(id))return stormFields(stormCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(commandLanceVariant(id))return lanceFields(lanceCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(probeHammerVariant(id))return textFields(probeCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
@@ -60,6 +64,7 @@ export function cardTextFields(id,locale=getCardTextLocale()){
 const colors={Comune:['#e5edf1','#a9b9c4','#d0dce2'],Rara:['#fff0d6','#d38c5b','#f3c393'],Epica:['#ffffff','#8799a9','#e4edf4'],Leggendaria:['#ffffff','#74dafa','#d99ff3']};
 const xml=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 export function cardTextSvgContents(id,locale=getCardTextLocale(),unique='card'){
+ if(batchWeaponVariant(id))return batchSvg(batchWeaponVariant(id),normalizeCardTextLocale(locale),unique).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
  if(stormCapacitorVariant(id))return stormCardTextSvg(stormCard(id),normalizeCardTextLocale(locale),unique).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
  const fields=cardTextFields(id,locale);if(!fields)return '';
  const c=WEAPON_NEAR_FINAL_BY_ID[id],p=colors[c.rarita],prism=c.rarita==='Leggendaria';

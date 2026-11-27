@@ -20,7 +20,7 @@ export function previewCards(root=path.resolve('.')){
   return {id:c.id,familyId,kind,rarity:c.rarita,raritySlug:slug[c.rarita],elementId:c.elementId,
    duration:c.effectSpec.durationTurns,damage:p.baseDamage||0,extra:p.extraDamage||0,second:p.secondDamage||0,percent:p.damagePercent||0,burn,
    maxExtraShots:p.maxExtraShots||0,ammoMode:p.ammoMode||null,
-   directionApproved:directions[kind].approved,frontApproved:false,inGame:false,
+   directionApproved:directions[kind].approved,frontApproved:directions.frontsApproved,inGame:directions.inGame,
    artPath:path.join(root,'asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art',kind+'-'+slug[c.rarita]+'.png'),
    catalogProfile:p,executedLegacyProfile:live,
    numericSource:kind==='incinerator'?'Strategic direct-hit values; locked burn fields from the executable burn path.':'WEAPON_NEAR_FINAL_VALUES',
@@ -32,5 +32,5 @@ export function previewCards(root=path.resolve('.')){
 }
 if(process.argv[2]){
  const out=path.resolve(process.argv[2]);fs.mkdirSync(out,{recursive:true});
- fs.writeFileSync(path.join(out,'manifest-carte.json'),JSON.stringify({status:'REVIEW_ONLY',defaultLocale:'en',canvas:[3072,4608],textRegions:CARD_TEXT_REGIONS,frontsApproved:false,inGame:false,directions,cards:previewCards()},null,2)+'\n');
+ fs.writeFileSync(path.join(out,'manifest-carte.json'),JSON.stringify({status:directions.frontsApproved?'APPROVED_AND_PROMOTED':'REVIEW_ONLY',defaultLocale:'en',canvas:[3072,4608],textRegions:CARD_TEXT_REGIONS,frontsApproved:directions.frontsApproved,inGame:directions.inGame,directions,cards:previewCards()},null,2)+'\n');
 }

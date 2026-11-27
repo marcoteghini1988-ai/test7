@@ -5,6 +5,9 @@ import {drawProbeHammerProjectile,drawProbeHammerContact} from './probeHammerRen
 import {COMMAND_LANCE_KIND,commandLanceVisualHit} from './commandLanceSpec.js';
 import {STORM_CAPACITOR_KIND,stormVisualHit} from './stormCapacitorSpec.js';
 import {drawStormCloud,drawStormContact} from './stormCapacitorRenderer.js';
+import {isBatchWeaponKind,batchVisualHit} from './weaponBatchSpec.js';
+import {drawJudgmentFlight,drawJudgmentContact} from './judgmentTemporalRenderer.js';
+import {drawMagmaFlight,drawPlasmaFlight,drawFireContact,drawBurnTick,batchMagmaTexture} from './fireWeaponRenderer.js';
 import {drawCommandLanceProjectile,drawCommandLanceContact} from './commandLanceRenderer.js';
 import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import {Vector3} from 'three';
@@ -604,6 +607,13 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 }
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
+ if(isBatchWeaponKind(p.kind)){
+  const h=batchVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs,point=weaponHullContactPoint(e.to,contactPose||{x:0,y:0,lift:0});
+  if(e.shot.burnTick){drawBurnTick(air,point,ms,p.tier,{reduced});return;}
+  if(h.kind===undefined){drawJudgmentFlight(air,h,elapsed,e.to,{reduced});drawJudgmentContact(air,h,ms,point,{reduced});return;}
+  (h.kind==='mortar'?drawMagmaFlight:drawPlasmaFlight)(air,h,elapsed,e.to,{reduced,texture:batchMagmaTexture()});
+  drawFireContact(air,h,ms,point,{reduced});return;
+ }
  if(p.kind===STORM_CAPACITOR_KIND){
   const h=stormVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs;
   if(ms<0){drawStormCloud(air,h,elapsed,e.to,{reduced});return;}

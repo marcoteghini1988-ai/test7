@@ -16,6 +16,8 @@
     "quote": "Confermo entrambe le direzioni",
     "date": "2026-11-27"
   },
-  "frontsApproved": false,
-  "inGame": false
+  "frontsApproved": true,
+  "inGame": true,
+  "publicationApproved": true,
+  "approvalQuote": "procedi"
 }

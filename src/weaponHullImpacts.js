@@ -3,9 +3,14 @@
 import {isProbeHammerKind,probeHammerHullFrame} from './probeHammerSpec.js';
 import {COMMAND_LANCE_KIND,commandLanceBattleHullFrame} from './commandLanceSpec.js';
 import {STORM_CAPACITOR_KIND,stormBattleHullFrame} from './stormCapacitorSpec.js';
+import {isBatchWeaponKind,batchBattleHullFrame} from './weaponBatchSpec.js';
 import {clamp01,weaponHullFrame} from './weaponCinematicStyle.js';
 
 const contacts=Object.freeze({
+ 'temporal-judgment':{kind:'three-rings-concentrated-discharge',radius:1,sparks:18,smoke:false},
+ 'magmatic-mortar':{kind:'basalt-magma-splash',radius:1,sparks:24,smoke:true},
+ 'rotating-incinerator':{kind:'helical-plasma-contact',radius:.85,sparks:16,smoke:false},
+ 'plasma-burn':{kind:'locked-burn-tick',radius:.55,sparks:9,smoke:false},
  'storm-capacitor-cloud':{kind:'compressed-thundercloud-contact',radius:1,sparks:15,smoke:false},
  'ionic-command-lance':{kind:'command-lance-branched-contact',radius:.85,sparks:18,smoke:false},
  'ionic-probe':{kind:'probe-electric-contact',radius:.5,sparks:9,smoke:false},
@@ -41,6 +46,7 @@ export function weaponHullImpactProfile(profile,shot){
 // Live ship motion and the contact canvas consume the same pose, including
 // the smaller intermediate salvo kicks. Passing light cannot erase a recoil.
 export function weaponImpactHullFrame(profile,shot,age,{reduced=false}={}){
+ if(isBatchWeaponKind(profile.kind))return batchBattleHullFrame(profile,shot,age,{reduced});
  if(profile.kind===STORM_CAPACITOR_KIND)return stormBattleHullFrame(profile,shot,age,{reduced});
  if(profile.kind===COMMAND_LANCE_KIND)return commandLanceBattleHullFrame(profile,shot,age,{reduced});
  if(isProbeHammerKind(profile.kind))return probeHammerHullFrame(profile,shot,age,{reduced});

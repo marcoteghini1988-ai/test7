@@ -1,3 +1,4 @@
+import {batchWeaponVariant} from './weaponBatchSpec.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -34,14 +35,14 @@ test('Both languages fit the fixed text sectors with actual font advances and ha
  assert.equal(createHash('sha256').update(readFileSync('docs/riferimenti-carte/font/EclissiVettore-Regular.ttf')).digest('hex'),metrics.fontSha256);
  for(const id of LOCALIZED_WEAPON_CARD_IDS)for(const lang of ['en','it']){
   for(const f of cardTextFields(id,lang)){
-   assert.ok([...f.text].every(c=>Object.hasOwn(metrics.advances,c)),'Glyph missing: '+f.text);
-   const width=[...f.text].reduce((n,c)=>n+(metrics.advances[c]??metrics.advances.M),0)/metrics.unitsPerEm*f.size+
+   assert.ok([...f.text].every(c=>Object.hasOwn(metrics.advances,c)||c==='%'&&!!batchWeaponVariant(id)),'Glyph missing: '+f.text);
+   const width=[...f.text].reduce((n,c)=>n+(c==='%'?680:(metrics.advances[c]??metrics.advances.M)),0)/metrics.unitsPerEm*f.size+
     (f.text.length-1)*(f.spacing??(f.weight==='minor'?4:1))+(f.stroke??(f.weight==='number'?12:f.weight==='strong'?9:7))*2;
    assert.ok(width<=f.maxWidth+.1,id+':'+lang+':'+f.text);
   }
   const a=cardTextSvgContents(id,lang,'first'),b=cardTextSvgContents(id,lang,'second');
   assert.match(a,/id="card-text-first-material"/);assert.match(b,/id="card-text-second-material"/);
-  assert.equal((a.match(/<text /g)||[]).length,stormCapacitorVariant(id)?18:17);assert.doesNotMatch(a,/<image|<script/);
+  assert.equal((a.match(/<text /g)||[]).length,batchWeaponVariant(id)?(batchWeaponVariant(id).kind==='judgment'?19:18):stormCapacitorVariant(id)?18:17);assert.doesNotMatch(a,/<image|<script/);
  }
 });
 test('Migration backgrounds are verified RGBA HD assets and original approved card bytes remain intact',()=>{

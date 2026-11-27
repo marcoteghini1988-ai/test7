@@ -1,0 +1,170 @@
+{
+  "weapon-designed-ionic-giudizio-temporale": {
+    "title": [
+      "CANNONE DEL",
+      "GIUDIZIO TEMPORALE"
+    ],
+    "name": "CANNONE DEL GIUDIZIO TEMPORALE",
+    "description": "Un attacco nel turno di posa, pari al 20% degli HP massimi del bersaglio prima dei modificatori. Occupa lo slot per tre turni propri. Nessun costo Energia.",
+    "values": [
+      "CANNONE DEL",
+      "GIUDIZIO TEMPORALE",
+      "ARMA",
+      "LEGGENDARIA",
+      "ELEMENTO",
+      "FULMINE",
+      "DURATA",
+      3,
+      "TURNI",
+      "DANNO / HP",
+      "20% MAX HP",
+      "PRIMA DEI MODIFICATORI",
+      "SPARA NEL TURNO DI POSA",
+      "UN SOLO ATTACCO",
+      "NESSUN TIRO SUCCESSIVO",
+      "DIFESE APPLICABILI",
+      "1 BERSAGLIO / COLPO",
+      "1 COLPO ALLA POSA"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico": {
+    "title": [
+      "MORTAIO",
+      "MAGMATICO"
+    ],
+    "name": "MORTAIO MAGMATICO",
+    "description": "Per tre turni propri: un colpo gratuito da 20 HP e fino a due extra da 8 HP, pagando una carica Fuoco reale per ciascuno. Le Difese si applicano.",
+    "values": [
+      "MORTAIO",
+      "MAGMATICO",
+      "ARMA",
+      "RARA",
+      "COSTO / COLPO EXTRA",
+      "1 FUOCO",
+      "DURATA",
+      3,
+      "TURNI",
+      "DANNO / HP",
+      "20 BASE",
+      "8 / COLPO EXTRA",
+      "1 COLPO GRATUITO / TURNO",
+      "FINO A 2 EXTRA A PAGAMENTO",
+      "CONSUMA CARICHE REALI",
+      "DIFESE APPLICABILI",
+      "1 BERSAGLIO / COLPO",
+      "1-3 COLPI / TURNO"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico-rarity-e": {
+    "title": [
+      "MORTAIO",
+      "MAGMATICO"
+    ],
+    "name": "MORTAIO MAGMATICO",
+    "description": "Per tre turni propri: un colpo gratuito da 48 HP e fino a due extra da 19 HP, pagando una carica Fuoco reale per ciascuno. Le Difese si applicano.",
+    "values": [
+      "MORTAIO",
+      "MAGMATICO",
+      "ARMA",
+      "EPICA",
+      "COSTO / COLPO EXTRA",
+      "1 FUOCO",
+      "DURATA",
+      3,
+      "TURNI",
+      "DANNO / HP",
+      "48 BASE",
+      "19 / COLPO EXTRA",
+      "1 COLPO GRATUITO / TURNO",
+      "FINO A 2 EXTRA A PAGAMENTO",
+      "CONSUMA CARICHE REALI",
+      "DIFESE APPLICABILI",
+      "1 BERSAGLIO / COLPO",
+      "1-3 COLPI / TURNO"
+    ]
+  },
+  "weapon-designed-plasma-mortaio-magmatico-rarity-l": {
+    "title": [
+      "MORTAIO",
+      "MAGMATICO"
+    ],
+    "name": "MORTAIO MAGMATICO",
+    "description": "Per tre turni propri: un colpo gratuito da 67 HP e fino a due extra da 28 HP, pagando una carica Fuoco reale per ciascuno. Le Difese si applicano.",
+    "values": [
+      "MORTAIO",
+      "MAGMATICO",
+      "ARMA",
+      "LEGGENDARIA",
+      "COSTO / COLPO EXTRA",
+      "1 FUOCO",
+      "DURATA",
+      3,
+      "TURNI",
+      "DANNO / HP",
+      "67 BASE",
+      "28 / COLPO EXTRA",
+      "1 COLPO GRATUITO / TURNO",
+      "FINO A 2 EXTRA A PAGAMENTO",
+      "CONSUMA CARICHE REALI",
+      "DIFESE APPLICABILI",
+      "1 BERSAGLIO / COLPO",
+      "1-3 COLPI / TURNO"
+    ]
+  },
+  "weapon-designed-plasma-inceneritore-rotante": {
+    "title": [
+      "INCENERITORE A",
+      "PLASMA ROTANTE"
+    ],
+    "name": "INCENERITORE A PLASMA ROTANTE",
+    "description": "Un colpo per ciascuno dei due turni propri: 37, poi 27 HP. Il primo impatto riuscito fissa cinque Bruciature dalle proprie Strategie scartate: 2 HP per carta, minimo 2, massimo 12, prima dei modificatori.",
+    "values": [
+      "INCENERITORE A",
+      "PLASMA ROTANTE",
+      "ARMA",
+      "EPICA",
+      "ELEMENTO",
+      "FUOCO",
+      "DURATA",
+      2,
+      "TURNI",
+      "DANNO / HP",
+      "37 / 27 HP",
+      "TURNO 1 / TURNO 2",
+      "COLPO T1: 5 BRUCIATURE",
+      "2 / STRATEGIA SCARTATA",
+      "MIN 2 / MAX 12 HP",
+      "VALORE FISSATO AL COLPO",
+      "1 BERSAGLIO / COLPO",
+      "1 COLPO / TURNO"
+    ]
+  },
+  "weapon-designed-plasma-inceneritore-rotante-rarity-l": {
+    "title": [
+      "INCENERITORE A",
+      "PLASMA ROTANTE"
+    ],
+    "name": "INCENERITORE A PLASMA ROTANTE",
+    "description": "Un colpo per ciascuno dei due turni propri: 54, poi 39 HP. Il primo impatto riuscito fissa cinque Bruciature dalle proprie Strategie scartate: 3 HP per carta, minimo 3, massimo 16, prima dei modificatori.",
+    "values": [
+      "INCENERITORE A",
+      "PLASMA ROTANTE",
+      "ARMA",
+      "LEGGENDARIA",
+      "ELEMENTO",
+      "FUOCO",
+      "DURATA",
+      2,
+      "TURNI",
+      "DANNO / HP",
+      "54 / 39 HP",
+      "TURNO 1 / TURNO 2",
+      "COLPO T1: 5 BRUCIATURE",
+      "3 / STRATEGIA SCARTATA",
+      "MIN 3 / MAX 16 HP",
+      "VALORE FISSATO AL COLPO",
+      "1 BERSAGLIO / COLPO",
+      "1 COLPO / TURNO"
+    ]
+  }
+}

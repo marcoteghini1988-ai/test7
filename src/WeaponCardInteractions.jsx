@@ -6,6 +6,7 @@ import './WeaponCardInteractions.css';
 import {cardTextName} from './cardTextPresentation.js';
 import {COMMAND_LANCE_KIND} from './commandLanceSpec.js';
 import {STORM_CAPACITOR_KIND,STORM_TIMING,stormContributionPlan} from './stormCapacitorSpec.js';
+import {BATCH_KINDS} from './weaponBatchSpec.js';
 
 export default function WeaponCardInteractions({events,paths,startedAt}){
  const host=useRef(null);
@@ -35,7 +36,7 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
    const first=matching[0];if(!first)continue;
    if(event.energyContributions?.length){
     const transfer=event.kind==='weapon-cascade',leg=transfer?matching.find(p=>p.shot.cascadeIndex===event.cascadeIndex):first;
-    if(!leg)continue;const at=transfer?leg.start:Math.max(0,first.start-(profile.chargeMs||0)+(profile.kind===STORM_CAPACITOR_KIND?STORM_TIMING.energyAt:0));
+    if(!leg)continue;const at=transfer?leg.start:Math.max(0,first.start-(profile.chargeMs||0)+(profile.kind===STORM_CAPACITOR_KIND?STORM_TIMING.energyAt:profile.kind===BATCH_KINDS.mortar?-300:0));
     const slot=slots.find(s=>s.dataset.fleetCardSlot===event.who+'-5');
     const participating=event.energyContributions.map(c=>c.pileIndex).join(','),cards=event.energyContributions.map(c=>c.cardId).join(',');
     const shown=[];

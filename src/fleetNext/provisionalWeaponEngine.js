@@ -2,7 +2,8 @@
 // Usa i medesimi controlli di Difese, Terreni, copertura e limiti della nave madre.
 import {hologramCombatEscorts} from './nextHolographicWeapons.js';
 import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
-import {stormCapacitorNominal,withFinalStormNominal} from './stormCapacitorNominals.js';
+import {stormCapacitorNominal} from './stormCapacitorNominals.js';
+import {approvedBatchNominal,withFinalBatchNominal} from './approvedBatchNominals.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
 import {weaponFiresOnOwnTurn,consumeMortarEnergy,mortarAmmunition} from './confirmedAdvancedWeaponMechanics.js';
 
@@ -37,9 +38,11 @@ export function reserveProvisionalMortarFuel(b,ctx,h){
   if(p?.pattern!=='magma-mortar'||!activeMachine(m,b.ply,{...h,side})||
    side.fireBlocked||side.fireDisabledUntil>b.ply)continue;
   const count=Math.min(p.maxExtraShots||0,mortarAmmunition(side,p.ammoMode));
-  let consumed=0;
+  const before=structuredClone(side.energyPile||[]);let consumed=0;
   for(let i=0;i<count;i++)if(consumeMortarEnergy(side,p.ammoMode))consumed++;
   result[m.id]=consumed;
+  (ctx.provisionalMortarFeedback??={})[m.id]={energySpent:consumed,
+   energyContributions:weaponEnergyContributions({energyPile:before},'plasma',{cost:consumed},h.card)};
  }
  ctx.provisionalMortarShots=result;
  return result;
@@ -97,7 +100,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const target=hit.target||ordinary();
   if(!target||target.kind==='escort'&&!physical(target.unit))return 0;
   const nominal=Math.max(1,Math.round(hit.base||0));
-  const power=h.arsenalBonus(side,hit.finalNominal?withFinalStormNominal(m):m,b.ply,nominal);
+  const power=h.arsenalBonus(side,hit.finalNominal?withFinalBatchNominal(m):m,b.ply,nominal);
   const old=ctx.attackElement,priorPiercing=ctx.iceNeedlePiercing||false;
   ctx.attackElement=m.weaponElementId;
   if(hit.ignoreOrdinaryDefenses)ctx.iceNeedlePiercing=true;
@@ -127,12 +130,14 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
-  let planned=[],coreFeedback=null,probeFeedback=null,commandFeedback=null,stormFeedback=null;
+  let planned=[],coreFeedback=null,probeFeedback=null,commandFeedback=null,stormFeedback=null,mortarFeedback=null;
   if(pattern==='magma-mortar'){
    const extras=ctx.provisionalMortarShots?.[m.id]||0;
-   planned=[{base:p.baseDamage},...Array.from({length:extras},()=>({base:p.extraDamage}))];
+   const base=approvedBatchNominal(m),extra=approvedBatchNominal(m,{extra:true});
+   planned=[{base:base??p.baseDamage,finalNominal:base!==null},...Array.from({length:extras},()=>({base:extra??p.extraDamage,finalNominal:extra!==null}))];
+   mortarFeedback=ctx.provisionalMortarFeedback?.[m.id]||null;
   }else if(pattern==='incinerator'){
-   planned=[{base:stage===1?p.baseDamage:p.secondDamage}];
+   const base=approvedBatchNominal(m,{stage});planned=[{base:base??(stage===1?p.baseDamage:p.secondDamage),finalNominal:base!==null}];
   }else if(pattern==='binary-overload'){
    if(stage===2||stage===4){
     const loss=spendOwnHp(side,stage===2?p.motherCostPercent:p.allyCostPercent,
@@ -308,6 +313,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    ...(coreFeedback||{}),
    ...(probeFeedback||{}),
    ...(stormFeedback||{}),
+   ...(mortarFeedback||{}),
    ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),
   });
  }

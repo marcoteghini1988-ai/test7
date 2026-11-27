@@ -1,3 +1,4 @@
+import {configureBatchWeaponReview} from './batchWeaponReviewBattle.js';
 // Fixture di collaudo: usa il motore e la plancia ufficiali, senza inventario o ricompense.
 import {createFleetNextBattle,resolvePreparedFleetTurn} from '../src/fleetNext/combat.js';
 import {HP_SYNC_RULESET} from '../src/fleetNext/hpSynchronization.js';
@@ -15,7 +16,7 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
  shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false,secondTurn=false,
  supportCount=2,energyCards=0,withDefense=false,expiredCombo=false,lanceReviewMode='active',
- cascadeMode='none',ownStage=1,jawCombo=false,coreMode='charged',probeHammerMode='single',stormMode='fed'}={}){
+ cascadeMode='none',ownStage=1,jawCombo=false,coreMode='charged',probeHammerMode='single',stormMode='fed',batchMode='normal',discardedStrategies=0}={}){
  const chain=chainWeaponVariant(cardId),collision=chain?.kind==='alloy-collision'&&jawCombo;
  const precision=precisionWeaponVariant(cardId);
  const core=cardId===CORE_FAMILY||cardId.startsWith(CORE_FAMILY+'-rarity-'),energyId=core?'energy-ionic':'energy-metallic';
@@ -113,7 +114,8 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  }
  state=configureProbeHammerReview(state,{cardId,probeHammerMode,blocked,withDefense,nowMs});
  state=configureCommandLanceReview(state,{cardId,lanceReviewMode,blocked,withDefense,nowMs});
- return configureStormCapacitorReview(state,{cardId,stormMode,ownStage,blocked,withDefense,nowMs});
+ state=configureStormCapacitorReview(state,{cardId,stormMode,ownStage,blocked,withDefense,nowMs});
+ return configureBatchWeaponReview(state,{cardId,ownStage,batchMode,energyCards,discardedStrategies,blocked,withDefense,nowMs});
 }
 function rarityGrapple(id){
  return id.endsWith('-rarity-l')?GRAPPLE_ID+'-rarity-l':id===COLLISION_ID?GRAPPLE_ID+'-rarity-e':GRAPPLE_ID;

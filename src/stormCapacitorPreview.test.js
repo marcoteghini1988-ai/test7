@@ -57,7 +57,7 @@ test('Storm: Defense produces one shield contact, zero damage and zero damage re
 test('Storm: localized card fields use official print candidates; the two approved fronts are now promoted without changing the other 50',()=>{
  const cards=previewCards();assert.deepEqual(cards.map(c=>[c.rarity,c.damage,c.bonus]),[['Epica',31,14],['Leggendaria',43,19]]);
  for(const c of cards)for(const l of ['en','it']){const fields=textFields(c,l);assert.equal(fields.length,18);assert.ok(fields.every(f=>f.size>30&&f.advance*f.size+f.spacing*(f.text.length-1)+f.stroke*2<=f.maxWidth+.001));}
- const live=JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json'));assert.equal(live.cards.length,52);assert.equal(live.cards.filter(c=>c.id.startsWith(STORM_CAPACITOR_FAMILY)).length,2);
+ const live=JSON.parse(readFileSync('src/fleetNext/approvedWeaponIntegration.json'));assert.equal(live.cards.length,58);assert.equal(live.cards.filter(c=>c.id.startsWith(STORM_CAPACITOR_FAMILY)).length,2);
 });
 test('Storm: finite cloud rendering balances Canvas state; audio and haptics contain exactly the actual contacts',()=>{
  let depth=0,count=0;const gradient={addColorStop(){}};

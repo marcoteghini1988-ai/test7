@@ -11,11 +11,13 @@ Magmatico Rara/Epica/Leggendaria e Inceneritore a Plasma Rotante
 Epica/Leggendaria: entrambe le direzioni confermate esplicitamente con
 «Confermo entrambe le direzioni». Non richiederle di nuovo.
 
-I sei fronti PNG 3072×4608, le basi separate e i livelli EN/IT sono anteprime
-complete, ancora da approvare prima della promozione. Lo studio usa gli
+L’utente ha confermato con «procedi» i sei fronti completi e l’inserimento
+nel gioco su test7/main. Approvazione definitiva: non rigenerare PNG,
+cornici, testi o simboli e non chiedere nuovamente conferma. Lo studio usa gli
 eventi reali del motore e suono/aptica propri; non è la partita StackBlitz.
-Registro giocabile invariato: 52 varianti. Non rigenerare i fronti per una
-semplice conferma. Fonti, hash, numeri e ripresa:
+Promozione in corso a 58 varianti: 22 Metallo, 31 Fulmine e 5 Fuoco.
+Il collaudo reale e il video con audio vanno completati e registrati
+separatamente prima di dichiararli verificati. Fonti, hash, numeri e ripresa:
 `docs/LOTTO_6_ARMI_GIUDIZIO_FUOCO_2026-11-27.md` e
 `scripts/previews/lotto-giudizio-fuoco-20261127`.
 

@@ -1,3 +1,4 @@
+import {batchWeaponSoundPlan} from './weaponBatchAudio.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -17,9 +18,9 @@ import {resolvePreparedFleetTurn} from './fleetNext/combat.js';
 
 const integration=JSON.parse(readFileSync(new URL('./fleetNext/approvedWeaponIntegration.json',import.meta.url),'utf8'));
 const order={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'};
-test('The 52 active fronts are verified native RGBA files, including the confirmed Ganasce revision',()=>{
- assert.equal(integration.cards.length,52);
- assert.equal(integration.cards.filter(c=>c.elementId==='ionic').length,30);
+test('The 58 active fronts are verified native RGBA files, including the confirmed Ganasce revision',()=>{
+ assert.equal(integration.cards.length,58);
+ assert.equal(integration.cards.filter(c=>c.elementId==='ionic').length,31);
  for(const c of integration.cards){
   assert.equal(cardDisplayFacePath(c.id),cardTextBasePath(c.id)||'/'+c.path.replace(/^public\//,''));
   const png=readFileSync(c.path);
@@ -28,17 +29,17 @@ test('The 52 active fronts are verified native RGBA files, including the confirm
   assert.equal(png.readUInt32BE(16),3072);assert.equal(png.readUInt32BE(20),4608);assert.equal(png[25],6);
  }
 });
-test('All 30 Fulmine variants use their own approved family, rarity and complete audio sequence',()=>{
+test('All 31 Fulmine variants use their own approved family, rarity and complete audio sequence',()=>{
  const kinds=new Set();
  for(const c of integration.cards.filter(c=>c.elementId==='ionic')){
   const p=weaponEffectProfile(c.id);assert.ok(p.approved);assert.equal(p.kind,c.kind);kinds.add(p.kind);
   for(const phase of ['charge','fire','impact','block'].filter(phase=>p.sound[phase])){
-   const sound=stormCapacitorSoundPlan(p.sound[phase])||commandLanceSoundPlan(p.sound[phase])||probeHammerSoundPlan(p.sound[phase])||coreThunderSoundPlan(p.sound[phase])||metalWeaponSoundPlan(p.sound[phase]);assert.ok(sound,c.id+':'+phase);
+   const sound=batchWeaponSoundPlan(p.sound[phase])||stormCapacitorSoundPlan(p.sound[phase])||commandLanceSoundPlan(p.sound[phase])||probeHammerSoundPlan(p.sound[phase])||coreThunderSoundPlan(p.sound[phase])||metalWeaponSoundPlan(p.sound[phase]);assert.ok(sound,c.id+':'+phase);
    assert.equal(sound.family,p.kind);assert.equal(sound.tier,p.tier);assert.equal(sound.phase,phase);
    assert.ok(sound.layers.every(l=>l.duration>0&&l.gain>0));
   }
  }
- assert.equal(kinds.size,9);
+ assert.equal(kinds.size,10);
 });
 test('Counted Energy keeps its real physical cards and charges; paid Energy reports only the consumed charges',()=>{
  const side={energyPile:['energy-ionic',{id:'energy-metallic',remaining:2},'energy-metallic']};
