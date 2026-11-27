@@ -386,7 +386,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_rare_4',
-    name: 'Il Collezionista di Specchi',
+    name: 'Mercante dei Riflessi Gemelli',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#38bdf8',
