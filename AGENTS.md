@@ -1,5 +1,14 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Regola prioritaria 27/11 — effetti immediati e combattimento sequenziale
+
+Leggere e applicare la nuova sezione in [Regole permanenti effetti carte](docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md). Personaggi, Strategie con effetto immediato ed Energie si attivano al momento della giocata valida, durante i 30 secondi; rispettare i trigger periodici e condizionali specifici. Terza giocata o ESEGUI avvia la fase offensiva: ogni azione con la propria risposta di Difesa/Trappola, impatto e conseguenze deve concludersi prima della successiva. Vietata la sovrapposizione di azioni indipendenti; preservare la coreografia interna delle raffiche e combo approvate. Grafica, suono e aptica seguono gli eventi reali; il timer successivo parte dopo la risoluzione. Le vecchie istruzioni incompatibili sono superate.
+
+Lo Stratega di flotta, Personaggio generico n.11 nella revisione del 27/11, è Leggendario con una sola abilità approvata in eccezione, due turni propri. Preselezione ordinata nella creazione del mazzo (anche più di cinque); alla giocata porta subito in cima fino a cinque carte ancora nel mazzo. Una Strategia di pesca giocata dopo deve poter pescare quelle carte nello stesso turno. Le non pescate si rimescolano a scadenza o uscita anticipata. Nessuna finestra o estensione del timer. La scheda nel documento permanente prevale sulla vecchia proposta n.11 del catalogo Personaggi; la riconciliazione completa della revisione dei 13 Personaggi confermati con i registri precedenti è ancora da completare. Non considerare il vecchio registro come elenco aggiornato di tutte le approvazioni.
+
+Stato: specifica salvata, non modifica né certifica il motore o il collaudo. Priorità fra azioni equivalenti e tempi esatti di animazione da definire in implementazione.
+
+
 ## Sonda / Martello — sette fronti e direzione B approvati il 27/11/2026
 
 L'utente ha confermato «si» dopo aver visto i sette fronti completi e il
