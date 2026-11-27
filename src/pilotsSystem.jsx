@@ -323,7 +323,7 @@ export const PILOTS_DATABASE = Object.freeze([
   // --- 4 RARI (RISCHIO, TEMPO E RISORSE) ---
   {
     id: 'pilot_rare_1',
-    name: 'Il Vendicatore',
+    name: 'Corsaro della Rivalsa',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#38bdf8',
@@ -333,7 +333,7 @@ export const PILOTS_DATABASE = Object.freeze([
     unlockCost: { dust: 2800, diamonds: 1, voidCrystals: 0, primordialMatter: 0 },
     trait: 'Finestra di Vendetta: ogni 30% di HP massimi persi congela il turno nemico e avvia una raffica da 60...90s. Ogni bersaglio risolto assegna un bonus cumulativo (+2...+10 HP).',
     weakness: 'Rigetto di [+] (-10s) e [-] (-5s) al timer della raffica. I due turni successivi hanno timer ridotto (20s il primo, 30s il secondo).',
-    portrait: { bg: '#7f1d1d', visor: '#f87171', accent: '#fca5a5', symbol: 'VD' },
+    portrait: { bg: '#7f1d1d', visor: '#f87171', accent: '#fca5a5', symbol: 'CR' },
     upgradeTable: {
       1: { burstTime: 60, flatBonusPerHit: 2, reqXP: 40, dust: 2200, dia: 1, voidC: 0, prim: 0 },
       2: { burstTime: 65, flatBonusPerHit: 4, reqXP: 43, dust: 2800, dia: 1, voidC: 0, prim: 0 },
