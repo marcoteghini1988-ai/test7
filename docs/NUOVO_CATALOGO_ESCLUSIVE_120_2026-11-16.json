@@ -1486,7 +1486,7 @@
       "shipId": "L04",
       "type": "Personaggio",
       "minShipLevel": 1,
-      "name": "Custode Astrale",
+      "name": "Vegliatore delle Rotte Celesti",
       "effectText": "Quando una tua riparazione recupera almeno due punti, puoi mettere una carta sotto il mazzo e pescarne una. Una volta per tuo turno.",
       "rules": "Conta HP davvero recuperati da una singola riparazione, non il numero scritto sulla carta. Non ripara ulteriormente.",
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
