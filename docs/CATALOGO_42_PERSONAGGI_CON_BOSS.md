@@ -282,10 +282,10 @@ Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. La scheda 
 - Rimane fisso per tutta la battaglia. Gaia non ha navicelle di supporto: il settore 10 precede il primo sblocco NPC al settore 20, come da `src/fleetNext/supportCampaign.js`.
 - A ogni proprio turno recupera una percentuale degli HP massimi della propria nave madre, senza oltrepassarne il massimo.
 
-**Dopo lo sblocco (Comune, durata temporanea da decidere):**
+**Dopo lo sblocco (Comune, tre turni propri):**
 - È giocabile come normale Personaggio; non è attivo per tutta la battaglia.
-- Durante la permanenza cura una sola navicella alleata viva scelta dal giocatore, madre oppure uno dei supporti presenti, della stessa percentuale dei suoi HP massimi. Non rianima.
-- Percentuale definitiva, numero di turni e scelta del bersaglio (fissa all'attivazione o rinnovabile ogni turno) da confermare. Il 5% era solo una proposta di bilanciamento. Definire il momento delle cure ricorrenti rispettando le regole degli effetti immediati.
+- A ogni proprio turno cura una sola navicella alleata viva scelta dal giocatore, madre oppure uno dei supporti presenti, della stessa percentuale dei suoi HP massimi. Il bersaglio può cambiare a ogni turno. Non rianima.
+- Percentuale definitiva da bilanciare; tre turni e scelta rinnovabile a ogni turno confermati. Il 5% era solo una proposta di bilanciamento. Definire il momento delle cure ricorrenti rispettando le regole degli effetti immediati.
 
 ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarità Leggendaria per Gaia sono superate.
 
