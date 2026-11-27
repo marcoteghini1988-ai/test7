@@ -179,7 +179,7 @@ export function rememberExclusiveLeviatanoNativeHit(attacker,barrierDamage,bonus
 }
 
 
-// Signore delle Ombre (Plutone, boss ID 9) — Patto di sangue.
+// Predone della Penombra (Plutone, boss ID 9) — Patto di sangue.
 // A voluntary trade: 4 REAL shield HP for +8% to this cycle's REAL
 // native-weapon packet. The shield debit happens BEFORE preparations and
 // opposing volleys, so the price remains paid even if the shot is intercepted.
