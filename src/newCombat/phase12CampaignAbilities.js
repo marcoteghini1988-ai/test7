@@ -89,7 +89,7 @@ export const CAMPAIGN_BOSS_V2=Object.freeze(Object.fromEntries([
  [17,'Boss del Sacrificio','discard','Trasforma gli scarti in un piccolo impulso'],
  [18,'Entità della Discordia','venom','Danno residuo dopo il colpo'],
  [19,'Divoratore delle Scorie','magma','Sequenza di carica, scarica e raffreddamento'],
- [20,'Custode dell'Antispazio','sovereign','Il seme dominante cambia secondo la fase del boss']
+ [20,'Custode dell’Antispazio','sovereign','Il seme dominante cambia secondo la fase del boss']
  ].map(([planet,name,kind,description])=>{
    const upgraded=PHASE16D_BOSS_PROFILES[planet];
    return [planet,Object.freeze(upgraded?{planet,name:upgraded.name,kind:'phase16d',description:upgraded.description,ability:upgraded.ability}:{planet,name,kind,description})];
