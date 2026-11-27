@@ -137,3 +137,43 @@ proposta; non sostituisce il nuovo collaudo della partita.
 La copia StackBlitz non ricostruisce più automaticamente il vecchio HTML
 di studio da 23 MB: l’avvio corrente prepara soltanto la partita ufficiale.
 I file precedenti rimangono conservati e recuperabili come archivio.
+
+
+## Collaudo concluso nella partita ufficiale — 27 novembre 2026
+
+Le sette carte e la direzione B sono integrate in `test7/main`. La prova
+StackBlitz usa `OfficialFleetBattle3D` e il risolutore reali: otto casi
+osservati sul commit `3e968ad2e3b3b62da9e78cbff56058ff9c926ece`, poi combo
+Leggendaria e doppia Difesa ricontrollate sul sorgente finale
+`bd116313c0d6478a1082d74c520e85724e7663f8`. Le modifiche intermedie sono
+rifiniture del renderer e separazione dei metadati visivi dal catalogo.
+
+- Combo Rara A/B: tre contatti reali, origini sui rispettivi bordi e
+  prospettiva invertita correttamente; segnale consumato al secondo fendente.
+- Doppia Difesa: due intercettazioni, zero danni e nessun BOOM sullo scafo.
+- Marchio scaduto e primo fendente letale: un solo colpo del Martello.
+- Arma disabilitata: zero proiettili. Epica dal turno successivo: due
+  fendenti. Leggendaria: impulso e due fendenti, 215 danni effettivi nel
+  caso osservato, distinti dai nominali per le normali regole del bersaglio.
+- Cambio EN/IT: 17 campi aggiornati sulla stessa base nativa 3072×4608.
+- Avvio finale salvato e riaperto: pin confermato, 740 sorgenti verificati,
+  selettore da 47 varianti, nessun errore applicativo in console.
+- Suite completa dell'integrazione: 2455/2455. Dopo le ultime rifiniture
+  visive e dei metadati: 27/27 mirati; preflight e build passati.
+
+Il fotogramma `sonda-martello-lama-in-partita.jpg` mostra la lama in volo
+verso la madre marcata nella partita, non nello studio. È conservato come
+`libfile_987c7c0a82ac8191aca10d53eb64d857`. Dettagli e dati osservati sono in
+`collaudi/sonda-martello-2026-11-27/verifica-partita-stackblitz.json`.
+
+L'avvio non copia più i 14 PNG HD nel WebContainer e non ricrea il vecchio
+HTML di studio da 23 MB. Le immagini native sono servite da GitHub; la
+geometria della lama ha un solo contorno luminoso anziché sfocature su ogni
+faccia. Il browser cloud mostra ancora rallentamenti al primo caricamento
+e campioni a caldo variabili: 30 FPS costanti non sono certificati. Le
+richieste aptiche sono osservate, la vibrazione fisica sul telefono resta
+da provare. Il video precedente rimane una dimostrazione dello studio.
+
+La specifica parallela degli effetti immediati/combattimento sequenziale
+e le nuove schede Personaggio sono conservate; questo inserimento non ne
+costituisce implementazione o collaudo.

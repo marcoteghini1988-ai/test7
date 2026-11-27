@@ -30,12 +30,16 @@
     "fullSuite": 2455,
     "passed": 2455,
     "failed": 0,
-    "targetedArchiveAndLiveAndCatalog": 21
+    "targetedArchiveAndLiveAndCatalog": 21,
+    "finalTargetedAfterPresentationRefinements": 27
   },
   "archive": {
     "parts": 52,
     "shaVerified": true
   },
-  "stackblitzBattleQa": "pending; separate from prior isolated studio report",
-  "physicalHapticsVerified": false
+  "stackblitzBattleQa": "completed on official battle; see verifica-partita-stackblitz.json",
+  "physicalHapticsVerified": false,
+  "finalSourceCommit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+  "savedStackblitzBootstrapVerified": true,
+  "steady30FpsVerified": false
 }

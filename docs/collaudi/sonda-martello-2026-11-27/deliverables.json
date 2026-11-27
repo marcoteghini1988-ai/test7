@@ -1,5 +1,5 @@
 {
-  "status": "review-only; seven complete fronts pending visual approval",
+  "status": "approved and integrated; official StackBlitz battle reviewed",
   "directionApproved": "B",
   "defaultLocale": "en",
   "textLayers": [
@@ -42,6 +42,17 @@
       "libraryFileId": "libfile_bdbf1e62bc0c8191b896c938f25ac809",
       "bytes": 70408,
       "sha256": "b3494da05bb043d56de75779c669cc357fb89b290a270ea73b9c668a04b74388"
+    },
+    {
+      "file": "sonda-martello-lama-in-partita.jpg",
+      "libraryFileId": "libfile_987c7c0a82ac8191aca10d53eb64d857",
+      "sourceCommit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+      "description": "Actual StackBlitz battle: rotating crescent in flight toward the marked mother ship; cropped screenshot, no retouching",
+      "bytes": 109492,
+      "sha256": "1209f25f824c17c77003308119ee0f4067fb30971a742d6357522ff4a9a79687",
+      "name": "sonda-martello-lama-in-partita.jpg",
+      "type": "actual battle screenshot"
     }
-  ]
+  ],
+  "finalApprovalQuote": "si"
 }

@@ -28,8 +28,13 @@ fendente con BOOM elettrico e contraccolpo soltanto se il motore lo emette.
 Partita e studio condividono geometrie, suoni e pattern aptici. Origini
 variabili dai bordi A/B; nessuna macchina Arma montata sulla plancia.
 Danni, costi, durata e quantità dei colpi restano quelli del motore.
-La verifica precedente `verifica-stackblitz.json` è dello studio isolato;
-il nuovo collaudo nella partita ufficiale va registrato separatamente.
+La verifica precedente `verifica-stackblitz.json` è dello studio isolato.
+Il collaudo della partita ufficiale è completato e registrato separatamente
+in `docs/collaudi/sonda-martello-2026-11-27/verifica-partita-stackblitz.json`:
+otto casi reali, poi combo e doppia Difesa ricontrollate sul sorgente finale
+`bd116313c0d6478a1082d74c520e85724e7663f8`. Salvataggio e reload verificati
+con 740 sorgenti e 47 varianti. La fluidità resta variabile nel browser
+cloud; non dichiarare 30 FPS costanti né collaudo hardware del telefono.
 La vibrazione fisica resta da provare su un telefono compatibile.
 Dettagli in `docs/FULMINE_06_07_SONDA_MARTELLO_2026-11-26.md`.
 

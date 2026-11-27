@@ -1,0 +1,763 @@
+{
+  "date": "2026-11-27",
+  "status": "integrated; actual official battle reviewed on StackBlitz",
+  "repository": "marcoteghini1988-ai/test7",
+  "approval": {
+    "quote": "si",
+    "scope": "seven complete card fronts and direction B integration"
+  },
+  "finalSourceCommit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+  "stackblitzEditor": "https://stackblitz.com/edit/github-edu2s6xy?file=.stackblitz-sync.json&initialPath=/.maglio-review.html",
+  "officialBattleRoute": "/.maglio-review.html",
+  "runtime": "OfficialFleetBattle3D and actual combat resolver; prepared fixtures, not isolated concept studio",
+  "savedBootstrap": {
+    "saveReloadPackageMatch": true,
+    "commit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+    "sourceFiles": 740,
+    "applied": true,
+    "nativeImagesServedFromGitHub": true,
+    "bulkNativePngCopyIntoWebContainer": false,
+    "oldConceptHtmlAutobuild": false
+  },
+  "baselineBattleQa": {
+    "commit": "3e968ad2e3b3b62da9e78cbff56058ff9c926ece",
+    "sync": {
+      "repository": "marcoteghini1988-ai/test7",
+      "commit": "3e968ad2e3b3b62da9e78cbff56058ff9c926ece",
+      "files": 740,
+      "updated": 362,
+      "applied": true
+    },
+    "cardLocale": {
+      "englishCard": {
+        "fields": [
+          "THUNDER",
+          "HAMMER",
+          "WEAPON",
+          "RARE",
+          "ELEMENT",
+          "LIGHTNING",
+          "DURATION",
+          "1",
+          "TURN",
+          "BASE DAMAGE",
+          "28 HP",
+          "PROBE COMBO",
+          "SECOND HIT 18 HP",
+          "CONSUMES MARK",
+          "IF TARGET LIVES",
+          "1 TARGET",
+          "1 OR 2 HITS"
+        ],
+        "naturalHeight": 4608,
+        "naturalWidth": 3072,
+        "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3e968ad2e3b3b62da9e78cbff56058ff9c926ece/public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-text-base.png"
+      },
+      "italianCard": {
+        "fields": [
+          "MARTELLO",
+          "DEL TUONO",
+          "ARMA",
+          "RARA",
+          "ELEMENTO",
+          "FULMINE",
+          "DURATA",
+          "1",
+          "TURNO",
+          "DANNO BASE",
+          "28 HP",
+          "COMBO CON SONDA",
+          "SECONDO COLPO 18 HP",
+          "CONSUMA SEGNALE",
+          "SE BERSAGLIO VIVO",
+          "1 BERSAGLIO",
+          "1 O 2 COLPI"
+        ],
+        "naturalHeight": 4608,
+        "naturalWidth": 3072,
+        "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3e968ad2e3b3b62da9e78cbff56058ff9c926ece/public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-text-base.png"
+      },
+      "identicalBase": true
+    },
+    "cases": {
+      "comboPackets": [
+        {
+          "actualDamage": "20",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1080",
+          "impactAtMs": "3100",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "precision-impulse-persistent-electric-reticle",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "ionic-probe"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "5170",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "rotating-electric-crescent",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        },
+        {
+          "actualDamage": "17",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "6590",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "second-crescent-electric-detonation",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        }
+      ],
+      "opponentPackets": {
+        "enemyHp": "AVVERSARIOSUPPORTO A—Lince Solare387 / 451SUPPORTO B—",
+        "shots": [
+          {
+            "actualDamage": "20",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1080",
+            "impactAtMs": "3100",
+            "originEdge": "opponent-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "precision-impulse-persistent-electric-reticle",
+            "shooter": "B",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "generator",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "front",
+            "weaponKind": "ionic-probe"
+          },
+          {
+            "actualDamage": "26",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "5170",
+            "originEdge": "opponent-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "B",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "generator",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "front",
+            "weaponKind": "thunder-hammer"
+          },
+          {
+            "actualDamage": "17",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "6590",
+            "originEdge": "opponent-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "second-crescent-electric-detonation",
+            "shooter": "B",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "generator",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "front",
+            "weaponKind": "thunder-hammer"
+          }
+        ]
+      },
+      "defenseCase": {
+        "cinema": {
+          "active": "1",
+          "activeWeapon": "thunder-hammer",
+          "comboContact": "false",
+          "contacts": "[\"shield\",\"shield\"]",
+          "frames": "68",
+          "impactIndex": "1",
+          "maxFrameMs": "200.0",
+          "motif": "bronze-crescent-cross-slash",
+          "motifs": "[\"bronze-crescent-cross-slash\",\"bronze-crescent-cross-slash\"]",
+          "phase": "shield-contact",
+          "presentation": "hull-impacts-v4",
+          "targetId": "weapons"
+        },
+        "mark": {
+          "activeMarks": "2",
+          "targetIds": "[\"weapons\",\"weapons\"]"
+        },
+        "shots": [
+          {
+            "actualDamage": "0",
+            "cascadeIndex": "0",
+            "defenseBlocked": "true",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "2720",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          },
+          {
+            "actualDamage": "0",
+            "cascadeIndex": "0",
+            "defenseBlocked": "true",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "4140",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "second-crescent-electric-detonation",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          }
+        ],
+        "stage": {
+          "cardFlights": "1",
+          "hapticPattern": "[5,15,5]",
+          "hapticPhase": "block",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        }
+      },
+      "expiredCase": {
+        "mark": {
+          "activeMarks": "0"
+        },
+        "shots": [
+          {
+            "actualDamage": "27",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "2720",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          }
+        ]
+      },
+      "lethalCase": {
+        "mark": {
+          "activeMarks": "2",
+          "targetIds": "[\"escort:maglio-review-B-0\",\"escort:maglio-review-A-0\"]"
+        },
+        "shots": [
+          {
+            "actualDamage": "4",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "2720",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          }
+        ]
+      },
+      "blockedCase": {
+        "mark": {
+          "activeMarks": "0"
+        },
+        "shots": 0,
+        "stage": {
+          "cardFlights": "1",
+          "weaponEffects": "0"
+        }
+      },
+      "nextTurnCase": {
+        "cinema": {
+          "active": "1",
+          "activeWeapon": "thunder-hammer",
+          "comboContact": "true",
+          "contacts": "[\"crescent-electric-detonation\",\"crescent-electric-detonation\"]",
+          "frames": "54",
+          "impactIndex": "1",
+          "maxFrameMs": "649.8",
+          "motif": "silver-crescent-cross-slash",
+          "motifs": "[\"silver-crescent-cross-slash\",\"silver-crescent-cross-slash\"]",
+          "phase": "contact",
+          "presentation": "hull-impacts-v4",
+          "targetId": "weapons"
+        },
+        "shots": [
+          {
+            "actualDamage": "63",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "2720",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          },
+          {
+            "actualDamage": "41",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "4140",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "second-crescent-electric-detonation",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          }
+        ],
+        "stage": {
+          "cardFlights": "1",
+          "hapticPattern": "[34,16,16]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        }
+      },
+      "legendaryCase": {
+        "board": {
+          "height": 841,
+          "width": 473.0625,
+          "x": 444.96875,
+          "y": 95
+        },
+        "cinema": {
+          "active": "1",
+          "activeWeapon": "thunder-hammer",
+          "comboContact": "true",
+          "contacts": "[\"probe-electric-contact\",\"crescent-electric-detonation\",\"crescent-electric-detonation\"]",
+          "frames": "99",
+          "impactIndex": "1",
+          "maxFrameMs": "816.5",
+          "motif": "prismatic-crescent-cross-slash",
+          "motifs": "[\"precision-impulse-reticle\",\"prismatic-crescent-cross-slash\",\"prismatic-crescent-cross-slash\"]",
+          "phase": "contact",
+          "presentation": "hull-impacts-v4",
+          "targetId": "weapons"
+        },
+        "shots": [
+          {
+            "actualDamage": "68",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1080",
+            "impactAtMs": "3100",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "precision-impulse-persistent-electric-reticle",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "ionic-probe"
+          },
+          {
+            "actualDamage": "89",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "5170",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "rotating-electric-crescent",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          },
+          {
+            "actualDamage": "58",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "0",
+            "flightMs": "1220",
+            "impactAtMs": "6590",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "second-crescent-electric-detonation",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "thunder-hammer"
+          }
+        ],
+        "stage": {
+          "cardFlights": "2",
+          "hapticPattern": "[34,16,16]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "3"
+        }
+      }
+    },
+    "physicalVibrationVerified": false
+  },
+  "finalSourceRecheck": {
+    "commit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+    "sync": {
+      "files": 740,
+      "applied": true
+    },
+    "cold": {
+      "cinema": {
+        "active": "1",
+        "activeWeapon": "thunder-hammer",
+        "comboContact": "true",
+        "contacts": "[\"probe-electric-contact\",\"crescent-electric-detonation\",\"crescent-electric-detonation\"]",
+        "frames": "111",
+        "impactIndex": "1",
+        "maxFrameMs": "833.3",
+        "motif": "prismatic-crescent-cross-slash",
+        "motifs": "[\"precision-impulse-reticle\",\"prismatic-crescent-cross-slash\",\"prismatic-crescent-cross-slash\"]",
+        "phase": "contact",
+        "presentation": "hull-impacts-v4",
+        "targetId": "weapons"
+      },
+      "shots": [
+        {
+          "actualDamage": "68",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1080",
+          "impactAtMs": "3100",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "precision-impulse-persistent-electric-reticle",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "ionic-probe"
+        },
+        {
+          "actualDamage": "89",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "5170",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "rotating-electric-crescent",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        },
+        {
+          "actualDamage": "58",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "6590",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "second-crescent-electric-detonation",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        }
+      ],
+      "stage": {
+        "cardFlights": "2",
+        "hapticPattern": "[34,16,16]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "3"
+      }
+    },
+    "warm": {
+      "cinema": {
+        "active": "1",
+        "activeWeapon": "thunder-hammer",
+        "comboContact": "true",
+        "contacts": "[\"probe-electric-contact\",\"crescent-electric-detonation\",\"crescent-electric-detonation\"]",
+        "frames": "127",
+        "impactIndex": "1",
+        "maxFrameMs": "316.7",
+        "motif": "prismatic-crescent-cross-slash",
+        "motifs": "[\"precision-impulse-reticle\",\"prismatic-crescent-cross-slash\",\"prismatic-crescent-cross-slash\"]",
+        "phase": "contact",
+        "presentation": "hull-impacts-v4",
+        "targetId": "weapons"
+      },
+      "stage": {
+        "cardFlights": "2",
+        "hapticPattern": "[34,16,16]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "3"
+      }
+    },
+    "warmRepeat": {
+      "cinema": {
+        "active": "1",
+        "activeWeapon": "thunder-hammer",
+        "comboContact": "true",
+        "contacts": "[\"probe-electric-contact\",\"crescent-electric-detonation\",\"crescent-electric-detonation\"]",
+        "frames": "156",
+        "impactIndex": "1",
+        "maxFrameMs": "283.3",
+        "motif": "prismatic-crescent-cross-slash",
+        "motifs": "[\"precision-impulse-reticle\",\"prismatic-crescent-cross-slash\",\"prismatic-crescent-cross-slash\"]",
+        "phase": "contact",
+        "presentation": "hull-impacts-v4",
+        "targetId": "weapons"
+      },
+      "stage": {
+        "cardFlights": "2",
+        "hapticPattern": "[34,16,16]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "3"
+      }
+    },
+    "defense": {
+      "cinema": {
+        "active": "1",
+        "activeWeapon": "thunder-hammer",
+        "comboContact": "false",
+        "contacts": "[\"shield\",\"shield\"]",
+        "frames": "88",
+        "impactIndex": "1",
+        "maxFrameMs": "116.6",
+        "motif": "prismatic-crescent-cross-slash",
+        "motifs": "[\"prismatic-crescent-cross-slash\",\"prismatic-crescent-cross-slash\"]",
+        "phase": "shield-contact",
+        "presentation": "hull-impacts-v4",
+        "targetId": "weapons"
+      },
+      "shots": [
+        {
+          "actualDamage": "0",
+          "cascadeIndex": "0",
+          "defenseBlocked": "true",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "2720",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "rotating-electric-crescent",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        },
+        {
+          "actualDamage": "0",
+          "cascadeIndex": "0",
+          "defenseBlocked": "true",
+          "energySpent": "0",
+          "flightMs": "1220",
+          "impactAtMs": "4140",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "second-crescent-electric-detonation",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "thunder-hammer"
+        }
+      ],
+      "stage": {
+        "cardFlights": "1",
+        "hapticPattern": "[5,15,5]",
+        "hapticPhase": "block",
+        "hapticStatus": "requested",
+        "weaponEffects": "2"
+      }
+    },
+    "savedPackageMatches": true
+  },
+  "visualProof": {
+    "file": "sonda-martello-lama-in-partita.jpg",
+    "libraryFileId": "libfile_987c7c0a82ac8191aca10d53eb64d857",
+    "sourceCommit": "bd116313c0d6478a1082d74c520e85724e7663f8",
+    "description": "Actual StackBlitz battle: rotating crescent in flight toward the marked mother ship; cropped screenshot, no retouching",
+    "bytes": 109492,
+    "sha256": "1209f25f824c17c77003308119ee0f4067fb30971a742d6357522ff4a9a79687"
+  },
+  "verification": {
+    "fullSuite": {
+      "passed": 2455,
+      "failed": 0,
+      "log": "integration-full-final.log",
+      "scope": "complete integration before final renderer performance and presentation-metadata-only refinements"
+    },
+    "finalTargeted": {
+      "passed": 27,
+      "failed": 0,
+      "log": "integration-catalog-split-tests.log"
+    },
+    "preflight": "passed",
+    "build": "passed after renderer performance refinement",
+    "finalBattleConsoleErrors": 0,
+    "physicalVibrationVerified": false
+  },
+  "performance": {
+    "renderLimiterHz": 30,
+    "steady30FpsVerified": false,
+    "observations": "Warm and cold first-contact frame counts are included in finalSourceRecheck. HD image decoding produces initial stalls; cloud-browser warm samples still vary. These are observations, not a phone performance certification. Mesh-face blur was removed and the RAF threshold rounding was corrected."
+  },
+  "scopeLimits": [
+    "Physical vibration requires a compatible real phone. Browser requests only were observed.",
+    "Prepared local battle scenarios are not a network PvP certification.",
+    "The separately documented global immediate-play/sequential-combat specification and new Character designs were not implemented by this card batch.",
+    "The old studio video remains a concept preview, not a recording of this integrated battle."
+  ]
+}
