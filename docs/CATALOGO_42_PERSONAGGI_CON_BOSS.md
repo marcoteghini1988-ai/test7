@@ -272,7 +272,9 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le schede Gaia, Tharsis, Matriarca e Crono sono confermate nella meccanica con parametri aperti; le altre otto sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le singole abilità e durate dei tre Epici restano da approvare.
+
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime sei schede, da Gaia a Leviatano Abissale, sono confermate nella meccanica con parametri aperti; le altre sei sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
 ### 31. Guardiano di Gaia — Terra · settore 10 · Comune
 
@@ -437,7 +439,7 @@ ID conservato: `boss-character-20`.
 ## Decisioni aperte
 
 - Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.
-- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; le abilità proposte dei Boss 6–12 e le relative durate restano da approvare individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
+- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; le abilità proposte dei Boss 7–12 e le relative durate restano da approvare individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.
 - I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.
