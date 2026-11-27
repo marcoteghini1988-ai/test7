@@ -31,7 +31,7 @@ const planet=[
  shape('planet_char_3','Venere · Ricombinazione','swaps','refill',2),
  shape('planet_char_4','Mercurio · Caricatore Quantico','patterns','dice_charge',3),
  shape('planet_char_5','Giove · Vortice Ciclonico','big_combo','ammo_refill',2),
- shape('planet_char_6','Saturno · Crono','counter','prevent_skip',2),
+ shape('planet_char_6','Saturno · Contromossa degli Anelli','counter','prevent_skip',2),
  shape('planet_char_7','Urano · Impulso Ionico','boost','boost_siphon',2),
  shape('planet_char_8','Nettuno · Onda Abissale','joker','pure_hit',2),
  shape('planet_char_9','Plutone · Sifone Oscuro','low_hp','life_drain',2),
