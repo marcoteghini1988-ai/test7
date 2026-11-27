@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-generici-v2-2026-11-27",
+  "revision": "personaggi-generici-v3-2026-11-27",
   "status": "design-review",
   "counts": {
     "Comune": 6,
-    "Rara": 11,
+    "Rara": 10,
     "Epica": 8,
-    "Leggendaria": 5
+    "Leggendaria": 6
   },
-  "confirmedCount": 13,
-  "proposedCount": 17,
+  "confirmedCount": 14,
+  "proposedCount": 16,
   "rules": {
     "confirmed": [
       "Tutti i Personaggi neutri, nessuna affinità o debolezza elementale; la specializzazione Arma non è un elemento.",
@@ -17,10 +17,11 @@
       "Più Personaggi nel mazzo, uno solo attivo contemporaneamente; sostituzione volontaria prima della scadenza, con perdita degli effetti non ancora risolti e passaggio agli scarti.",
       "Sostituzione occupa una delle tre giocate; permanenti fino a sostituzione/rimozione, temporanei a scadenza, istantanei dopo effetto. Plancia esaurita disattiva lo slot.",
       "30 generici: 20 strategici e 10 specializzati Arma. Personaggi esclusivi e Boss sono fuori da questo lotto.",
-      "Effetti d'ingresso, passivi e istantanei attivi alla giocata valida, durante il timer dei 30 secondi; i trigger periodici e le reazioni conservano la loro fase. Consultare REGOLE_PERMANENTI_EFFETTI_CARTE.md per l'ordine ESEGUI e le combo."
+      "Effetti d'ingresso, passivi e istantanei attivi alla giocata valida, durante il timer dei 30 secondi; i trigger periodici e le reazioni conservano la loro fase. Consultare REGOLE_PERMANENTI_EFFETTI_CARTE.md per l'ordine ESEGUI e le combo.",
+      "Un Personaggio con più abilità può combinare abilità già confermate e nuove coerenti; le abilità possono funzionare tutte nello stesso turno, rispettando i propri costi e limiti, senza un limite comune di un'attivazione salvo regola specifica approvata."
     ],
     "proposed": [
-      "Le 17 schede rimanenti sono bozze; rarità, durate, meccaniche e valori da verificare. Le quantità per rarità non costituiscono una quota approvata.",
+      "Le 16 schede rimanenti sono bozze; rarità, durate, meccaniche e valori da verificare. Le quantità per rarità non costituiscono una quota approvata.",
       "Tempo e HP da bilanciare dopo definizione. Niente recupero HP oltre maxHp o resurrezione salvo esplicita futura decisione. Nessun aumento del limite di tre carte giocate; istantanei e sostituzioni consumano una giocata.",
       "Nei temporanei i turni contano dal turno proprio di schieramento, incluse le finestre avversarie conseguenti; durata esatta delle azioni istantanee e trigger da verificare.",
       "Le cariche virtuali non creano carte fisiche Energia per la Speciale della madre; specificare fisicità, costo, cap e visual feedback nel bilanciamento.",
@@ -29,7 +30,7 @@
     "blockers": [
       "Motore corrente rifiuta un secondo Personaggio con uno già attivo: implementare la sostituzione approvata, senza rompere le 12 esclusive.",
       "Riparazione della Plancia quando lo slot è già disattivato: serve decisione sull'eccezione per gli istantanei, prima dell'integrazione.",
-      "Le 17 rimanenti schede sono proposte; le famiglie Arma da associare agli specialisti vanno riconciliate con il catalogo corrente.",
+      "Le 16 rimanenti schede sono proposte; le famiglie Arma da associare agli specialisti vanno riconciliate con il catalogo corrente.",
       "I valori di bilanciamento non sono ancora definitivi; nessun asset o effetto approvato viene sostituito.",
       "Implementazione della fase di attivazione immediata e della coda ESEGUI, configurazione Stratega e test non ancora realizzati."
     ]
@@ -311,8 +312,8 @@
     },
     {
       "id": "character-general-14",
-      "name": "Tecnico del raffreddamento",
-      "rarity": "Rara",
+      "name": "Maestro dell'energia",
+      "rarity": "Leggendaria",
       "category": "Personaggio",
       "element": null,
       "evolution": false,
@@ -321,13 +322,16 @@
         "turns": 3
       },
       "abilities": [
-        "Una volta per turno proprio può smontare e sacrificare un'intera Carta Energia installata per dissipare il calore del Generatore, riducendo di un turno il suo raffreddamento residuo. Non riattiva un Generatore disattivato e non concede un attacco aggiuntivo."
+        "Dimezza l'Energia richiesta dagli attacchi speciali della madre, arrotondando per eccesso: da 2 a 1 e da 4 a 2. Non modifica potenza o ricarica.",
+        "Una volta per turno proprio rigenera una carica Energia del tipo appena utilizzato: la carta Energia resta nel suo slot e la carica torna disponibile, non viene pescata dagli scarti.",
+        "Una volta per turno proprio sacrifica una Carta Energia fisica installata, inviandola negli scarti, e converte una carica di un'altra Energia rimasta nell'elemento richiesto. Esempio approvato: da due Fuoco e due Ghiaccio, sacrifica un Ghiaccio e converte l'altro Ghiaccio in Fuoco; rimangono tre Fuoco."
       ],
-      "status": "proposed",
+      "status": "confirmed",
       "playable": false,
       "balancePending": true,
       "open": [
-        "Costo, disponibilità e limite da verificare; proposta non confermata."
+        "Tutte e tre le abilità possono operare nello stesso turno, ciascuna secondo i propri limiti e costi; nessun limite comune di un intervento per turno.",
+        "Preservare le schede singole 8, 9 e 12. Verificare le interazioni fra le tre abilità, le cariche effettive, il costo speciale della madre e la persistenza delle conversioni."
       ]
     },
     {
