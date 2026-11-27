@@ -74,7 +74,7 @@ export const CAMPAIGN_BOSS_V2=Object.freeze(Object.fromEntries([
  [2,'Colosso di Tharsis','streak','Le salve consecutive aumentano la pressione'],
  [3,'Matriarca Tossica','venom','Infligge veleno dopo uno scambio, non in base ai secondi'],
  [4,'Arconte Solare','red','Carte rosse amplificano il colpo'],
- [5,'Occhio del Vortice','spades','Le picche rilasciano un impulso ionico'],
+ [5,'Vegliardo del Vortice','spades','Le picche rilasciano un impulso ionico'],
  [6,'Devastatore delle Ere','counter','Le risposte parziali generano un contraccolpo'],
  [7,'Sentinella Ionica','boost','La perdita di un confronto ricarica il Boost'],
  [8,'Leviatano Abissale','finisher','Colpo più forte quando il bersaglio è ferito'],
