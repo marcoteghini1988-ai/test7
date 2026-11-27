@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (13 confermati, 17 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Le nuove abilità e la rarità Leggendaria dei 12 Boss sbloccabili restano proposte; il codice conserva la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 11; Epica: 8; Leggendaria: 5.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Le nuove abilità e la rarità Leggendaria dei 12 Boss sbloccabili restano proposte; il codice conserva la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -10,6 +10,7 @@
 - Sostituzione occupa una delle tre giocate; permanenti fino a sostituzione/rimozione, temporanei a scadenza, istantanei dopo effetto. Plancia esaurita disattiva lo slot.
 - 30 generici: 20 strategici e 10 specializzati Arma. Personaggi esclusivi e Boss sono fuori da questo lotto.
 - Effetti d'ingresso, passivi e istantanei attivi alla giocata valida, durante il timer dei 30 secondi; i trigger periodici e le reazioni conservano la loro fase. Consultare REGOLE_PERMANENTI_EFFETTI_CARTE.md per l'ordine ESEGUI e le combo.
+- Un Personaggio con più abilità può combinare abilità già confermate e nuove coerenti; possono funzionare tutte nello stesso turno rispettando costi e limiti propri, senza un limite comune salvo regola specifica approvata.
 
 Per le decisioni aperte leggere [PROGETTAZIONE_30_PERSONAGGI_GENERICI.md](PROGETTAZIONE_30_PERSONAGGI_GENERICI.md). Gli effetti immediati, la coda ESEGUI e lo Stratega seguono [REGOLE_PERMANENTI_EFFETTI_CARTE.md](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
 
@@ -113,13 +114,15 @@ Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
 Da definire/verificare: Eccezione esplicitamente approvata: una sola abilità Epica. Definire arrotondamenti, progressione se il componente è già parzialmente operativo, consumo del tempo fra i passaggi e selezione casuale deterministica nel motore.
 
-### 14. Tecnico del raffreddamento — Rara
+### 14. Maestro dell'energia — Leggendaria
 
-Durata: 3 turni propri. Stato: proposta da verificare; non ancora implementato.
+Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
-- Una volta per turno proprio può smontare e sacrificare un'intera Carta Energia installata per dissipare il calore del Generatore, riducendo di un turno il suo raffreddamento residuo. Non riattiva un Generatore disattivato e non concede un attacco aggiuntivo.
+- Dimezza l'Energia richiesta dagli attacchi speciali della madre, arrotondando per eccesso: da 2 a 1 e da 4 a 2. Non modifica potenza o ricarica.
+- Una volta per turno proprio rigenera una carica Energia del tipo appena utilizzato: la carta Energia resta nel suo slot e la carica torna disponibile, non viene pescata dagli scarti.
+- Una volta per turno proprio sacrifica una Carta Energia fisica installata, inviandola negli scarti, e converte una carica di un'altra Energia rimasta nell'elemento richiesto. Esempio approvato: da due Fuoco e due Ghiaccio, sacrifica un Ghiaccio e converte l'altro Ghiaccio in Fuoco; rimangono tre Fuoco.
 
-Da definire/verificare: Costo, disponibilità e limite da verificare; proposta non confermata.
+Da definire/verificare: Tutte e tre le abilità possono operare nello stesso turno, ciascuna secondo i propri limiti e costi; nessun limite comune di un intervento per turno. Preservare le schede singole 8, 9 e 12. Verificare le interazioni fra le tre abilità, le cariche effettive, il costo speciale della madre e la persistenza delle conversioni.
 
 ### 15. Tecnica delle contromisure — Epica
 
