@@ -21,7 +21,6 @@ export function createDailyPokerConfig(dateStr){
   attackSeconds:25,responseSeconds:25,preparationSeconds:35,
   assignedWeapons:Object.freeze(assignedWeapons),weaponLevel:rarityKey==='epic'?1:2,
   rarityKey,playerHp,aiHp:Math.round(playerHp*1.15),
-  pilotId:'pilot_com_1',pilotLevel:2,enemyPilotId:'pilot_com_2',
   livesProvided:0,scannerMode:'RESTRICTED',assignedDeck:'neutral_starter',assignedDeckLevel:1,
   noCampaignRewards:true});
 }

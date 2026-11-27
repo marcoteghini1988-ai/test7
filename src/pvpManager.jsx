@@ -126,20 +126,6 @@ export const getWeeklyLeaderboardKey = (date = new Date()) => {
   return `settimana_${d.getUTCFullYear()}_${weekNo}`;
 };
 
-// ============================================================================
-// 1.3 POOL DEI 33 PILOTI PER GENERAZIONE AVVERSARI E CLASSIFICHE
-// ============================================================================
-const POOL_PILOTS = Object.freeze([
-  'pilot_com_1', 'pilot_com_2', 'pilot_com_3', 'pilot_com_4',
-  'pilot_boss_1', 'pilot_boss_2', 'pilot_boss_3', 'pilot_boss_4',
-  'pilot_boss_5', 'pilot_boss_6', 'pilot_boss_7', 'pilot_boss_8',
-  'pilot_boss_9', 'pilot_boss_10', 'pilot_boss_11', 'pilot_boss_12',
-  'pilot_rare_1', 'pilot_rare_2', 'pilot_rare_3', 'pilot_rare_4',
-  'pilot_epic_1', 'pilot_epic_2', 'pilot_epic_3', 'pilot_epic_4',
-  'pilot_leg_1', 'pilot_leg_2', 'pilot_leg_3', 'pilot_leg_4',
-  'pilot_leg_5', 'pilot_leg_6', 'pilot_boss_18', 'pilot_boss_19', 'pilot_boss_20'
-]);
-
 // Helper per generare una Carta Base valida per il banco di Convergenza o Tris
 export const generatePvpBaseCard = () => {
   const suits = [
@@ -274,7 +260,6 @@ export const generateGhostProfile = (playerLevel = 1, playerTrophies = 0, channe
     'planet_char_1', 'planet_char_2', 'planet_char_6', 'planet_char_15', 'planet_char_20'
   ];
   const botDeck = poolDecks[Math.floor(Math.random() * poolDecks.length)];
-  const botPilot = POOL_PILOTS[Math.floor(Math.random() * POOL_PILOTS.length)];
 
   let botDeckLevel = 1;
   if (botLevel >= 66) botDeckLevel = Math.min(9, Math.floor((botLevel - 65) / 5) + 7);
@@ -289,7 +274,6 @@ export const generateGhostProfile = (playerLevel = 1, playerTrophies = 0, channe
     trophies: botTrophies,
     deck: botDeck,
     ability: botDeck,
-    pilot: botPilot,
     channel,
     equippedWeapons: ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'],
     weaponsLevels: {
@@ -375,7 +359,6 @@ function generateNewWeeklyRoster(currentWeekKey, monday) {
       nickname: name,
       level,
       deck: poolDecks[i % poolDecks.length],
-      pilot: POOL_PILOTS[i % POOL_PILOTS.length],
       trophies,
       wins,
       losses,
@@ -419,8 +402,7 @@ function simulateDailyLeaderboardGrowth(stored, todayStr) {
       ...pilot,
       trophies: nextTrophies,
       wins: pilot.wins + extraWins,
-      losses: pilot.losses + extraLosses,
-      pilot: pilot.pilot || POOL_PILOTS[idx % POOL_PILOTS.length]
+      losses: pilot.losses + extraLosses
     };
   });
 
@@ -439,7 +421,7 @@ function simulateDailyLeaderboardGrowth(stored, todayStr) {
 // 2.0 PVP SIMULATO OFFLINE — matchmaking e avversario IA
 // ============================================================================
 export function MatchmakingLobby({
-  myNickname, myLevel, myTrophies, myPilot='pilot_com_1',
+  myNickname, myLevel, myTrophies,
   pvpChannel='training', selectedMode='classic', onMatchFound, onCancel
 }) {
   const [searchTime, setSearchTime] = useState(0);
@@ -456,13 +438,13 @@ export function MatchmakingLobby({
       foundCallback.current({
         roomId: `room_pvp_bot_${Date.now()}`,
         myPlayerId: `offline_${Date.now()}`,
-        myPilot, opponent, isHost: true,
+        opponent, isHost: true,
         isGhostMatch: true, isOnlinePoker: false,
         channel: pvpChannel, mode: activeMode,
       });
     }, COMPETITIVE_BOOTSTRAP.realOpponentSearchMs);
     return () => {clearInterval(clock); clearTimeout(waiting);};
-  }, [myLevel, myTrophies, myPilot, pvpChannel, selectedMode]);
+  }, [myLevel, myTrophies, pvpChannel, selectedMode]);
   return (
     <div style={{position:'fixed',inset:0,background:'rgba(2,4,12,.96)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:30000,padding:'1rem'}}>
       <div className="cyber-panel" style={{padding:'1.75rem',maxWidth:400,width:'100%',textAlign:'center',border:'2px solid #00f2fe'}}>

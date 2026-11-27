@@ -185,25 +185,6 @@ export function generateDailyChallengeConfig(dateStr = getRomeDateString()) {
   const assignedModule = hasModule ? poolDecks[Math.floor(rng() * poolDecks.length)] : null;
   const assignedModuleLevel = hasModule ? (Math.floor(rng() * 4) + 3) : 1;
 
-  const poolPilots = [
-    'pilot_com_1', 'pilot_com_2', 'pilot_com_3', 'pilot_com_4',
-    'pilot_boss_1', 'pilot_boss_2', 'pilot_boss_3', 'pilot_boss_4',
-    'pilot_boss_5', 'pilot_boss_6', 'pilot_boss_7', 'pilot_boss_8',
-    'pilot_boss_9', 'pilot_boss_10', 'pilot_boss_11', 'pilot_boss_12',
-    'pilot_rare_1', 'pilot_rare_2', 'pilot_rare_3', 'pilot_rare_4',
-    'pilot_epic_1', 'pilot_epic_2', 'pilot_epic_3', 'pilot_epic_4',
-    'pilot_leg_1', 'pilot_leg_2', 'pilot_leg_3', 'pilot_leg_4',
-    'pilot_leg_5', 'pilot_leg_6', 'pilot_boss_18', 'pilot_boss_19', 'pilot_boss_20'
-  ];
-  const assignedPilot = poolPilots[Math.floor(rng() * poolPilots.length)];
-  const assignedPilotLevel = Math.floor(rng() * 3) + 1;
-
-  let nemesisPilot = poolPilots[Math.floor(rng() * poolPilots.length)];
-  if (nemesisPilot === assignedPilot) {
-    nemesisPilot = poolPilots[(poolPilots.indexOf(assignedPilot) + 7) % poolPilots.length];
-  }
-  const nemesisPilotLevel = assignedPilotLevel;
-
   const hasEpic = rng() > 0.4;
   const epicItems = ['epic_item_1', 'epic_item_2', 'epic_item_3', 'epic_item_4', 'epic_item_5', 'epic_item_6', 'epic_item_7', 'epic_item_8', 'epic_item_9', 'epic_item_10'];
   const assignedEpicItem = hasEpic ? epicItems[Math.floor(rng() * epicItems.length)] : null;
@@ -241,8 +222,6 @@ export function generateDailyChallengeConfig(dateStr = getRomeDateString()) {
     assignedDeckLevel,
     assignedModule,
     assignedModuleLevel,
-    assignedPilot,
-    assignedPilotLevel,
     assignedEpicItem,
     assignedEpicLevel,
     assignedTerrains,
@@ -252,8 +231,6 @@ export function generateDailyChallengeConfig(dateStr = getRomeDateString()) {
     aiDeck,
     aiDeckLevel,
     aiModule,
-    nemesisPilot,
-    nemesisPilotLevel,
     scannerMode: 'RESTRICTED'
   };
 }

@@ -85,6 +85,5 @@ export const PHASE16A_CONTENT=Object.freeze({
   extraPlanetModules:Array.from({length:20},(_,i)=>`planet_char_${i+1}`),
   capsuleModule:'singularity_core',
   capsuleDecks:['ophiuchus','supreme_eclipse'],
-  pilotIds:['pilot_com_1','pilot_com_2','pilot_com_3','pilot_com_4','pilot_rare_1','pilot_rare_2','pilot_rare_3','pilot_rare_4','pilot_epic_1','pilot_epic_2','pilot_epic_3','pilot_epic_4','pilot_leg_1','pilot_leg_2','pilot_leg_3','pilot_leg_4'],
   terrainIds:['cryo_stasis','magnetic_valve','charge_splitter','entropic_filter','resonance_lock','suit_catalyst','quantum_polarizer','algebraic_refraction']
 });

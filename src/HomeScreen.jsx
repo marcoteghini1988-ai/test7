@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SciFiIcon, TacticalVisual } from './visualAssets';
-import { PILOTS_DATABASE } from './pilotsSystem';
 import { playSound } from './audio';
 import { SUIT_SIGNS } from './mathDuelEngine.js';
 import { ASSET_ROOT } from './ShipPresentation';
@@ -109,7 +108,6 @@ export default function HomeScreen({
   maxPlayerHp = 100,
   selectedDeck = 'neutral_starter',
   currentDeckObj = {},
-  selectedPilot = 'pilot_com_1',
   maxUnlockedPlanet = 1,
   currentPlanetLevel = 1,
   currentPlanetName = 'Terra',
@@ -132,13 +130,7 @@ export default function HomeScreen({
   dailyBountiesState = null,
   triggerPopup = null
 }) {
-  const [carouselSlide, setCarouselSlide] = useState(0);
   const [localHint, setLocalHint] = useState(null);
-
-  // Gesture Swipe Carosello
-  const touchStartXRef = useRef(null);
-  const touchEndXRef = useRef(null);
-  const isSwipingRef = useRef(false);
 
   // Barra inferiore a scorrimento orizzontale
   const bottomScrollRef = useRef(null);
@@ -178,38 +170,7 @@ export default function HomeScreen({
 
   const claimableBounties = (dailyBountiesState?.bounties || []).filter(b => b && b.completed && !b.claimed).length;
 
-  const handleTouchStart = (e) => {
-    touchEndXRef.current = null;
-    touchStartXRef.current = e.targetTouches[0].clientX;
-    isSwipingRef.current = false;
-  };
-
-  const handleTouchMove = (e) => {
-    touchEndXRef.current = e.targetTouches[0].clientX;
-    if (touchStartXRef.current !== null && Math.abs(touchStartXRef.current - touchEndXRef.current) > 10) {
-      isSwipingRef.current = true;
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (touchStartXRef.current === null || touchEndXRef.current === null) return;
-    const distance = touchStartXRef.current - touchEndXRef.current;
-    const minSwipeDistance = 35;
-
-    if (Math.abs(distance) > minSwipeDistance) {
-      try { playSound('card_slide'); } catch (_) {}
-      setCarouselSlide(prev => 1 - prev);
-    }
-
-    touchStartXRef.current = null;
-    touchEndXRef.current = null;
-    setTimeout(() => { isSwipingRef.current = false; }, 50);
-  };
-
   const safePlanetName = (currentPlanetName || 'TERRA').toUpperCase();
-  const pilotsList = Array.isArray(PILOTS_DATABASE) ? PILOTS_DATABASE : Object.values(PILOTS_DATABASE || {});
-  const curPilot = pilotsList.find(p => p.id === selectedPilot) || pilotsList[0] || { name: 'Pilota Alpha', color: '#10b981' };
-  const pilotColor = curPilot.rarityColor || curPilot.color || '#10b981';
 
   return (
     <div className="eclissi-home" style={{ '--home-card-art':`url("${officialNumericDeckBackPath(selectedDeck)}")`, '--home-pedestal-art': pedestalArt, flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, gap: 'clamp(4px, 1vmin, 10px)', position: 'relative', zIndex: 5, width: '100%', boxSizing: 'border-box' }}>
@@ -341,11 +302,8 @@ export default function HomeScreen({
           </div>
         )}
 
-        {/* CAROSELLO CENTRALE A TUTTO CAMPO */}
+        {/* MAZZO CENTRALE A TUTTO CAMPO */}
         <div 
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -359,11 +317,10 @@ export default function HomeScreen({
           <div 
             className="trophy-pedestal-container" 
             onClick={() => {
-              if (isSwipingRef.current) return;
               try { playSound('click'); } catch (_) {}
               onOpenLoadout();
             }}
-            title="Scorri per cambiare carta, tocca per aprire l'Assetto Nave"
+            title="Tocca per aprire l'Assetto Nave"
             style={{ cursor: 'pointer', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
           >
             <div className="trophy-beam" />
@@ -371,56 +328,14 @@ export default function HomeScreen({
             {/* ALLOGGIAMENTO CARTA STRUTTURALE 78x116 PX */}
             <div className="hero-card-anim" style={{ zIndex: 2, width: 78, height: 116, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               
-              {/* 1. Mazzo Tattico */}
-              {carouselSlide === 0 && (
-                <div className="home-deck-preview" data-equipped-deck={selectedDeck}
-                  style={{'--home-numeric-back':`url("${officialNumericDeckBackPath(selectedDeck)}")`}}
-                  title={'Mazzo numerico equipaggiato: '+officialNumericDeckBackName(selectedDeck)}>
-                  <img className="home-deck-hd"
-                    src={officialNumericDeckBackPath(selectedDeck)}
-                    alt={'Dorso del '+officialNumericDeckBackName(selectedDeck)}
-                    width={78} height={116} draggable={false}/>
-                </div>
-              )}
-
-              {/* 2. Pilota */}
-              {carouselSlide === 1 && (
-                <div
-                  style={{
-                    width: 78,
-                    height: 116,
-                    borderRadius: 6,
-                    border: `1.5px solid ${pilotColor}`,
-                    boxShadow: `0 0 14px ${pilotColor}77`,
-                    background: `linear-gradient(180deg, ${pilotColor}25 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '4px 3px',
-                    boxSizing: 'border-box',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.48rem', fontWeight: 900, color: pilotColor, lineHeight: 1 }}>
-                    <span>COMANDANTE</span>
-                    <span>L.{level}</span>
-                  </div>
-
-                  <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 50%, ${pilotColor}33 0%, transparent 70%)` }} />
-                    <span style={{ fontSize: '2.4rem', filter: `drop-shadow(0 0 10px ${pilotColor})`, lineHeight: 1 }}>
-                      {curPilot.avatar || curPilot.icon || curPilot.emoji || <SciFiIcon name="shield" size={38} color={pilotColor} />}
-                    </span>
-                  </div>
-
-                  <div style={{ width: '100%', background: 'rgba(2, 6, 23, 0.9)', borderTop: `1px solid ${pilotColor}55`, borderRadius: '0 0 4px 4px', padding: '2px 0', textAlign: 'center', lineHeight: 1 }}>
-                    <div style={{ fontSize: '0.56rem', fontWeight: 900, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {curPilot.name}
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="home-deck-preview" data-equipped-deck={selectedDeck}
+                style={{'--home-numeric-back':`url("${officialNumericDeckBackPath(selectedDeck)}")`}}
+                title={'Mazzo numerico equipaggiato: '+officialNumericDeckBackName(selectedDeck)}>
+                <img className="home-deck-hd"
+                  src={officialNumericDeckBackPath(selectedDeck)}
+                  alt={'Dorso del '+officialNumericDeckBackName(selectedDeck)}
+                  width={78} height={116} draggable={false}/>
+              </div>
 
             </div>
 
@@ -435,8 +350,7 @@ export default function HomeScreen({
 
             <div className="home-carousel-caption" style={{ textAlign: 'center', marginTop: 3, zIndex: 2 }}>
               <div style={{ fontSize: 'clamp(0.6rem, 1.5vmin, 0.72rem)', fontWeight: 900, color: '#facc15' }}>
-                {carouselSlide === 0 && officialNumericDeckBackName(selectedDeck)}
-                {carouselSlide === 1 && curPilot.name}
+                {officialNumericDeckBackName(selectedDeck)}
               </div>
             </div>
           </div>

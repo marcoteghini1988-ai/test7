@@ -25,9 +25,7 @@ export default function PersonalLoadoutModal({
   nextExtractorConfig,
   onHarvestEther,
   onUpgradeExtractor,
-  // Comandante e mazzo numerico
-  selectedPilot = 'pilot_com_1',
-  pilotInventory = {},
+  // Mazzo numerico
   selectedDeck = 'neutral_starter',
   currentDeckObj,
   deckInventory = {},

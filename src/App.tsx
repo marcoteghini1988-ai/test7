@@ -38,7 +38,6 @@ import {validateShipUpgradePurchase} from './shipUpgrades.js';
 import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
 import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
 import {normalizeOfficialForgeQueue,applyOfficialForgeCompletion,isOfficialForgeJobInQueue} from './officialForgeProgress.js';
-import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 import { validatePhase13Settlement, createPhase13OnceGuard } from './newCombat/phase13Campaign.js';
 import { phase17PilotHp, phase17CampaignXpAward, phase17CampaignDustAward } from './newCombat/phase17Balance.js';
 
@@ -58,7 +57,6 @@ import {
 } from './dailyChallengeEngine';
 import { buildDailyPokerResult } from './dailyPokerChallenge.js';
 
-import { PilotCard, evaluatePilotDominance, getPilotById, getSectorEncounterPilot } from './pilotsSystem';
 
 
 
@@ -3527,7 +3525,6 @@ function RiftCollapseModal({ rift, relic1, relic2, epicItem, onComplete }) {
 function CampaignLevelBriefingModal({
   planetNum,
   levelNum,
-  playerPilotId = 'pilot_com_1',
   sectorStars = [false, false, false],
   onLaunch,
   onClose,
@@ -3539,13 +3536,6 @@ function CampaignLevelBriefingModal({
   onBuyScannerRefill
 }) {
   const isBoss = levelNum === 10;
-
-  const enemyPilot = typeof getSectorEncounterPilot === 'function'
-    ? getSectorEncounterPilot(planetNum, levelNum)
-    : null;
-  const enemyPilotId = enemyPilot?.id || (isBoss ? `pilot_boss_${planetNum}` : 'pilot_com_1');
-  const playerPilotObj = typeof getPilotById === 'function' ? getPilotById(playerPilotId) : null;
-  const enemyPilotObj = enemyPilot || (typeof getPilotById === 'function' ? getPilotById(enemyPilotId) : null);
 
   const planetName = realPlanetNames?.[planetNum - 1] || `Pianeta ${planetNum}`;
   const zoneName = (PLANET_ZONE_NAMES?.[planetNum - 1] || [])[levelNum - 1] || `Settore ${levelNum}`;
@@ -3617,7 +3607,7 @@ function CampaignLevelBriefingModal({
         </button>
       </div>
 
-      {/* CONFRONTO FORZE PILOTI SOSPESE SUL PIANO COSMICO */}
+      {/* Confronto tra flotte: i vecchi piloti non fanno parte della battaglia. */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -3626,25 +3616,15 @@ function CampaignLevelBriefingModal({
         zIndex: 10,
         margin: 'auto 0'
       }}>
-        {/* Pilota Giocatore */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-          <div style={{ filter: 'drop-shadow(0 0 16px rgba(0, 242, 254, 0.6))' }}>
-            <PilotCard pilot={playerPilotId} compact={true} isEquipped={false} />
-          </div>
-          <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#00f2fe' }}>
-            {playerPilotObj?.name || 'Tuo Pilota'}
-          </span>
+          <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#00f2fe' }}>LA TUA FLOTTA</span>
         </div>
 
         <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#facc15', textShadow: '0 0 10px currentColor' }}>VS</span>
 
-        {/* Pilota Nemico */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-          <div style={{ filter: isBoss ? 'drop-shadow(0 0 18px rgba(239, 68, 68, 0.7))' : 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))' }}>
-            <PilotCard pilot={enemyPilotObj || enemyPilotId} compact={true} isEquipped={false} />
-          </div>
           <span style={{ fontSize: '0.68rem', fontWeight: 900, color: isBoss ? '#f87171' : '#fff' }}>
-            {enemyPilotObj?.name || (isBoss ? 'Titano' : 'Sentinella')}
+            {isBoss ? 'FLOTTA BOSS' : 'FLOTTA AVVERSARIA'}
           </span>
         </div>
       </div>
@@ -3702,7 +3682,7 @@ function CampaignLevelBriefingModal({
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '1.4rem', filter: 'drop-shadow(0 0 8px #00f2fe)' }}>👤</span>
               <div style={{ textAlign: 'left', lineHeight: 1.1 }}>
-                <div style={{ fontSize: '0.65rem', color: '#00f2fe', fontWeight: 900 }}>Carta Boss {enemyPilotObj?.name || 'Gaia'}</div>
+                <div style={{ fontSize: '0.65rem', color: '#00f2fe', fontWeight: 900 }}>Carta Personaggio Boss</div>
                 <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>Personaggio da aggiungere al mazzo</div>
               </div>
             </div>
@@ -5172,42 +5152,6 @@ function App() {
   const modulePurchaseLocks=useRef(new Set());
   useEffect(()=>{modulePurchaseLocks.current.clear();},[abilities,forgeQueue]);
 
-    // STATI DEL SISTEMA PILOTI TATTICI (18 CARTE PILOTA AUTONOME)
-  const [selectedPilot, setSelectedPilot] = useState(() => {
-    // La selezione storica non sblocca un pilota in assenza del suo inventario.
-    return initialSelectedPilot(localStorage.getItem('eclissi_selected_pilot'),
-      localStorage.getItem('eclissi_pilot_inventory'));
-  });
-   const [pilotInventory, setPilotInventory] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_pilot_inventory');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.pilot_starter_1 && !parsed.pilot_com_1) {
-          parsed.pilot_com_1 = { level: parsed.pilot_starter_1.level || 1, unlocked: true };
-          delete parsed.pilot_starter_1;
-        }
-        return parsed;
-      }
-      // Senza salvataggio inventario si possiede solo il pilota iniziale:
-      // un ID precedentemente selezionato NON prova lo sblocco.
-      return missingPilotInventory();
-    } catch (_) {
-      return { pilot_com_1: { level: 1, unlocked: true } };
-    }
-  });
-
-
-    useEffect(() => {
-    localStorage.setItem('eclissi_selected_pilot', selectedPilot);
-  }, [selectedPilot]);
-
-
-  useEffect(() => {
-    localStorage.setItem('eclissi_pilot_inventory', JSON.stringify(pilotInventory));
-  }, [pilotInventory]);
-
-
   const [selectedDeck, setSelectedDeck] = useState(() => {
     return localStorage.getItem('eclissi_selected_deck') || 'neutral_starter';
   });
@@ -5885,7 +5829,7 @@ function App() {
     if (typeof playBGM === 'function') playBGM(levelNum === 10 ? 'boss' : 'battle');
         setBattleSessionId(s => s + 1);
     setStep('game');
-  }, [abilities, deckInventory, credits, selectedPilot, triggerPopup]);
+  }, [credits, triggerPopup]);
 
 
   const handleQuickResumeRadar = useCallback(() => {
@@ -6293,24 +6237,11 @@ function App() {
         });
 
 
-        // Conserva il riconoscimento storico di Terra S9 senza proporre
-        // equipaggiamenti estranei al mazzo di flotta attivo.
-        const terraModule=terraNineModuleVictory({
-          winner:'player',mode:gameMode,planetId:planetNum,sectorLevel:levelNum,
-          selectedPilot,abilities
-        });
-        if(terraModule){
-          setAbilities(prev => Object.values(prev as Record<string,{unlocked?:boolean}>).some(item=>item?.unlocked===true)
-            ? prev : {...prev,[terraModule]:{unlocked:true,level:1}});
-          // Il premio e' posseduto, NON equipaggiato come potere gratuito.
-          triggerPopup('Settore Terra 9 completato. Prosegui verso il boss di Terra.');
-        }
-
         const maxLvl = unlockedLevels?.[planetNum] || 1;
         const isReplay = levelNum < maxLvl;
         let reward = typeof getLevelReward === 'function' ? getLevelReward(planetNum, levelNum, isReplay) : { stardust: 50, diamonds: 0, xp: 40 };
 
-        // Pilota boss, avanzamento di pianeta e premio doppio soltanto
+        // Avanzamento di pianeta e premio doppio soltanto
         // se la vittoria e' il vero boss del settore canonico.
         const bossRelic = verifiedBossRelicReward({
           winner: 'player', mode: gameMode,
@@ -6335,18 +6266,8 @@ function App() {
         setXp(x => x + reward.xp);
 
         if (isBossFight) {
-          // La reliquia viene verificata e assegnata con il risultato
-          // ufficiale sopra, non soltanto con il livello del menu.
-          // SBLOCCO AUTOMATICO CARTA PILOTA BOSS (COSTO ZERO A GRADO 1)
-          const bossPilotId = `pilot_boss_${planetNum}`;
-          setPilotInventory(prev => {
-            if (prev[bossPilotId]) return prev;
-            return {
-              ...prev,
-              [bossPilotId]: { level: 1, unlocked: true }
-            };
-          });
-
+          // La Carta Personaggio Boss del sistema attuale viene assegnata
+          // separatamente da claimOfficialLiveVictoryRewards, su vittoria verificata.
           triggerPopup(` BOSS PIANETA ${planetNum} SCONFITTO!\nReliquia acquisita e carta Personaggio Boss ottenuta. Aggiungila al tuo mazzo!`);
 
           const nextP = getNextCampaignPlanet(planetNum);
@@ -6396,7 +6317,7 @@ function App() {
       triggerPopup(`Sconfitta Tattica.\nDati di Telemetria: +${telemetry.dustEarned} 🌟 Polvere | +${telemetry.xpEarned} XP Pilota!`);
     }
 
-                  }, [nickname, trophies, pvpWins, pvpLosses, selectedDeck, selectedPilot, abilities, level, myPlayerId, hasStabilizedRift1, addStardustSafe, addVoidCrystalsSafe, addPrimordialMatterSafe, addBettingDiamondsSafe, gameMode, bettingTier, customBetAmount, activeAdventure, unlockedLevels, walletCap, triggerPopup]);
+                  }, [nickname, trophies, pvpWins, pvpLosses, selectedDeck, level, myPlayerId, hasStabilizedRift1, addStardustSafe, addVoidCrystalsSafe, addPrimordialMatterSafe, addBettingDiamondsSafe, gameMode, bettingTier, customBetAmount, activeAdventure, unlockedLevels, walletCap, triggerPopup]);
 
     const phase13SettlementGuard=useRef(createPhase13OnceGuard());
     const dailyPokerResultGuard=useRef(new Set());
@@ -6833,30 +6754,16 @@ function App() {
   }
 
   // --------------------------------------------------------------------------
-  // 3. REGISTRAZIONE LICENZA PILOTA & SCELTA STARTER (STILE FLUTTUANTE HOME)
+  // 3. REGISTRAZIONE DEL PROFILO (STILE FLUTTUANTE HOME)
   // --------------------------------------------------------------------------
   if (step === 'welcome') {
-    const starterPilots = ['pilot_com_1', 'pilot_com_2', 'pilot_com_3', 'pilot_com_4'];
-    const currentChosenPilot = selectedPilot || 'pilot_com_1';
-
     const handleRegister = (e) => {
       e.preventDefault();
       const finalName = nickname.trim() || 'Pilota Alpha';
-      const chosenPilotId = currentChosenPilot;
-
       try { playSound('epic_item_trigger'); } catch (_) {}
 
       localStorage.setItem('eclissi_profile', JSON.stringify({ nickname: finalName }));
-      localStorage.setItem('eclissi_selected_pilot', chosenPilotId);
-      
-      const newInventory = {
-        [chosenPilotId]: { level: 1, unlocked: true }
-      };
-      localStorage.setItem('eclissi_pilot_inventory', JSON.stringify(newInventory));
-
       setNickname(finalName);
-      setSelectedPilot(chosenPilotId);
-      setPilotInventory(newInventory);
       setStep('home');
     };
 
@@ -6899,60 +6806,8 @@ function App() {
             }} 
           />
           <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '6px', fontWeight: 700 }}>
-            Tocca la carta per scegliere il tuo Pilota Starter gratuito:
+            Scegli il nome con cui giocare e poi entra alla base.
           </div>
-        </div>
-
-        {/* LE 4 CARTE REALI SOSPESE SUL PIANO SPAZIALE */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(2, auto)', 
-          gap: 'clamp(10px, 2.5vmin, 20px)', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          zIndex: 10,
-          margin: 'auto 0'
-        }}>
-          {starterPilots.map((pilotId) => {
-            const isSelected = currentChosenPilot === pilotId;
-            return (
-              <div
-                key={pilotId}
-                onClick={() => {
-                  try { playSound('select'); } catch (_) {}
-                  setSelectedPilot(pilotId);
-                }}
-                style={{
-                  cursor: 'pointer',
-                  transform: isSelected ? 'scale(1.08)' : 'scale(0.94)',
-                  transition: 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.25s ease',
-                  filter: isSelected ? 'drop-shadow(0 0 20px rgba(0, 242, 254, 0.95))' : 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.85)) opacity(0.72)',
-                  position: 'relative'
-                }}
-              >
-                <PilotCard pilot={pilotId} compact={true} isEquipped={isSelected} />
-
-                {isSelected && (
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '-8px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: '#00f2fe',
-                    color: '#020617',
-                    fontSize: '0.52rem',
-                    fontWeight: 900,
-                    padding: '1px 8px',
-                    borderRadius: '10px',
-                    boxShadow: '0 0 10px #00f2fe',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    ✓ ATTIVO
-                  </div>
-                )}
-              </div>
-            );
-          })}
         </div>
 
         {/* PULSANTE CINETICO FLUTTUANTE */}
@@ -7369,9 +7224,6 @@ function App() {
           gameMode={gameMode}
           selectedBossDeck={selectedDeck}
           bossDeckInventory={deckInventory}
-          selectedPilot={getPilotById(selectedPilot)?selectedPilot:null}
-          pilotInventory={pilotInventory}
-          commanderDisplayName={getPilotById(selectedPilot)?.name || ''}
           bossPlanetId={activeAdventure?.planet ?? null}
           bossSectorLevel={activeAdventure?.level ?? null}
           sectorNumber={gameMode === 'adventure' ? ((activeAdventure?.planet || 1) - 1) * 10 + (activeAdventure?.level || 1) : Math.max(1, level)}
@@ -7427,7 +7279,6 @@ function App() {
           maxPlayerHp={maxPlayerHp}
           selectedDeck={selectedDeck}
           currentDeckObj={currentDeckObj}
-          selectedPilot={selectedPilot}
           maxUnlockedPlanet={maxUnlockedPlanet}
           currentPlanetLevel={currentPlanetLevel}
           currentPlanetName={currentPlanetName}
@@ -7463,7 +7314,6 @@ function App() {
         <CampaignLevelBriefingModal
           planetNum={selectedSectorForBriefing.planetNum}
           levelNum={selectedSectorForBriefing.levelNum}
-          playerPilotId={selectedPilot}
           sectorStars={getSectorStars(selectedSectorForBriefing.planetNum, selectedSectorForBriefing.levelNum, campaignStars)}
           credits={credits}
           isReplay={selectedSectorForBriefing.levelNum < (unlockedLevels?.[selectedSectorForBriefing.planetNum] || 1)}
@@ -8348,17 +8198,10 @@ function App() {
       })()}
 
 
-            {/* Sblocco Modulo Settore 9 integrato direttamente all'avvio in base al Pilota */}
-
-
-          {/* Sblocco Mazzo con Passiva per Boss Gaia integrato direttamente all'avvio in base al Pilota */}
-
-
                  {isSearchingPvP && (
         <MatchmakingLobby
           myNickname={nickname}
           myDeck={selectedDeck}
-          myPilot={selectedPilot}
           myLevel={level}
           myTrophies={trophies}
           pvpChannel={selectedPvPChannel}
@@ -8603,8 +8446,6 @@ function App() {
             setExtractorLevel(l => l + 1);
             triggerPopup(`Estrattore potenziato a ${nextExtractorConfig.name}!`);
           }}
-          selectedPilot={selectedPilot}
-          pilotInventory={pilotInventory}
           selectedDeck={selectedDeck}
           currentDeckObj={currentDeckObj}
           deckInventory={deckInventory}
