@@ -37,7 +37,7 @@ Una volta per proprio turno può sacrificare una carta scelta dal giocatore dall
 
 All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive. Permanente durante lo scontro, temporanea come carta sbloccata, sospendibile secondo la regola generale dei Boss. Nessuna pesca aggiuntiva, riordino, rivelazione all'avversario o modifica del limite di giocate. Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri confermate. Specifica, non implementazione.
 
-### Riduzione del raffreddamento approvata: Leviatano Abissale (Personaggio Boss 36)
+### Riduzione del raffreddamento approvata: Serpe delle Fosse Abissali (Personaggio Boss 36)
 
 Finché il Personaggio è attivo, riduce di un turno i tempi di raffreddamento del Generatore, sia per l'attacco rapido sia per quello potente, senza modificare il consumo di Energia. Permanente nello scontro, sospendibile secondo la regola generale dei Boss. Rara, durata di tre turni propri confermata come carta sbloccata. Nessuna dipendenza da uno specifico supporto. Definire e collaudare la cumulabilità con il Relè Ionico, il limite minimo del raffreddamento e il momento di applicazione in caso di attivazione, scadenza o sospensione durante un raffreddamento già in corso. Specifica, non implementazione.
 
