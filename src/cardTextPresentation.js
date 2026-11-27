@@ -7,12 +7,16 @@ export {LOCALIZED_WEAPON_CARD_IDS,hasCardTextLayer,cardTextBasePath} from './car
 import fontMetrics from './fleetNext/cardTextFontMetrics.json' with {type:'json'};
 import {probeHammerVariant} from './probeHammerSpec.js';
 import {cardWords,textFields} from './probeHammerCardText.js';
+import {commandLanceVariant} from './commandLanceSpec.js';
+import {cardWords as lanceWords,textFields as lanceFields} from './commandLanceCardText.js';
 const dictionaries={en,it};
 const probeCard=id=>{const v=probeHammerVariant(id),c=WEAPON_NEAR_FINAL_BY_ID[id],p=c?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.comboBonusDamage||0};};
+const lanceCard=id=>{const v=commandLanceVariant(id),p=WEAPON_NEAR_FINAL_BY_ID[id]?.effectSpec.weaponProfile;return v&&{...v,duration:p.durationTurns,damage:p.baseDamage,bonus:p.characterBonusDamage};};
 const format=(text,values)=>text.replace(/\{(\w+)\}/g,(_,key)=>String(values[key]??''));
 export function localizedCardText(definition,locale=getCardTextLocale()){
  if(!definition)return null;
  const dictionary=dictionaries[normalizeCardTextLocale(locale)];
+ if(commandLanceVariant(definition.id)){const w=lanceWords(lanceCard(definition.id),normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(probeHammerVariant(definition.id)){const c=probeCard(definition.id),w=cardWords(c,normalizeCardTextLocale(locale));return {name:w.name,description:w.description,category:w.values[2],rarity:w.values[3]};}
  if(hasCardTextLayer(definition.id)){
   const source=WEAPON_NEAR_FINAL_BY_ID[definition.id],p=source.effectSpec.weaponProfile;
@@ -30,6 +34,7 @@ export const cardTextName=definition=>localizedCardText(definition)?.name||defin
 export const cardTextDescription=(definition,fallback)=>localizedCardText(definition)?.description||fallback;
 export function cardTextFields(id,locale=getCardTextLocale()){
  if(!hasCardTextLayer(id))return null;
+ if(commandLanceVariant(id))return lanceFields(lanceCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  if(probeHammerVariant(id))return textFields(probeCard(id),normalizeCardTextLocale(locale)).map(f=>({...f,size:Number(f.size.toFixed(3))}));
  const d=dictionaries[normalizeCardTextLocale(locale)],c=WEAPON_NEAR_FINAL_BY_ID[id],p=c.effectSpec.weaponProfile;
  const values=[...d.coreTitle,d.weapon,d.rarities[c.rarita],d.elementLabel,d.lightning,d.durationLabel,

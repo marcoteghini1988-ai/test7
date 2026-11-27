@@ -1,0 +1,169 @@
+{
+  "approvalDate": "2026-11-27",
+  "approvalQuote": "ok",
+  "artworkRegenerated": false,
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico.png",
+      "sha256": "a4e58647d66d50ed9736d4d596d3b1b63174c43e1a6b926a052ab975cda7364e",
+      "bytes": 22288381,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico.part-000",
+          "bytes": 8388608,
+          "sha256": "68327d3cb4ad2f1511c4a06b7999ada00181d190167fed87eeab633dd801d906"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico.part-001",
+          "bytes": 8388608,
+          "sha256": "fd6d692a3b4996064e292c64a3dd27f6170f6b6e9489b01df51a1d3a6101921c"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico.part-002",
+          "bytes": 5511165,
+          "sha256": "1fd17a67b02793201c22cee3fe1ffb34f4fc15557c395f91612992a39afd9b74"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-text-base.png",
+      "sha256": "99c1a653f3558419a385c5d9e73f04bc48a062827509de11a2db20de178033b3",
+      "bytes": 22127168,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-text-base.part-000",
+          "bytes": 8388608,
+          "sha256": "40f4ee4fbb8e0e1c1f135f0b88b6542f06babe58870caf5d2cd13d5646a2af62"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-text-base.part-001",
+          "bytes": 8388608,
+          "sha256": "35613af33b154949027080de34b650fbabe2dfaa98ebae941321fa7fe306a079"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-text-base.part-002",
+          "bytes": 5349952,
+          "sha256": "008cfe8956dabee013249e0a229b109ead5264181a4b6458a271c10542c9b941"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-e",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-e.png",
+      "sha256": "ae7ab83fe15ad3416db035e76261265c039b8e9c8614c0c8d24a19694229c7eb",
+      "bytes": 22960955,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e.part-000",
+          "bytes": 8388608,
+          "sha256": "49e176cf6e07e0fb1d9b36b0e33bcdb207441396243a1b61ce6fdfe3a15dbe21"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e.part-001",
+          "bytes": 8388608,
+          "sha256": "3ab27a9a01879ec2036ca6ffc378c7fde85cda5b88f4897b19a1fb69244b1b7e"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e.part-002",
+          "bytes": 6183739,
+          "sha256": "9f43c2dce77acdeaf2726dbe39985eee14097b2e10264fd6255941bfb48e88a3"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base.png",
+      "sha256": "6e583b7679ebf6cb4fd3d87dbe55ce6e9d5cdae86839859aa80806ae542559b2",
+      "bytes": 22777188,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base.part-000",
+          "bytes": 8388608,
+          "sha256": "4565b1fd5c54bd53558a0bbd2e4cdf4753ef9423beadf337cc43349e7444917e"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base.part-001",
+          "bytes": 8388608,
+          "sha256": "46b5ed05db96bb3950cc4d3ff9d0cbc51fd8ef6fc7e08a95c5598a1771dca64b"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base.part-002",
+          "bytes": 5999972,
+          "sha256": "09b0fbb37be01820b15e0c619fd8ff5fbc7f38e96c2c8df0a65cbae58db8ef26"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-l",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-l.png",
+      "sha256": "c58a3106917cb65edc95cbfca32c9345db5dbc88fe5c8a95a144875ac6cea8cc",
+      "bytes": 25032932,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l.part-000",
+          "bytes": 8388608,
+          "sha256": "fae249c51316d3b62ddfb2ff6f802e8eafe4d9259b4eec65e654ec0723eacf61"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l.part-001",
+          "bytes": 8388608,
+          "sha256": "dcd4598f5c8f1512ec7d0f8effdbcffb2fd7eda6da5d7ba1ea59973a074d0363"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l.part-002",
+          "bytes": 8255716,
+          "sha256": "87f8b63c9ae0936b67f6cf51f316d22e66b520fa2678a50c1eb243d7eccc6b0c"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base.png",
+      "sha256": "f95de1c7f7190e8812903decbcd6640a4717b455da3c163b61e1b60fcb6963b5",
+      "bytes": 24854027,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base.part-000",
+          "bytes": 8388608,
+          "sha256": "853ee24f3af9472a5daa8dcb6b09908cfb51101381506148c6ab6532f20864ce"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base.part-001",
+          "bytes": 8388608,
+          "sha256": "e9d1aa357d15f880a38ac3fbf68f7f86a1fb75e5ebb45ed83611a700e2de1bf2"
+        },
+        {
+          "name": "weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base.part-002",
+          "bytes": 8076811,
+          "sha256": "74e4d9f67b801174bda027f86ae7b91fc160bb05205065902d883cfe9289fe00"
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,22 @@ Lo Stratega di flotta, Personaggio generico n.11 nella revisione del 27/11, è L
 Stato: specifica salvata, non modifica né certifica il motore o il collaudo. Priorità fra azioni equivalenti e tempi esatti di animazione da definire in implementazione.
 
 
+## Carte Arma — Lancia del Comando Ionico, direzione approvata il 27/11
+
+Questa conversazione riguarda le Carte Arma e i loro effetti. Dopo Sonda
+e Martello l'utente ha approvato con «ok» la direzione della Lancia:
+richiamo sulla carta Personaggio, lancia elettrica dal bordo del proprio
+lato, scariche ramificate, scintille, contraccolpo, suono e aptica.
+Leggere `docs/FULMINE_08_LANCIA_COMANDO_2026-11-27.md`. Tre fronti R/E/L
+3072×4608 con livelli EN/IT sono approvati con il successivo «ok», che
+autorizza esplicitamente l'inserimento nel repository pubblico test7/main.
+Registro aggiornato a 50 varianti: 22 Metallo e 28 Fulmine. Gli originali
+e le basi senza testo sono archiviati byte per byte; nessuna rigenerazione.
+Renderer, suono e piano aptico sono condivisi con lo studio. Il nuovo
+collaudo in partita su StackBlitz è ancora da eseguire. Lo studio usa eventi
+del motore e non è una registrazione della partita. Non
+riaprire la direzione approvata o confondere questa chat con i Personaggi.
+
 ## Sonda / Martello — sette fronti e direzione B approvati il 27/11/2026
 
 L'utente ha confermato «si» dopo aver visto i sette fronti completi e il

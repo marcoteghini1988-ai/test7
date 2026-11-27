@@ -1,0 +1,25 @@
+{
+  "directionApproved": true,
+  "cardVisualApproval": false,
+  "inGame": false,
+  "actualBattleRecording": false,
+  "physicalHapticsVerified": false,
+  "tests": 2463,
+  "passed": 2463,
+  "failed": 0,
+  "buildPassed": true,
+  "preflightPassed": true,
+  "browserPreviewVerified": false,
+  "browserStatus": "Il browser della prova locale non era accessibile. Il video e i fotogrammi sono esportati dal renderer; nessun collaudo della pagina o della partita viene certificato.",
+  "cases": 13,
+  "nativeFrames": [
+    3072,
+    4608
+  ],
+  "video": {
+    "width": 720,
+    "height": 1280,
+    "duration": 37.8,
+    "audioChannels": 2
+  }
+}

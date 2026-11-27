@@ -1,0 +1,30 @@
+{
+  "generation": "built-in image generation; Rare original, Epic reference edit, Legendary composite edit",
+  "directionApproved": true,
+  "cardVisualApproval": false,
+  "images": [
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-epic.png",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "1f1db51004300e5aba9f87105fe9ecf3bdc5f98bea1ac6f57e073d42aeefe026"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-legendary.png",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "1dda4aa091ebbae7f8170ac4029d3f42f5025192a358678cefe755f495474d8d"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-rare.png",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "de6c928bfd9c8f7cae02477599ba91c532f2580c579b9e3283b87d55d20857d9"
+    }
+  ],
+  "progression": [
+    "Bronze rails and graphite base",
+    "Previous components plus silver focusing annulus, coils, gimbals and vents",
+    "Previous components plus three diamond crystal stabilizers"
+  ]
+}

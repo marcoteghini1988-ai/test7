@@ -1,0 +1,8 @@
+{
+ "name":"Ionic Command Lance","title":["IONIC COMMAND","LANCE"],"weapon":"WEAPON",
+ "rarities":{"Rara":"RARE","Epica":"EPIC","Leggendaria":"LEGENDARY"},
+ "element":"ELEMENT","lightning":"LIGHTNING","duration":"DURATION","turn":"TURN",
+ "damage":"TOTAL DAMAGE","requires":"REQUIRES","requirement":["ACTIVE CHARACTER","NO ENERGY COST","NORMAL DEFENSES"],
+ "target":"1 TARGET","shots":"1 SHOT",
+ "description":"Requires an active allied Character. One shot deals {damage} nominal HP including the Character bonus. Lasts one own turn; no dedicated Energy cost. Normal defenses and cover apply."
+}

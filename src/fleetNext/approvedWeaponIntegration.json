@@ -1,6 +1,6 @@
 {
   "approvalDate": "2026-11-27",
-  "sourceCommit": "96d5de471e59beb07e614e4f4e07dcbe9957d42c",
+  "sourceCommit": "a98d29dbf8480bf594aeb23cadfca25d888beeca",
   "visualApprovalReceived": true,
   "deferred": [],
   "cards": [
@@ -920,6 +920,54 @@
       "protectedTextAndSymbolsUnchanged": true,
       "visualDirection": "B",
       "approvalDate": "2026-11-27"
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico",
+      "familyId": "weapon-designed-ionic-lancia-comando-ionico",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-command-lance",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico.png",
+      "sha256": "a4e58647d66d50ed9736d4d596d3b1b63174c43e1a6b926a052ab975cda7364e",
+      "bytes": 22288381,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "artworkRegenerated": false,
+      "sourceApprovalLibraryFileId": "libfile_1eeac49602fc819196d528c93238b2cb"
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-e",
+      "familyId": "weapon-designed-ionic-lancia-comando-ionico",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-command-lance",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-e.png",
+      "sha256": "ae7ab83fe15ad3416db035e76261265c039b8e9c8614c0c8d24a19694229c7eb",
+      "bytes": 22960955,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "artworkRegenerated": false,
+      "sourceApprovalLibraryFileId": "libfile_f32d5d6ca1388191a34bb29f2f699724"
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-l",
+      "familyId": "weapon-designed-ionic-lancia-comando-ionico",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-command-lance",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-l.png",
+      "sha256": "c58a3106917cb65edc95cbfca32c9345db5dbc88fe5c8a95a144875ac6cea8cc",
+      "bytes": 25032932,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "artworkRegenerated": false,
+      "sourceApprovalLibraryFileId": "libfile_e65573405e9881918b4892fb20dcb8fa"
     }
   ],
   "rulesConfirmed": {
@@ -947,6 +995,15 @@
       "defaultLocale": "en",
       "secondHitOnlyFromEngine": true,
       "persistentMark": true
+    },
+    "commandLance": {
+      "visualApprovalReceived": true,
+      "activeCharacterRequired": true,
+      "ownTurns": 1,
+      "shots": 1,
+      "dedicatedEnergyCost": 0,
+      "defaultLocale": "en",
+      "artworkRegenerated": false
     }
   }
 }

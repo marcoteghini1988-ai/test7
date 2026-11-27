@@ -1,0 +1,8 @@
+{
+ "name":"Lancia del Comando Ionico","title":["LANCIA DEL","COMANDO IONICO"],"weapon":"ARMA",
+ "rarities":{"Rara":"RARA","Epica":"EPICA","Leggendaria":"LEGGENDARIA"},
+ "element":"ELEMENTO","lightning":"FULMINE","duration":"DURATA","turn":"TURNO",
+ "damage":"DANNO TOTALE","requires":"RICHIEDE","requirement":["PERSONAGGIO ATTIVO","NESSUN COSTO ENERGIA","DIFESE NORMALI"],
+ "target":"1 BERSAGLIO","shots":"1 COLPO",
+ "description":"Richiede un Personaggio alleato attivo. Un colpo da {damage} HP nominali, compreso il bonus Personaggio. Dura un turno proprio, senza costo Energia dedicato. Difese e copertura si applicano normalmente."
+}

@@ -1,0 +1,66 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico",
+      "rarity": "Rara",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "a4e58647d66d50ed9736d4d596d3b1b63174c43e1a6b926a052ab975cda7364e",
+      "bytes": 22288381,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "de6c928bfd9c8f7cae02477599ba91c532f2580c579b9e3283b87d55d20857d9",
+      "frameGitBlob": "59e256d1624695f4788c178ddbc589a41aeb73b1",
+      "protectedFramePixelsVerified": 5304,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-e",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "ae7ab83fe15ad3416db035e76261265c039b8e9c8614c0c8d24a19694229c7eb",
+      "bytes": 22960955,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "1f1db51004300e5aba9f87105fe9ecf3bdc5f98bea1ac6f57e073d42aeefe026",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "c58a3106917cb65edc95cbfca32c9345db5dbc88fe5c8a95a144875ac6cea8cc",
+      "bytes": 25032932,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "1dda4aa091ebbae7f8170ac4029d3f42f5025192a358678cefe755f495474d8d",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0
+    }
+  ],
+  "inGame": false,
+  "finalVisualApproval": false
+}

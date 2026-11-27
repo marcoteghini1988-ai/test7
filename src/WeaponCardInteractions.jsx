@@ -4,6 +4,7 @@ import {isTrapCard} from './fleetNext/simpleEffects.js';
 import {weaponEffectProfile} from './maglioBattleVisuals.js';
 import './WeaponCardInteractions.css';
 import {cardTextName} from './cardTextPresentation.js';
+import {COMMAND_LANCE_KIND} from './commandLanceSpec.js';
 
 export default function WeaponCardInteractions({events,paths,startedAt}){
  const host=useRef(null);
@@ -13,6 +14,12 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
   const schedule=(time,fn)=>timers.push(window.setTimeout(fn,Math.max(0,time-(performance.now()-startedAt))));
   const mark=(element,key,value)=>{if(!element)return;const attr='data-weapon-'+key;if(!restore.has(element))restore.set(element,new Map());const old=restore.get(element);if(!old.has(attr))old.set(attr,element.getAttribute(attr));element.setAttribute(attr,value);};
   const slots=[...root.querySelectorAll('[data-fleet-card-slot]')];
+  for(const p of paths.filter(p=>p.profile.kind===COMMAND_LANCE_KIND)){
+   const slot=slots.find(s=>s.dataset.fleetCardSlot===p.shot.who+'-0'&&s.dataset.cardId===p.shot.characterCardId);
+   const at=Math.max(0,p.start-p.profile.chargeMs);
+   schedule(at,()=>mark(slot,'character','command-lance'));
+   schedule(at+600,()=>mark(slot,'character','idle'));
+  }
   for(const event of events){
    const sourceId=event.sourceWeaponCardId||event.cardId,profile=weaponEffectProfile(sourceId);if(!profile?.approved)continue;
    const matching=paths.filter(p=>p.shot.cardId===sourceId&&p.shot.who===event.who);

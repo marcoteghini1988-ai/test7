@@ -1,4 +1,5 @@
 .weapon-card-interactions{display:none}
+.live-slot[data-weapon-character="command-lance"]{animation:weapon-energy-feedback .6s ease-out;--weapon-resource-color:#a6d8ff}
 .weapon-energy-contributor{position:absolute;inset:0;z-index:6;pointer-events:none;transform:translate(var(--contributor-x),-5px) scale(.92);animation:weapon-energy-contributor var(--contributor-duration,.6s) ease-out}
 .weapon-energy-contributor img{display:block;width:100%;height:100%;object-fit:contain}
 .weapon-energy-contributor[data-discarded="true"]{animation:weapon-energy-spent var(--contributor-duration,.6s) ease-in forwards}
@@ -14,4 +15,4 @@
 @keyframes weapon-energy-feedback{0%,100%{filter:none}25%{filter:brightness(1.65) drop-shadow(0 0 5px var(--weapon-resource-color))}60%{filter:brightness(1.2) drop-shadow(0 0 3px var(--weapon-resource-color))}}
 @keyframes weapon-defense-feedback{0%,100%{filter:none}20%{filter:brightness(1.6) drop-shadow(0 0 6px var(--weapon-resource-color))}50%{filter:brightness(1.1)}}
 @keyframes weapon-defense-discard{0%{opacity:1;transform:none}35%{filter:brightness(2);opacity:.85}100%{opacity:0;transform:translate(18px,15px) rotate(16deg) scale(.7)}}
-@media(prefers-reduced-motion:reduce){.live-slot[data-weapon-energy],.live-slot[data-weapon-defense]{animation-duration:.2s}.live-slot[data-weapon-defense="removed"] .f3d-slot-art{animation:none;opacity:.25}.weapon-energy-contributor,.weapon-energy-contributor[data-discarded="true"]{animation:none;opacity:1;transform:translate(var(--contributor-x),0) scale(.92)}}
+@media(prefers-reduced-motion:reduce){.live-slot[data-weapon-energy],.live-slot[data-weapon-defense],.live-slot[data-weapon-character]{animation-duration:.2s}.live-slot[data-weapon-defense="removed"] .f3d-slot-art{animation:none;opacity:.25}.weapon-energy-contributor,.weapon-energy-contributor[data-discarded="true"]{animation:none;opacity:1;transform:translate(var(--contributor-x),0) scale(.92)}}

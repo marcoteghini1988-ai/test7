@@ -19,6 +19,8 @@ import {weaponSalvoAudioCue} from './weaponSalvoAudio.js';
 import {collisionGroups,chainWeaponVariant,COLLISION_RELEASE_AFTER_MS} from './chainWeaponBattleVisuals.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {requestWeaponHaptic,cancelWeaponHaptics} from './weaponHaptics.js';
+import {commandLanceVariant} from './commandLanceSpec.js';
+import {cancelCommandLanceSounds} from './commandLanceAudio.js';
 import './MaglioBattleEffects.css';
 
 const point=(rect,board)=>({
@@ -87,6 +89,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
  // durante i ricalcoli delle coordinate del ResizeObserver.
  useEffect(()=>{
   const timers=[],collisionKeys=new Set();let requested=false;
+  const lance=shots.some(s=>commandLanceVariant(s.cardId));
+  const visibility=()=>{if(lance&&document.visibilityState!=='visible'){cancelCommandLanceSounds();cancelWeaponHaptics();}};
+  if(lance)document.addEventListener('visibilitychange',visibility);
   const schedule=(delay,callback)=>timers.push(window.setTimeout(callback,
    Math.max(0,delay-(performance.now()-startedAt))));
   const cue=(profile,phase,time,shot)=>schedule(time,()=>{
@@ -134,7 +139,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   }
   for(const event of events.filter(e=>e.kind==='weapon-core-expired'))
    cue(weaponEffectProfile(event.cardId),'release',weaponExpiryStartMs(shots,shotStart),event);
-  return ()=>{timers.forEach(id=>window.clearTimeout(id));if(requested)cancelWeaponHaptics();};
+  return ()=>{timers.forEach(id=>window.clearTimeout(id));if(requested)cancelWeaponHaptics();if(lance){document.removeEventListener('visibilitychange',visibility);cancelCommandLanceSounds();}};
  },[nonce,shots,shotStart]);
  useLayoutEffect(()=>{
   const root=ref.current?.closest('.f3d-approved-layout');

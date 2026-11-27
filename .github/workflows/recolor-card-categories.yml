@@ -7,6 +7,7 @@ on:
       - 'scripts/restore-weapon-fronts.mjs'
       - 'asset-sources/card-text/**'
       - 'asset-sources/weapon-fronts/approved-2026-11-26/**'
+      - 'asset-sources/weapon-fronts/lancia-comando-2026-11-27/**'
       - 'src/fleetNext/approvedWeaponIntegration.json'
       - '.github/workflows/recolor-card-categories.yml'
   workflow_dispatch:
@@ -48,6 +49,7 @@ jobs:
           # The same verified archive produces these native PNGs; no recompression.
           git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica*.png
           git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono*.png
+          git add -f public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico*.png
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Materializza i PNG approvati e le basi HD traducibili senza alterarne i byte'
           git pull --rebase origin main

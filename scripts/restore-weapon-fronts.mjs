@@ -1,6 +1,7 @@
 // Ricompone i PNG approvati dalle parti binarie versionate. Nessuna modifica
 // a risoluzione, colori, trasparenza o compressione del file originale.
 import {restoreProbeHammerFronts} from './restore-probe-hammer-fronts.mjs';
+import {restoreCommandLanceFronts} from './restore-command-lance-fronts.mjs';
 import {readFile,writeFile,mkdir,access,rename} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
@@ -82,3 +83,4 @@ for(const card of textManifest.cards){
 console.log('Basi traducibili HD verificate: '+textManifest.cards.length+'; ricomposte: '+textRestored+'.');
 
 await restoreProbeHammerFronts({root,remoteAssets});
+await restoreCommandLanceFronts({root});

@@ -2,6 +2,8 @@ import {electricFlight,electricImpact,kineticImpact} from './approvedProjectileE
 import {drawScenicPreparation,drawScenicFlight,drawScenicContact} from './coreThunderRenderer.js';
 import {isProbeHammerKind,probeHammerVisualHit} from './probeHammerSpec.js';
 import {drawProbeHammerProjectile,drawProbeHammerContact} from './probeHammerRenderer.js';
+import {COMMAND_LANCE_KIND,commandLanceVisualHit} from './commandLanceSpec.js';
+import {drawCommandLanceProjectile,drawCommandLanceContact} from './commandLanceRenderer.js';
 import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import {Vector3} from 'three';
 import {boardPointToWorld,worldPointToBoard} from './maglioProjectile3D.js';
@@ -600,6 +602,12 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 }
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
+ if(p.kind===COMMAND_LANCE_KIND){
+  const h=commandLanceVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs;
+  if(ms<0){if(!reduced)drawCommandLanceProjectile(air,h,elapsed,e.to);return;}
+  if(reduced&&ms>=250)return;
+  drawCommandLanceContact(air,h,reduced?80:ms,weaponHullContactPoint(e.to,contactPose||{x:0,y:0,lift:0}),{reduced});return;
+ }
  if(isProbeHammerKind(p.kind)){
   const h=probeHammerVisualHit(p,e.shot,e.from),ms=elapsed-p.flightMs;
   if(ms<0){if(!reduced)drawProbeHammerProjectile(air,h,elapsed,e.to);return;}

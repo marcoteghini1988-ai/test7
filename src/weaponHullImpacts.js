@@ -1,9 +1,11 @@
 // A hit is an action on a real hull, not just camera shake. These profiles
 // describe contact only; HP, targets, salvo counts and timings stay in combat.
 import {isProbeHammerKind,probeHammerHullFrame} from './probeHammerSpec.js';
+import {COMMAND_LANCE_KIND,commandLanceBattleHullFrame} from './commandLanceSpec.js';
 import {clamp01,weaponHullFrame} from './weaponCinematicStyle.js';
 
 const contacts=Object.freeze({
+ 'ionic-command-lance':{kind:'command-lance-branched-contact',radius:.85,sparks:18,smoke:false},
  'ionic-probe':{kind:'probe-electric-contact',radius:.5,sparks:9,smoke:false},
  'thunder-hammer':{kind:'crescent-electric-detonation',radius:1.05,sparks:30,smoke:false},
  'growing-thunder-core':{kind:'electric-core-bloom',radius:1,sparks:26,smoke:false},
@@ -37,6 +39,7 @@ export function weaponHullImpactProfile(profile,shot){
 // Live ship motion and the contact canvas consume the same pose, including
 // the smaller intermediate salvo kicks. Passing light cannot erase a recoil.
 export function weaponImpactHullFrame(profile,shot,age,{reduced=false}={}){
+ if(profile.kind===COMMAND_LANCE_KIND)return commandLanceBattleHullFrame(profile,shot,age,{reduced});
  if(isProbeHammerKind(profile.kind))return probeHammerHullFrame(profile,shot,age,{reduced});
  const pose=weaponHullFrame(profile.kind,age,profile.impactMs,{tier:profile.tier,
   direction:shot.who==='A'?-1:1,reduced,blocked:!!shot.defenseBlocked||!shot.fires,coreStage:shot.coreChargeStage||1});

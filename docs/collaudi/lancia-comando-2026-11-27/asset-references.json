@@ -1,0 +1,70 @@
+{
+  "frontApproval": true,
+  "files": [
+    {
+      "file_name": "lancia-comando-rara-HD.png",
+      "library_file_id": "libfile_1eeac49602fc819196d528c93238b2cb",
+      "file_id": "file_00000000915c8210b31c2906ea77afd4",
+      "version": 0,
+      "sha256": "a4e58647d66d50ed9736d4d596d3b1b63174c43e1a6b926a052ab975cda7364e"
+    },
+    {
+      "file_name": "lancia-comando-epica-HD.png",
+      "library_file_id": "libfile_f32d5d6ca1388191a34bb29f2f699724",
+      "file_id": "file_00000000ea6881f4a9963862734baa1c",
+      "version": 0,
+      "sha256": "ae7ab83fe15ad3416db035e76261265c039b8e9c8614c0c8d24a19694229c7eb"
+    },
+    {
+      "file_name": "lancia-comando-leggendaria-HD.png",
+      "library_file_id": "libfile_e65573405e9881918b4892fb20dcb8fa",
+      "file_id": "file_000000000c608210b965f36141c55e44",
+      "version": 0,
+      "sha256": "c58a3106917cb65edc95cbfca32c9345db5dbc88fe5c8a95a144875ac6cea8cc"
+    },
+    {
+      "file_name": "lancia-comando-rara-base-senza-testo.png",
+      "library_file_id": "libfile_1428141d6f4481919bd8679f43276a78",
+      "file_id": "file_00000000b2c08210966c49f25049c1f1",
+      "version": 0,
+      "sha256": "99c1a653f3558419a385c5d9e73f04bc48a062827509de11a2db20de178033b3"
+    },
+    {
+      "file_name": "lancia-comando-epica-base-senza-testo.png",
+      "library_file_id": "libfile_136aeedc48508191805254a7055b9295",
+      "file_id": "file_000000005dc881f4a36e38698057ba81",
+      "version": 0,
+      "sha256": "6e583b7679ebf6cb4fd3d87dbe55ce6e9d5cdae86839859aa80806ae542559b2"
+    },
+    {
+      "file_name": "lancia-comando-leggendaria-base-senza-testo.png",
+      "library_file_id": "libfile_59d1e1ee1a10819199b545abbf00794a",
+      "file_id": "file_00000000687c81f48349311b5295d406",
+      "version": 0,
+      "sha256": "f95de1c7f7190e8812903decbcd6640a4717b455da3c163b61e1b60fcb6963b5"
+    },
+    {
+      "file_name": "lancia-comando-tre-rarita.png",
+      "library_file_id": "libfile_c646a2e734888191aeb041b7640eccf3",
+      "file_id": "file_00000000001c81f483179bd28ca664bd",
+      "version": 0,
+      "sha256": "34cbc21d074d45049810e17c403780d353d12c15f74905bf5d7515835a333f9c"
+    },
+    {
+      "file_name": "lancia-comando-effetto-con-audio.mp4",
+      "library_file_id": "libfile_640691a92bc481919f71b3f6ec559aa5",
+      "file_id": "file_00000000edbc821083f7502ff7aacf84",
+      "version": 0,
+      "sha256": "aaffe7b8fbf074dd602f27701e65ba09e7c8478f0897fa6fb54e9fe1415677ae"
+    },
+    {
+      "file_name": "lancia-comando-anteprima.html",
+      "library_file_id": "libfile_c9d6fb5af68c8191b3f85a8772ca44ff",
+      "file_id": "file_0000000072908210bd3d8b79404d6b61",
+      "version": 0,
+      "sha256": "68bee8c902cf3482315c6237020368a6d04a6f819a0e6543cb2d3358cb1d5be4"
+    }
+  ],
+  "approvalQuote": "ok",
+  "publicationExplicitlyAuthorized": true
+}

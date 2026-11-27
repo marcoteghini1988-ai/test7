@@ -1,0 +1,16 @@
+{
+  "status": "INTEGRATED_LIVE_CHECK_PENDING",
+  "frontApproval": true,
+  "publicationExplicitlyAuthorized": true,
+  "activeVariants": 50,
+  "metalVariants": 22,
+  "lightningVariants": 28,
+  "nativePNGsPreserved": 6,
+  "targetedTestsPassed": 28,
+  "catalogTestsPassed": 15,
+  "buildPassed": true,
+  "preflightPassed": true,
+  "fullSuitePending": true,
+  "stackblitzVerified": false,
+  "physicalHapticsVerified": false
+}

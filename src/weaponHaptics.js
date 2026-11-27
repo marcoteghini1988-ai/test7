@@ -3,8 +3,10 @@
 import {probeHammerCue} from './probeHammerAudio.js';
 import {isProbeHammerKind} from './probeHammerSpec.js';
 import {coreThunderSoundPlan} from './coreThunderAudio.js';
+import {commandLanceCue} from './commandLanceAudio.js';
 export const HAPTICS_KEY='eclissi_haptics_enabled';
 export function weaponHapticPattern(kind,phase,tier=2,coreStage=1,comboBonus=false){
+ if(kind==='ionic-command-lance')return commandLanceCue(phase,tier).haptic;
  if(isProbeHammerKind(kind))return probeHammerCue(kind==='ionic-probe'?'probe':'hammer',phase,{bonus:comboBonus}).haptic;
  if(kind==='growing-thunder-core')return coreThunderSoundPlan('thunder-core_'+phase+'_'+['common','rare','epic','legendary'][tier]+'_'+coreStage)?.cue.haptic||[];
  if(kind?.startsWith('ionic-'))return phase==='charge'?[7]:phase==='fire'?[9]:phase==='impact'?[12]:phase==='block'?[7,15,7]:[];
@@ -43,7 +45,7 @@ export function requestWeaponHaptic(kind,phase,tier,{nav=globalThis.navigator,
   if(['fire','transfer'].includes(phase))pattern=[6+tier];
   if(phase==='impact')pattern=finisher?[40,25,14]:salvoLast?[28,22,10]:[9+tier*2];
  }
- if(destroyed&&!isProbeHammerKind(kind)&&kind!=='alloy-collision'&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
+ if(destroyed&&!isProbeHammerKind(kind)&&kind!=='ionic-command-lance'&&kind!=='alloy-collision'&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
  if(jawPhase==='tear'&&phase==='impact')pattern=[38,22,15];
  if(inductionBonusPercent&&phase==='impact'&&pattern.length)pattern=[Math.min(60,pattern[0]+Math.round(inductionBonusPercent/5)),...pattern.slice(1)];
  const result=status=>({status,pattern,physicalVerified:false});

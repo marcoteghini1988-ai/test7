@@ -126,7 +126,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
-  let planned=[],coreFeedback=null,probeFeedback=null;
+  let planned=[],coreFeedback=null,probeFeedback=null,commandFeedback=null;
   if(pattern==='magma-mortar'){
    const extras=ctx.provisionalMortarShots?.[m.id]||0;
    planned=[{base:p.baseDamage},...Array.from({length:extras},()=>({base:p.extraDamage}))];
@@ -235,8 +235,10 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(marked)planned.push({target:marked,base:p.comboBonusDamage});
    comboSide.ionProbe=null;
   }else if(pattern==='command-lance'){
-   if(side.commander?.id&&side.commander.untilPly>b.ply)
+   if(side.commander?.id&&side.commander.untilPly>b.ply){
+    commandFeedback={characterCardId:side.commander.id};
     planned=[{base:p.baseDamage+p.characterBonusDamage}];
+   }
   }
   else if(pattern==='storm-capacitor'){
    if(!spendFreshIonic(p.energyCost)){
@@ -296,6 +298,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const sum=hits.reduce((n,x)=>n+x.actualDamage,0);
   event(m,'weapon-provisional-shot',m.name+' · '+sum+' HP',{
    pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true,
+   ...(commandFeedback||{}),
    ...(coreFeedback||{}),
    ...(probeFeedback||{}),
    ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),

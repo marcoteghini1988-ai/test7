@@ -19,6 +19,7 @@ import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import {probeHammerVariant} from './src/probeHammerSpec.js';
+import {commandLanceVariant} from './src/commandLanceSpec.js';
 import {CORE_FAMILY} from './src/coreThunderSpec.js';
 import {useCardTextLocale} from './src/CardTextLayer.jsx';
 import {setCardTextLocale} from './src/cardTextLocale.js';
@@ -130,6 +131,14 @@ function Review(){
      <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
      <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
+   </>}
+   {commandLanceVariant(setup.cardId)&&<>
+    <span>1 Personaggio attivo · 1 lancia · nessun costo Energia</span>
+    <label>Scenario Lancia <select aria-label="Scenario Lancia" value={setup.lanceReviewMode||'active'} onChange={e=>reset({lanceReviewMode:e.target.value,blocked:false,withDefense:false})}>
+     <option value="active">Personaggio attivo</option><option value="same-turn">Personaggio nello stesso turno</option>
+     <option value="missing">Personaggio assente</option><option value="expired">Personaggio scaduto</option>
+     <option value="defense">Difesa bloccante</option><option value="disabled">Arma disabilitata</option>
+    </select></label>
    </>}
    {probeHammerVariant(setup.cardId)&&<>
     <span>Sonda: segnale su danno · Martello: uno o due impatti reali</span>

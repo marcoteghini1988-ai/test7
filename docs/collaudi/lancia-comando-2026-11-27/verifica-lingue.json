@@ -1,0 +1,32 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico",
+      "locales": [
+        "en",
+        "it"
+      ],
+      "changesOutsideTextRegions": 0,
+      "textlessSha256": "99c1a653f3558419a385c5d9e73f04bc48a062827509de11a2db20de178033b3"
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-e",
+      "locales": [
+        "en",
+        "it"
+      ],
+      "changesOutsideTextRegions": 0,
+      "textlessSha256": "6e583b7679ebf6cb4fd3d87dbe55ce6e9d5cdae86839859aa80806ae542559b2"
+    },
+    {
+      "id": "weapon-designed-ionic-lancia-comando-ionico-rarity-l",
+      "locales": [
+        "en",
+        "it"
+      ],
+      "changesOutsideTextRegions": 0,
+      "textlessSha256": "f95de1c7f7190e8812903decbcd6640a4717b455da3c163b61e1b60fcb6963b5"
+    }
+  ],
+  "sameArtworkAndFrames": true
+}

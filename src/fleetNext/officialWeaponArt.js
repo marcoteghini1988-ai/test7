@@ -5,6 +5,7 @@
 // La copia salvata di StackBlitz usa VITE_ASSET_ROOT per leggere gli asset
 // pubblici da test7/main; la versione GitHub conserva i PNG nel repository.
 import {PROBE_HAMMER_CARD_IDS} from '../probeHammerSpec.js';
+import {COMMAND_LANCE_CARD_IDS} from '../commandLanceSpec.js';
 import redWeaponFronts from './redWeaponFronts.json' with {type:'json'};
 const ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 // In StackBlitz è possibile aggiornare i nuovi fronti senza ricaricare tutte
@@ -13,6 +14,7 @@ const METAL_FRONT_ROOT=(import.meta.env?.VITE_METAL_FRONT_ROOT||ASSET_ROOT).repl
 const CHAIN_FRONT_ROOT=(import.meta.env?.VITE_CHAIN_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 const PRECISION_FRONT_ROOT=(import.meta.env?.VITE_PRECISION_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
+ ...Object.fromEntries(COMMAND_LANCE_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  ...Object.fromEntries(PROBE_HAMMER_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  'weapon-confirmed-metallic-maglio':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio.png`,
  'weapon-confirmed-metallic-maglio-rarity-r':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-r.png`,
