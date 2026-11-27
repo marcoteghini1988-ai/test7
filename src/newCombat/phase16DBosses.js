@@ -149,7 +149,7 @@ export function resolvePhase16DBossExchange(state){
        break;
      case 19: {
        const cycle=memory.cycle||0;
-       if(cycle===0){if(shot)memory.charge=Math.min(12,(memory.charge||0)+6);emit('status',0,'Nucleo magmatico in carica');}
+       if(cycle===0){if(shot)memory.charge=Math.min(12,(memory.charge||0)+6);emit('status',0,'Carica magmatica in accumulo');}
        else if(cycle===1){if(shot&&memory.charge>0)damage(memory.charge,'Eruzione magmatica');memory.charge=0;emit('status',0,'Fase eruzione completata');}
        else emit('status',0,'Nucleo in raffreddamento');
        memory.cycle=(cycle+1)%3;
