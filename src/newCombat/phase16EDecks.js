@@ -17,7 +17,7 @@ const descriptions={
   11:['Idra','Riduce il costo in Etere dell’estrazione mirata.'],
   14:['Generatore','Blocca una volta per battaglia la riduzione della mano causata da un Malus.'],
   17:['Risonanza','Alternare classi di armi in salve valide ricarica parte del Boost.'],
-  19:['Nucleo Magmatico','Una salva valida può applicare ustione al successivo scambio, senza timer.'],
+  19:['Divoratore delle Scorie','Una salva valida può applicare ustione al successivo scambio, senza timer.'],
   20:['Sovrano','Una rianimazione automatica una sola volta per battaglia.']
 };
 export const PHASE16E_DECKS=Object.freeze({
@@ -77,7 +77,7 @@ export function resolvePhase16EExchange(state){
   if(memory.poisonPending>0){
     const dot=Math.min(hp.enemy,memory.poisonPending);
     hp.enemy-=dot;memory.poisonPending=0;
-    if(dot)emit(`Nucleo Magmatico: ustione −${dot} HP`);
+    if(dot)emit(`Divoratore delle Scorie: ustione −${dot} HP`);
   }
   switch(id){
     case 'ophiuchus':{
@@ -143,7 +143,7 @@ export function resolvePhase16EExchange(state){
       break;
     }
     case 'planet_char_19':{
-      if(playerShot&&hp.enemy>0){memory.poisonPending=Math.min(6,1+Math.ceil(lv/3));emit(`Nucleo Magmatico: prossima ustione −${memory.poisonPending} HP`);}
+      if(playerShot&&hp.enemy>0){memory.poisonPending=Math.min(6,1+Math.ceil(lv/3));emit(`Divoratore delle Scorie: prossima ustione −${memory.poisonPending} HP`);}
       break;
     }
     default: break; // Venere/preparazione, Nettuno/deck, Europa/Etere, Proxima/Malus, Encelado/KO
