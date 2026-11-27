@@ -77,7 +77,7 @@ export const CAMPAIGN_BOSS_V2=Object.freeze(Object.fromEntries([
  [5,'Vegliardo del Vortice','spades','Le picche rilasciano un impulso ionico'],
  [6,'Devastatore delle Ere','counter','Le risposte parziali generano un contraccolpo'],
  [7,'Sentinella Ionica','boost','La perdita di un confronto ricarica il Boost'],
- [8,'Leviatano Abissale','finisher','Colpo più forte quando il bersaglio è ferito'],
+ [8,'Serpe delle Fosse Abissali','finisher','Colpo più forte quando il bersaglio è ferito'],
  [9,'Predone della Penombra','blood','Sacrifica HP per una salva cremisi più potente'],
  [10,'Colosso di Metano','shield','Un guscio chimico assorbe gli impatti'],
  [11,'Idra Criogenica','heal','Recupero graduale in seguito a una salva valida'],
