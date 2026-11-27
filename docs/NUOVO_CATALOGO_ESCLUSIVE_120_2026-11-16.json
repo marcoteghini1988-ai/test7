@@ -1330,7 +1330,7 @@
       "shipId": "L03",
       "type": "Attacco",
       "minShipLevel": 1,
-      "name": "Obice nero",
+      "name": "Tiro d’Assedio Ossidiano",
       "effectText": "Prepara un colpo pesante contro una macchina. Al rilascio ignora una protezione scoperta su quella macchina.",
       "rules": "Rilascio al prossimo tuo turno; una giocata prenotata. Non può scegliere supporti o vitali. Trappole ancora valide.",
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
