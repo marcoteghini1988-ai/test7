@@ -13,7 +13,7 @@ const defs=[
  [3,'Matriarca Tossica','Spora corrosiva','corrosion','Una salva nativa dannosa può applicare Corrosione autentica, rimovibile con Pulizia.'],
  [6,'Devastatore delle Ere','Contrattacco cronometrico','counter','Una Contromisura che ferma un vero attacco vitale genera +8 Sincronia.'],
  [7,'Sentinella Ionica','Gabbia dielettrica','ionGuard','Gli impulsi ionici subiti durano il 30% in meno.'],
- [8,'Leviatano Abissale','Guardia degli abissi','escortGuard','Con almeno una scudiera viva: -12% al danno sulla barriera madre.'],
+ [8,'Serpe delle Fosse Abissali','Guardia degli abissi','escortGuard','Con almeno una scudiera viva: -12% al danno sulla barriera madre.'],
  [9,'Predone della Penombra','Lama delle ombre','shadow','Con scudo proprio al 35% o meno all’inizio del ciclo, armi native +9%.'],
  [11,'Idra Criogenica','Riserva criogenica','regeneration','Dopo un colpo reale alla propria barriera, ripara fino a 4 HP nel ciclo successivo (una volta).'],
  [14,'Sovvertitore del Caso','Convertitore di flusso','sync','Un calcolo matematico valido concede +5 Sincronia effettiva, fino a 100.'],
