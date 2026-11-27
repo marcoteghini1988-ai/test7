@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v5-2026-11-27",
+  "revision": "personaggi-42-v6-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
     "Comune": 8,
     "Rara": 10,
     "Epica": 8,
-    "Leggendaria": 16
+    "Leggendaria": 15
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
   "genericProposed": 16,
-  "bossReworkProposed": 10,
+  "bossReworkProposed": 9,
   "characters": [
     {
       "id": "character-general-01",
@@ -819,34 +819,40 @@
       "name": "Matriarca Tossica",
       "sector": 30,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": null,
+      "rarityStatus": "pending",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "mechanic-confirmed-balance-pending",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
+        "supportCount": 1,
+        "temporarilySuppressible": true,
         "abilities": [
-          "Il primo colpo Arma dannoso di ogni turno applica corrosione temporanea al bersaglio.",
-          "Le cure del giocatore sono ridotte finché il bersaglio è corroso; un effetto di purificazione valido rimuove la corrosione."
+          "Finché il Personaggio è attivo, annulla il malus elementale difensivo di tutte le proprie navicelle (madre e supporti vivi): gli attacchi degli elementi forti contro di loro non ricevono il bonus per la debolezza del bersaglio. Mantiene i propri vantaggi elementali offensivi e gli altri modificatori indipendenti.",
+          "La neutralizzazione è una sola abilità permanente; se una Carta Strategia sospende l'effetto del Personaggio per un turno, le debolezze tornano immediatamente applicabili a tutte le navi per la durata della sospensione. Il Boss resta nello slot e l'abilità riprende automaticamente alla scadenza."
         ]
       },
       "unlocked": {
         "duration": {
           "mode": "own-turns",
-          "turns": 3
+          "turns": null
         },
         "replaceable": true,
+        "durationStatus": "pending",
         "abilities": [
-          "Il primo colpo dannoso applica corrosione per due turni avversari.",
-          "Riduce le cure ricevute dal bersaglio corroso.",
-          "La prima cura nemica ridotta dalla corrosione genera una protezione temporanea su una propria nave viva."
+          "Proposta di adattamento: stessa neutralizzazione delle debolezze elementali di tutte le proprie navi durante la permanenza del Personaggio, sospendibile da effetti validi. Durata e conferma della versione giocabile ancora da definire."
         ]
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità e durata della versione sbloccata, eventuale ulteriore abilità e conferma esplicita dell'adattamento giocabile.",
+        "Definire finestra esatta di sospensione della futura Carta Strategia (un turno), rarità, eventuali costi e limiti; non è una carta già progettata o implementata.",
+        "Verificare bonus di debolezza anche con Terreno, mantenendo i modificatori autonomi, la sospensione immediata prima di ESEGUI e il ripristino senza effetti retroattivi."
+      ]
     },
     {
       "number": 34,
@@ -1184,11 +1190,13 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; per gli altri 10 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca: prima abilità confermata, rarità e durata giocabile aperte; per gli altri 9 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.",
-    "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione."
+    "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione.",
+    "Regola confermata: un Boss fisso può avere le abilità sospese temporaneamente da una Carta Strategia idonea senza lasciare lo slot. Per Matriarca, durante la sospensione tornano immediatamente le debolezze elementali di tutte le navi; alla fine l'effetto riprende. La futura Strategia resta da definire."
   ],
-  "bossMechanicConfirmed": 2
+  "bossMechanicConfirmed": 3,
+  "rarityPendingCount": 1
 }
