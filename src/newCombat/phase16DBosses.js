@@ -17,15 +17,15 @@ const PROFILES=[
  [1,'Guardiano di Gaia','Corazza tellurica','Assorbe parte del primo colpo, ma tre semi diversi la spezzano.'],
  [2,'Colosso di Tharsis','Assalto progressivo','Ogni vittoria con salva aumenta la pressione. Fermalo per spezzare la serie.'],
  [3,'Matriarca Tossica','Neurotossina','Le salve vincenti avvelenano lo scambio successivo.'],
- [6,'Crono il Distruttore','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
+ [6,'Devastatore delle Ere','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
  [7,'Sentinella Ionica','Sifone quantico','Intercetta l’energia Boost che conservi; sfruttarla comporta un rischio.'],
  [8,'Leviatano Abissale','Pressione degli abissi','Quando hai pochi HP, le sue salve diventano più pericolose.'],
- [9,'Signore delle Ombre','Patto di sangue','Sacrifica i propri HP per potenziare colpi con carte rosse.'],
+ [9,'Predone della Penombra','Patto di sangue','Sacrifica i propri HP per potenziare colpi con carte rosse.'],
  [11,'Idra Criogenica','Rigenerazione criogenica','Recupera HP dopo una salva; i Cuori interrompono la rigenerazione.'],
- [14,'Generatore del Caos','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
- [17,'Cristallo di Risonanza','Memoria degli scarti','Gli scarti del giocatore alimentano il contrattacco.'],
- [19,'Nucleo Magmatico','Ciclo magmatico','Alterna carica, eruzione e raffreddamento su tre scambi.'],
- [20,'Sovrano del Vuoto','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
+ [14,'Sovvertitore del Caso','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
+ [17,'Boss del Sacrificio','Memoria degli scarti','Gli scarti del giocatore alimentano il contrattacco.'],
+ [19,'Divoratore delle Scorie','Ciclo magmatico','Alterna carica, eruzione e raffreddamento su tre scambi.'],
+ [20,'Custode dell'Antispazio','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
 ];
 export const PHASE16D_BOSS_PROFILES=Object.freeze(Object.fromEntries(PROFILES.map(([planet,name,ability,description])=>[planet,Object.freeze({planet,name,ability,description})])));
 export const isPhase16DBoss=planet=>Object.hasOwn(PHASE16D_BOSS_PROFILES,Number(planet));
@@ -137,14 +137,14 @@ export function resolvePhase16DBossExchange(state){
        if(shot){
          memory.charge=Math.min(12,(memory.charge||0)+4);
          emit('charge',memory.charge,'Reattore: carica accumulata');
-         if(memory.charge>=12){damage(12,'Scarica del Generatore del Caos');memory.charge=0;}
+         if(memory.charge>=12){damage(12,'Scarica del Sovvertitore del Caso');memory.charge=0;}
        }
        break;
      case 17: // L'ordine è quello degli scarti effettivi, non carte generate.
        if(shot){
          const count=state.player?.discard?.length||0;
          if(count>=4)addBoost('enemy',Math.min(6,Math.floor(count/2)),'Risonanza degli scarti');
-         if(count>=8)damage(5,'Cristallo di Risonanza alimentato dagli scarti');
+         if(count>=8)damage(5,'Boss del Sacrificio alimentato dagli scarti');
        }
        break;
      case 19: {
