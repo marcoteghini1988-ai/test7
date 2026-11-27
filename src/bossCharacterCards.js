@@ -19,7 +19,7 @@ const defs=[
  [14,'Sovvertitore del Caso','Convertitore di flusso','sync','Un calcolo matematico valido concede +5 Sincronia effettiva, fino a 100.'],
  [17,'Boss del Sacrificio','Coro delle scudiere','harmonic','Scudiera +10% se anche la madre colpisce la barriera nello stesso ciclo.'],
  [19,'Divoratore delle Scorie','Forgia instabile','magma','Armi native +8% se il nemico era già corroso all’inizio del ciclo.'],
- [20,'Custode dell'Antispazio','Frattura del vuoto','precision','Precisione valida con almeno due semi diversi: +8% al danno su vitale esposto.']
+ [20,'Custode dell’Antispazio','Frattura del vuoto','precision','Precisione valida con almeno due semi diversi: +8% al danno su vitale esposto.']
 ];
 export const BOSS_CHARACTER_DURATION_CYCLES=2;
 export const BOSS_CHARACTER_CATALOG=Object.freeze(Object.fromEntries(defs.map(
