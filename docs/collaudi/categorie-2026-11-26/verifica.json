@@ -457,6 +457,24 @@
       ],
       "redSha256": "c58a3106917cb65edc95cbfca32c9345db5dbc88fe5c8a95a144875ac6cea8cc",
       "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "ed23e3bb2bdb7840a9d631a10bb57ba7a1151ad25fc33a941b671d7a489c9959",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-condensatore-tempesta-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "3c1f6421391bdfb073c9981bc36d75f4a44bfe2508d86f5fa869bafd1bba716c",
+      "preservedApprovedRevision": true
     }
   ]
 }
