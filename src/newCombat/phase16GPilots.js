@@ -17,7 +17,7 @@ export const PHASE16G_PILOTS=Object.freeze(Object.fromEntries([
  pilot('pilot_com_2','Calibratore Sottrattivo','risposta_coppia','Vinci rispondendo con una Coppia: recuperi munizioni del seme utilizzato.'),
  pilot('pilot_com_3','Cannoniere Balistico','alterna_seme','Spari con un seme diverso dalla tua ultima salva: recuperi munizioni.'),
  pilot('pilot_com_4','Cecchino Quantico','coppia_pura','Vinci con una Coppia senza Jolly: generi energia Boost.'),
- pilot('pilot_rare_1','Il Vendicatore','risposta_perdente','Perdi rispondendo ma resisti a una salva: recuperi una parte degli HP.'),
+ pilot('pilot_rare_1','Corsaro della Rivalsa','risposta_perdente','Perdi rispondendo ma resisti a una salva: recuperi una parte degli HP.'),
  pilot('pilot_rare_2',"L'Adrenalinico",'pressione_hp','Sotto il 40% HP, una salva valida rigenera munizioni e Boost.'),
  pilot('pilot_rare_3','Il Baro','jolly_vincente','Vinci sparando con un Jolly nella figura: guadagni Etere e Boost.'),
  pilot('pilot_rare_4','Il Collezionista di Specchi','pareggio_armato','Pareggio Poker con due salve valide: recuperi HP e Boost.'),
