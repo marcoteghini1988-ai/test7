@@ -1,6 +1,6 @@
 # Eclissi Stellare — 30 Personaggi generici
 
-**Revisione 27/11/2026 — registro progettuale, non implementazione.** 13 confermati, 17 proposte da verificare (7 generici da 14 a 20, 10 specialisti delle Armi da 21 a 30). Distribuzione corrente, non vincolo approvato: Comune: 6; Rara: 11; Epica: 8; Leggendaria: 5. Tutti neutri e senza evoluzioni; Boss ed esclusivi separati. Fonte strutturata: [REGISTRO_30_PERSONAGGI_GENERICI.json](REGISTRO_30_PERSONAGGI_GENERICI.json).
+**Revisione 27/11/2026 — registro progettuale, non implementazione.** 14 confermati, 16 proposte da verificare (6 generici da 15 a 20, 10 specialisti delle Armi da 21 a 30). Distribuzione corrente, non vincolo approvato: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6. Tutti neutri e senza evoluzioni; Boss ed esclusivi separati. Fonte strutturata: [REGISTRO_30_PERSONAGGI_GENERICI.json](REGISTRO_30_PERSONAGGI_GENERICI.json).
 
 ## Regole approvate
 
@@ -10,16 +10,17 @@
 - Sostituzione occupa una delle tre giocate; permanenti fino a sostituzione/rimozione, temporanei a scadenza, istantanei dopo effetto. Plancia esaurita disattiva lo slot.
 - 30 generici: 20 strategici e 10 specializzati Arma. Personaggi esclusivi e Boss sono fuori da questo lotto.
 - Effetti d'ingresso, passivi e istantanei attivi alla giocata valida, durante il timer dei 30 secondi; i trigger periodici e le reazioni conservano la loro fase. Consultare REGOLE_PERMANENTI_EFFETTI_CARTE.md per l'ordine ESEGUI e le combo.
+- Un Personaggio con più abilità può combinare abilità già confermate e nuove coerenti; possono funzionare tutte nello stesso turno rispettando costi e limiti propri, senza un limite comune salvo regola specifica approvata.
 
 ## Criteri e punti aperti
 
-- Le 17 schede rimanenti sono bozze; rarità, durate, meccaniche e valori da verificare. Le quantità per rarità non costituiscono una quota approvata.
+- Le 16 schede rimanenti sono bozze; rarità, durate, meccaniche e valori da verificare. Le quantità per rarità non costituiscono una quota approvata.
 - Tempo e HP da bilanciare dopo definizione. Niente recupero HP oltre maxHp o resurrezione salvo esplicita futura decisione. Nessun aumento del limite di tre carte giocate; istantanei e sostituzioni consumano una giocata.
 - Nei temporanei i turni contano dal turno proprio di schieramento, incluse le finestre avversarie conseguenti; durata esatta delle azioni istantanee e trigger da verificare.
 - Le cariche virtuali non creano carte fisiche Energia per la Speciale della madre; specificare fisicità, costo, cap e visual feedback nel bilanciamento.
 - Blocchi, consumi, sostituzioni, scarti e bonus vanno collegati agli eventi reali e testati su entrambi i lati.
 
-Il criterio professionale richiede un meccanismo concreto della flotta, non un semplice bonus o una Strategia travestita. I 13 confermati non vengono cambiati per imporre artificialmente nuove abilità; le schede 14–30 sono bozze, non approvazioni. Le idee di resurrezione dei supporti, trasferimento HP madre/supporto, scambio delle Armi fra slot, riciclo delle Armi e semplice bonus di tiro non sono state approvate come Personaggi.
+Il criterio professionale richiede un meccanismo concreto della flotta, non un semplice bonus o una Strategia travestita. I 14 confermati non vengono cambiati per imporre artificialmente nuove abilità; le schede 15–30 sono bozze, non approvazioni. Le idee di resurrezione dei supporti, trasferimento HP madre/supporto, scambio delle Armi fra slot, riciclo delle Armi e semplice bonus di tiro non sono state approvate come Personaggi.
 
 ## Schede
 
@@ -121,13 +122,15 @@ Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
 Da definire/verificare: Eccezione esplicitamente approvata: una sola abilità Epica. Definire arrotondamenti, progressione se il componente è già parzialmente operativo, consumo del tempo fra i passaggi e selezione casuale deterministica nel motore.
 
-### 14. Tecnico del raffreddamento — Rara
+### 14. Maestro dell'energia — Leggendaria
 
-Durata: 3 turni propri. Stato: proposta da verificare; non ancora implementato.
+Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
-- Una volta per turno proprio può smontare e sacrificare un'intera Carta Energia installata per dissipare il calore del Generatore, riducendo di un turno il suo raffreddamento residuo. Non riattiva un Generatore disattivato e non concede un attacco aggiuntivo.
+- Dimezza l'Energia richiesta dagli attacchi speciali della madre, arrotondando per eccesso: da 2 a 1 e da 4 a 2. Non modifica potenza o ricarica.
+- Una volta per turno proprio rigenera una carica Energia del tipo appena utilizzato: la carta Energia resta nel suo slot e la carica torna disponibile, non viene pescata dagli scarti.
+- Una volta per turno proprio sacrifica una Carta Energia fisica installata, inviandola negli scarti, e converte una carica di un'altra Energia rimasta nell'elemento richiesto. Esempio approvato: da due Fuoco e due Ghiaccio, sacrifica un Ghiaccio e converte l'altro Ghiaccio in Fuoco; rimangono tre Fuoco.
 
-Da definire/verificare: Costo, disponibilità e limite da verificare; proposta non confermata.
+Da definire/verificare: Tutte e tre le abilità possono operare nello stesso turno, ciascuna secondo i propri limiti e costi; nessun limite comune di un intervento per turno. Preservare le schede singole 8, 9 e 12. Verificare le interazioni fra le tre abilità, le cariche effettive, il costo speciale della madre e la persistenza delle conversioni.
 
 ### 15. Tecnica delle contromisure — Epica
 
@@ -279,7 +282,7 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 - Motore corrente rifiuta un secondo Personaggio con uno già attivo: implementare la sostituzione approvata, senza rompere le 12 esclusive.
 - Riparazione della Plancia quando lo slot è già disattivato: serve decisione sull'eccezione per gli istantanei, prima dell'integrazione.
-- Le 17 rimanenti schede sono proposte; le famiglie Arma da associare agli specialisti vanno riconciliate con il catalogo corrente.
+- Le 16 rimanenti schede sono proposte; le famiglie Arma da associare agli specialisti vanno riconciliate con il catalogo corrente.
 - I valori di bilanciamento non sono ancora definitivi; nessun asset o effetto approvato viene sostituito.
 - Implementazione della fase di attivazione immediata e della coda ESEGUI, configurazione Stratega e test non ancora realizzati.
 
