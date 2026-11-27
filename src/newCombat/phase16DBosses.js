@@ -25,7 +25,7 @@ const PROFILES=[
  [14,'Sovvertitore del Caso','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
  [17,'Boss del Sacrificio','Memoria degli scarti','Gli scarti del giocatore alimentano il contrattacco.'],
  [19,'Divoratore delle Scorie','Ciclo magmatico','Alterna carica, eruzione e raffreddamento su tre scambi.'],
- [20,'Custode dell'Antispazio','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
+ [20,'Custode dell’Antispazio','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
 ];
 export const PHASE16D_BOSS_PROFILES=Object.freeze(Object.fromEntries(PROFILES.map(([planet,name,ability,description])=>[planet,Object.freeze({planet,name,ability,description})])));
 export const isPhase16DBoss=planet=>Object.hasOwn(PHASE16D_BOSS_PROFILES,Number(planet));
