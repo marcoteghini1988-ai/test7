@@ -754,20 +754,19 @@
       "unlocked": {
         "duration": {
           "mode": "own-turns",
-          "turns": null
+          "turns": 3
         },
         "replaceable": true,
         "abilities": [
-          "Quando giocato, durante la permanenza cura una sola navicella alleata viva scelta dal giocatore (madre o uno dei supporti presenti), della stessa percentuale dei suoi HP massimi prevista per il Boss, senza superare il massimo."
+          "Durante tre turni propri cura a ogni turno una sola navicella alleata viva scelta dal giocatore (madre o uno dei supporti presenti), della stessa percentuale dei suoi HP massimi prevista per il Boss, senza superare il massimo. Il bersaglio può cambiare a ogni turno. Non rianima."
         ],
-        "durationStatus": "pending",
-        "targetSelectionTiming": "pending"
+        "durationStatus": "confirmed",
+        "targetSelectionTiming": "each-own-turn"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
         "Percentuale definitiva da bilanciare; 5% era una proposta, non approvata.",
-        "Numero di turni della versione sbloccata e scelta del bersaglio una sola volta allo schieramento oppure a ogni turno da confermare. Il bersaglio dev'essere vivo.",
         "Momento esatto delle cure ricorrenti e interazioni con la regola degli effetti immediati da definire e collaudare."
       ]
     },
