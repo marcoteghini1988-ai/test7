@@ -632,7 +632,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  if(magma.phase==='raffreddamento')
   log.push(key+': Divoratore delle Scorie · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
  if(abyss.active&&hit.damage>0)
-  log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
+  log.push(key+': Serpe delle Fosse Abissali · Pressione degli abissi +8% sulla salva reale ('+
    'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
    '/100; barriera nemica <=40% all\'inizio del ciclo)');
  if(bloodPact.active)
