@@ -75,21 +75,21 @@ export const CAMPAIGN_BOSS_V2=Object.freeze(Object.fromEntries([
  [3,'Matriarca Tossica','venom','Infligge veleno dopo uno scambio, non in base ai secondi'],
  [4,'Arconte Solare','red','Carte rosse amplificano il colpo'],
  [5,'Occhio del Vortice','spades','Le picche rilasciano un impulso ionico'],
- [6,'Crono il Distruttore','counter','Le risposte parziali generano un contraccolpo'],
+ [6,'Devastatore delle Ere','counter','Le risposte parziali generano un contraccolpo'],
  [7,'Sentinella Ionica','boost','La perdita di un confronto ricarica il Boost'],
  [8,'Leviatano Abissale','finisher','Colpo più forte quando il bersaglio è ferito'],
- [9,'Signore delle Ombre','blood','Sacrifica HP per una salva cremisi più potente'],
+ [9,'Predone della Penombra','blood','Sacrifica HP per una salva cremisi più potente'],
  [10,'Colosso di Metano','shield','Un guscio chimico assorbe gli impatti'],
  [11,'Idra Criogenica','heal','Recupero graduale in seguito a una salva valida'],
  [12,"Titano d’Acciaio",'shield','Protezione aggiuntiva a salute bassa'],
  [13,'Eco dei Mondi','counter','Riflette energia dalle salve subite'],
- [14,'Generatore del Caos','reactor','Accumula energia e la rilascia in un colpo'],
+ [14,'Sovvertitore del Caso','reactor','Accumula energia e la rilascia in un colpo'],
  [15,'Arconte dei Sette','seventh','Ogni settimo scontro efficace genera un impulso'],
  [16,'Custode di Lagrange','gap','Reagisce a un forte divario di HP'],
- [17,'Cristallo di Risonanza','discard','Trasforma gli scarti in un piccolo impulso'],
+ [17,'Boss del Sacrificio','discard','Trasforma gli scarti in un piccolo impulso'],
  [18,'Entità della Discordia','venom','Danno residuo dopo il colpo'],
- [19,'Nucleo Magmatico','magma','Sequenza di carica, scarica e raffreddamento'],
- [20,'Sovrano del Vuoto','sovereign','Il seme dominante cambia secondo la fase del boss']
+ [19,'Divoratore delle Scorie','magma','Sequenza di carica, scarica e raffreddamento'],
+ [20,'Custode dell'Antispazio','sovereign','Il seme dominante cambia secondo la fase del boss']
  ].map(([planet,name,kind,description])=>{
    const upgraded=PHASE16D_BOSS_PROFILES[planet];
    return [planet,Object.freeze(upgraded?{planet,name:upgraded.name,kind:'phase16d',description:upgraded.description,ability:upgraded.ability}:{planet,name,kind,description})];
