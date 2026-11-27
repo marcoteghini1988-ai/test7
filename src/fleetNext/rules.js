@@ -130,17 +130,20 @@ export const progressionCard = id => PROGRESSION_CARDS[id]||null;
 export const generalCard = id => CURRENT_WEAPON_BY_ID[id]||CONFIRMED_TRANSFER_WEAPON_BY_ID[id]||DESIGNED_WEAPON_BY_ID[id]||MULTI_WEAPON_BY_ID[id]||CONFIRMED_WEAPON_BY_ID[id]||APPROVED_BASE_WEAPON_BY_ID[id]||SIPHON_ATTACK_BY_ID[id]||ELEMENTAL_TERRAIN_BY_ID[id]||TEMP_SUPPORT_WEAPON_BY_ID[id]||DISCARD_WEAPON_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
+// La copia StackBlitz legge anche Personaggi e Difese dal medesimo
+// riferimento degli asset remoti, senza copiarne i fronti nel WebContainer.
+const CARD_ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 export function cardFacePath(id,level=1){
  const definition=card(id);
  if(!definition||definition.playable===false||isProgressionCard(id))return null;
  const approvedWeaponArt=officialWeaponFacePath(id);
  if(approvedWeaponArt)return approvedWeaponArt;
  if(definition.nativeFace)return null;
- if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
+ if(bossCard(id))return CARD_ASSET_ROOT+'/fleet-next-boss-cards/'+id+'.svg';
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
-  '/assets/fleet-next-card-upgrades/'+id+'-g'+grade+'.svg':
-  '/assets/fleet-next-cards/'+id+'.svg';
+  CARD_ASSET_ROOT+'/fleet-next-card-upgrades/'+id+'-g'+grade+'.svg':
+  CARD_ASSET_ROOT+'/fleet-next-cards/'+id+'.svg';
 }
 // I fronti approvati originali conservano percorso e hash; il renderer usa la variante cromatica verificata.
 export function cardDisplayFacePath(id,level=1){
