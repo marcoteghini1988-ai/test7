@@ -1,7 +1,7 @@
 // Identita' visiva delle carte pescate dal mazzo ufficiale: SOLO testo/icone.
 // Il profilo non crea carte, non modifica costi, effetti, turni o inventario.
 const FAMILY_LABELS=Object.freeze({
- offense:'ATTACCO',defense:'DIFESA',support:'SUPPORTO',fusion:'FUSIONE',
+ offense:'STRATEGIA',defense:'DIFESA',support:'SUPPORTO',fusion:'FUSIONE',
  reaction:'REAZIONE',intel:'SCANSIONE',control:'CONTROLLO',
  quantum:'DADO',sabotage:'MALUS',transmute:'DORATA',
  rift:'FAGLIA',mutation:'MUTAZIONE',volley:'RAFFICA',
