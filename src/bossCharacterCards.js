@@ -7,8 +7,18 @@ import {restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {exclusiveNeurotoxinRepairAmount,exclusiveNeurotoxinActive,clearExclusiveNeurotoxin}
  from './tacticalExclusiveBosses.js';
-// Etichette provvisorie delle carte: le dodici raffigurazioni e i nomi
-// commerciali dei Personaggi richiedono ancora creazione e approvazione.
+// I nomi scelti dall'autore sono indipendenti dai fronti ancora in preparazione.
+// Le altre quattro carte conservano l'etichetta numerata provvisoria.
+const approvedNames=Object.freeze({
+ 1:'Soreno Nerqavol, Guaritore di Flotta',
+ 6:'Tavren Qordelis, Stratega della Quarta Carta',
+ 8:'Narevo Taqrenis, Domatore del Generatore',
+ 9:'Talviro Merqasin, Predone della Penombra',
+ 14:'Averin Qarvenoth, Sovvertitore dei Turni',
+ 17:'Vamor Vemarquil, Sacrificatore degli Scarti',
+ 19:'Odelio Vencaril, Divoratore delle Scorie',
+ 20:'Irelvo Gernavul, Interdittore d’Armi'
+});
 const defs=[
  [1,'Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
  [2,'Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
@@ -27,7 +37,7 @@ export const BOSS_CHARACTER_DURATION_CYCLES=2;
 export const BOSS_CHARACTER_CATALOG=Object.freeze(Object.fromEntries(defs.map(
  ([planetId,skill,effect,description],index)=>{
   const id='boss-character-'+planetId;
-  const name='Personaggio Boss '+String(index+1).padStart(2,'0');
+  const name=approvedNames[planetId]??'Personaggio Boss '+String(index+1).padStart(2,'0');
   return [id,Object.freeze({id,planetId,name,skill,effect,description,
    family:'boss-character',short:skill.toUpperCase(),durationCycles:BOSS_CHARACTER_DURATION_CYCLES,
    // Nessuna carta completa approvata: il catalogo conserva identità e regole.

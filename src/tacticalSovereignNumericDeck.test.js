@@ -33,7 +33,7 @@ function realHandCards(side,values){
  assert.equal(new Set([...pile.hand,...pile.deck].map(c=>c.id)).size,52);
 }
 
-test('Custode dell’Antispazio L1-L9: tutte tre le passive e livelli reali sbloccati; nessun mazzo regalato',()=>{
+test('Irelvo Gernavul, Interdittore d’Armi L1-L9: tutte tre le passive e livelli reali sbloccati; nessun mazzo regalato',()=>{
  assert.equal(tacticalBossDeckReady('planet_char_20'),true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_20',bossDeckInventory:{}}).enabled,false);
@@ -83,7 +83,7 @@ test('Vuoto difensivo: a barriera 25% o meno, due passive sommate con limite 35%
  assert.equal(tacticalBossMotherFactor(side),.84);
 });
 
-test('Difesa Custode dell’Antispazio protegge HP veri nel combattimento, non genera nuovi scudi',()=>{
+test('Difesa Irelvo Gernavul, Interdittore d’Armi protegge HP veri nel combattimento, non genera nuovi scudi',()=>{
  const boss=fixture(9),plain=fixture(null);
  for(const b of [boss,plain]){
   b.sides.A.defense.shield.hp=15;
@@ -145,7 +145,7 @@ test('Supremazia: il bonus non viene consumato su danno nullo o firma errata',()
  assert.equal(tacticalSovereignSupremacyBonus(side,10,3).active,false);
 });
 
-test('Custode dell’Antispazio numerico non attiva il seme dominante esclusivo del boss di Encelado',()=>{
+test('Irelvo Gernavul, Interdittore d’Armi numerico non attiva il seme dominante esclusivo del boss di Encelado',()=>{
  const b=fixture(9);
  assert.equal(b.sides.A.bossExclusive,null);
  assert.equal(b.sides.B.bossExclusive,null);

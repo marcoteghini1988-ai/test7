@@ -12,13 +12,13 @@ const descriptions={
   3:['Afrodite','Il primo cambio reale di ogni preparazione recupera una piccola quantità di HP.'],
   6:['Contromossa degli Anelli','Riduce una volta per battaglia la prima salva avversaria subita.'],
   7:['Sentinella Ionica','Mitiga una volta per battaglia il primo colpo in un settore con anomalia o interdizione.'],
-  8:['Serpe delle Fosse Abissali','Inserisce Jolly Quantici supplementari nel mazzo reale.'],
+  8:['Narevo Taqrenis, Domatore del Generatore','Inserisce Jolly Quantici supplementari nel mazzo reale.'],
   9:['Ombre','Una salva valida può consumare HP propri (mai l’ultimo) per aumentare il danno.'],
   11:['Idra','Riduce il costo in Etere dell’estrazione mirata.'],
   14:['Generatore','Blocca una volta per battaglia la riduzione della mano causata da un Malus.'],
   17:['Risonanza','Alternare classi di armi in salve valide ricarica parte del Boost.'],
-  19:['Divoratore delle Scorie','Una salva valida può applicare ustione al successivo scambio, senza timer.'],
-  20:['Custode dell’Antispazio','Una rianimazione automatica una sola volta per battaglia.']
+  19:['Odelio Vencaril, Divoratore delle Scorie','Una salva valida può applicare ustione al successivo scambio, senza timer.'],
+  20:['Irelvo Gernavul, Interdittore d’Armi','Una rianimazione automatica una sola volta per battaglia.']
 };
 export const PHASE16E_DECKS=Object.freeze({
   ...Object.fromEntries(PHASE16A_CAMPAIGN_PLANETS.map(p=>[p.deck,Object.freeze({id:p.deck,planet:p.id,name:descriptions[p.id][0],description:descriptions[p.id][1]})])),
@@ -77,7 +77,7 @@ export function resolvePhase16EExchange(state){
   if(memory.poisonPending>0){
     const dot=Math.min(hp.enemy,memory.poisonPending);
     hp.enemy-=dot;memory.poisonPending=0;
-    if(dot)emit(`Divoratore delle Scorie: ustione −${dot} HP`);
+    if(dot)emit(`Odelio Vencaril, Divoratore delle Scorie: ustione −${dot} HP`);
   }
   switch(id){
     case 'ophiuchus':{
@@ -110,7 +110,7 @@ export function resolvePhase16EExchange(state){
       break;
     }
     case 'planet_char_6':{
-      if(enemyShot&&!memory.usedShield){const n=heal(3+Math.ceil(lv/2));memory.usedShield=true;if(n)emit(`Devastatore delle Ere: prima salva attenuata di ${n} HP`);}
+      if(enemyShot&&!memory.usedShield){const n=heal(3+Math.ceil(lv/2));memory.usedShield=true;if(n)emit(`Tavren Qordelis, Stratega della Quarta Carta: prima salva attenuata di ${n} HP`);}
       break;
     }
     case 'planet_char_7':{
@@ -143,7 +143,7 @@ export function resolvePhase16EExchange(state){
       break;
     }
     case 'planet_char_19':{
-      if(playerShot&&hp.enemy>0){memory.poisonPending=Math.min(6,1+Math.ceil(lv/3));emit(`Divoratore delle Scorie: prossima ustione −${memory.poisonPending} HP`);}
+      if(playerShot&&hp.enemy>0){memory.poisonPending=Math.min(6,1+Math.ceil(lv/3));emit(`Odelio Vencaril, Divoratore delle Scorie: prossima ustione −${memory.poisonPending} HP`);}
       break;
     }
     default: break; // Venere/preparazione, Nettuno/deck, Europa/Etere, Proxima/Malus, Encelado/KO
@@ -175,5 +175,5 @@ export function applyPhase16ERevival(state){
   if(!a||a.id!=='planet_char_20'||a.revived||state.hp.player>0||!state.initialHp?.player||state.phase===TURN_PHASES.FINISHED)return state;
   const restored=Math.max(1,Math.ceil(state.initialHp.player*(0.10+0.01*a.level)));
   return {...state,hp:{...state.hp,player:restored},winner:null,
-    phase16E:{...a,revived:true},history:[...state.history,`Custode dell’Antispazio: rinascita automatica con ${restored} HP`].slice(-20)};
+    phase16E:{...a,revived:true},history:[...state.history,`Irelvo Gernavul, Interdittore d’Armi: rinascita automatica con ${restored} HP`].slice(-20)};
 }

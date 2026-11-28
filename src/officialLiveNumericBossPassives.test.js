@@ -53,7 +53,7 @@ test('Risonanza: bonus soltanto quando cambia il vero focus arma',()=>{
  liveNumericBossAfterShot(a,8,'W05',changed.bonus,1);
  assert.equal(a.bossNumericDeck.lastFocusedWeaponId,'W05');
 });
-test('Custode dell’Antispazio numerico: supremazia si attiva DOPO vitale KO, non nel ciclo del KO',()=>{
+test('Irelvo Gernavul, Interdittore d’Armi numerico: supremazia si attiva DOPO vitale KO, non nel ciclo del KO',()=>{
  const b=game('planet_char_20',9),a=b.sides.A;
  liveNumericBossAfterVital(a,10,true,1);
  assert.equal(a.bossNumericDeck.supremacyArmedAfterRound,1);
@@ -94,7 +94,7 @@ test('Sinfonia di flotta Risonanza: +7% solo dopo impatto efficace della madre e
   'Sinfonia non esiste prima di livello 7');
 });
 
-test('Serpe delle Fosse Abissali Marea: solo vero riciclo delle 52 numeriche prepara bonus, colpo nullo non lo consuma',()=>{
+test('Narevo Taqrenis, Domatore del Generatore Marea: solo vero riciclo delle 52 numeriche prepara bonus, colpo nullo non lo consuma',()=>{
  const untouched=game('planet_char_8',3).sides.A;
  liveNumericBossBeforeDraw(untouched);
  assert.equal(untouched.bossNumericDeck.recyclePending,false);

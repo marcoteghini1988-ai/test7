@@ -24,7 +24,7 @@ Il criterio professionale richiede un meccanismo concreto della flotta, non un s
 
 ## Schede
 
-### 1. Medico da campo — Comune
+### 1. Qemirun, Medica di Bordo — Comune
 
 Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
@@ -52,7 +52,7 @@ Durata: 2 turni propri. Stato: confermato; non ancora implementato.
 
 - Prolunga di un turno la prima Difesa temporanea giocata durante la permanenza; non aggiunge cariche o attivazioni.
 
-### 5. Decifratrice degli Scarti — Comune
+### 5. Lirena Vessalun, Recuperatrice di Strategie — Comune
 
 Durata: istantanea. Stato: confermato; non ancora implementato.
 
@@ -221,12 +221,12 @@ Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 25. Comandante d’Acciaio — Epica
+### 25. Telmuriq, Liberatore dell’Arsenale — Epica
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 - Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.
-- Attiva i potenziamenti dell'Impattatore del Comandante d'Acciaio alle soglie di HP già previste.
+- Attiva i potenziamenti dell'Impattatore di Telmuriq alle soglie di HP già previste.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
@@ -258,7 +258,7 @@ Durata: 3 turni propri. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 29. Tracciatore del Buio Astrale — Leggendaria
+### 29. Darev Ormavess, Vigilante degli Scarti — Leggendaria
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 

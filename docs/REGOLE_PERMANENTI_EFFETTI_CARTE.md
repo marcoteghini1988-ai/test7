@@ -29,7 +29,7 @@ Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 
 
 Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le singole abilità e durate dei tre Epici restano da approvare.
 
-### Eccezione approvata: Devastatore delle Ere (Personaggio Boss 34)
+### Eccezione approvata: Tavren Qordelis, Stratega della Quarta Carta (Personaggio Boss 34)
 
 Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa. Lo schieramento del Personaggio sbloccato occupa una normale giocata. La quarta giocata è un'eccezione specifica, non un cambiamento del limite generale. L'attivazione va gestita prima della chiusura automatica alla terza giocata (o atomicamente con essa); la scelta manuale del sacrificio è confermata; interazioni con sospensione/sostituzione, esaurimento del timer e chiusura anticipata sono da definire e testare. Nessuna proroga, nessuna estensione cumulativa, nessuna carta creata. La risoluzione offensiva rimane sequenziale. Boss fisso, carta giocabile temporanea; rarità Rara e tre turni propri confermati. Specifica, non implementazione.
 
@@ -37,7 +37,7 @@ Una volta per proprio turno può sacrificare una carta scelta dal giocatore dall
 
 All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive. Permanente durante lo scontro, temporanea come carta sbloccata, sospendibile secondo la regola generale dei Boss. Nessuna pesca aggiuntiva, riordino, rivelazione all'avversario o modifica del limite di giocate. Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri confermate. Specifica, non implementazione.
 
-### Riduzione del raffreddamento approvata: Serpe delle Fosse Abissali (Personaggio Boss 36)
+### Riduzione del raffreddamento approvata: Narevo Taqrenis, Domatore del Generatore (Personaggio Boss 36)
 
 Finché il Personaggio è attivo, riduce di un turno i tempi di raffreddamento del Generatore, sia per l'attacco rapido sia per quello potente, senza modificare il consumo di Energia. Permanente nello scontro, sospendibile secondo la regola generale dei Boss. Rara, durata di tre turni propri confermata come carta sbloccata. Nessuna dipendenza da uno specifico supporto. Definire e collaudare la cumulabilità con il Relè Ionico, il limite minimo del raffreddamento e il momento di applicazione in caso di attivazione, scadenza o sospensione durante un raffreddamento già in corso. Specifica, non implementazione.
 

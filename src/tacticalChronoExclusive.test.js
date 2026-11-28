@@ -24,7 +24,7 @@ function turn(b,aa=empty(),bb=empty(),now=100){
 }
 const barrierB=r=>r.history.at(-1).impacts.find(p=>p.kind==='barrier'&&p.by==='B');
 
-test('Devastatore delle Ere: la Contromisura reale contro una firma valida prepara il bonus, senza contrattacco immediato',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: la Contromisura reale contro una firma valida prepara il bonus, senza contrattacco immediato',()=>{
  const b=battle();
  const base=nativeBarrierPacket(b.sides.B);
  const r=turn(b,offensive(),block());
@@ -35,7 +35,7 @@ test('Devastatore delle Ere: la Contromisura reale contro una firma valida prepa
  assert.ok(r.lastEvents.some(t=>t.includes('Controtempo caricato')));
  assert.equal(barrierB(r).damage,base,'Nessun bonus prima della contromisura: fuoco iniziale normale');
 });
-test('Devastatore delle Ere: entro due cicli +5% solo sul colpo nativo reale e carica consumata',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: entro due cicli +5% solo sul colpo nativo reale e carica consumata',()=>{
  const ordinary=turn(battle(null),offensive(),block());
  const chrono=turn(battle(6),offensive(),block());
  const normalRound2=turn(advanceTacticalDuel(ordinary,8102),empty(),empty(),8200);
@@ -46,7 +46,7 @@ test('Devastatore delle Ere: entro due cicli +5% solo sul colpo nativo reale e c
  assert.equal(chronoRound2.sides.B.bossExclusive.counterArmedAfterRound,0);
  assert.equal(chronoRound2.sides.B.bossExclusive.counterExpiresRound,0);
 });
-test('Devastatore delle Ere: firma falsa, carta non giocata o colpo protetto non concedono carica',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: firma falsa, carta non giocata o colpo protetto non concedono carica',()=>{
  const noCard=turn(battle(),offensive(),empty());
  assert.equal(noCard.sides.B.bossExclusive.counterArmedAfterRound??0,0);
  const invalid=turn(battle(),{...offensive(),op:'plus'},block());
@@ -56,7 +56,7 @@ test('Devastatore delle Ere: firma falsa, carta non giocata o colpo protetto non
  const shielded=turn(protectedBattle,offensive(),block());
  assert.equal(shielded.sides.B.bossExclusive.counterArmedAfterRound??0,0);
 });
-test('Devastatore delle Ere: carica scade dopo due cicli senza danno vero, nessuna energia gratis',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: carica scade dopo due cicli senza danno vero, nessuna energia gratis',()=>{
  const first=turn(battle(),offensive(),block());
  const secondReady=advanceTacticalDuel(first,8102);
  secondReady.sides.A.defense.shield.hp=0;
@@ -68,7 +68,7 @@ test('Devastatore delle Ere: carica scade dopo due cicli senza danno vero, nessu
  assert.equal(barrierB(third).damage,0);
  assert.equal(third.sides.B.bossExclusive.counterArmedAfterRound,0);
 });
-test('Devastatore delle Ere: lo stato del potere non si attiva se il duello non e contro il boss vero',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: lo stato del potere non si attiva se il duello non e contro il boss vero',()=>{
  const normal={bossExclusive:null},proto={bossExclusive:{id:6}},splash={};
  assert.equal(rememberExclusiveChronoCounter(normal,1),false);
  assert.equal(exclusiveChronoNativeBonus(normal,30,2).active,false);

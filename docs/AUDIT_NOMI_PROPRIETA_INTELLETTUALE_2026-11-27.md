@@ -1,5 +1,13 @@
 # Eclissi Stellare — audit nomi e proprietà intellettuale
 
+**Aggiornamento 28/11/2026:** per dodici Personaggi l'autore ha scelto nuovi
+nomi. I nomi correnti sono nel
+[registro dei 42](REGISTRO_42_PERSONAGGI_CON_BOSS.json) e la cronologia è
+nelle [rinomine](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md). Gli elenchi
+di Boss e Personaggi più sotto sono uno stato storico, non il catalogo
+corrente. Le ricerche esatte preliminari non sono un certificato di
+disponibilità come marchio.
+
 **Correzione 28/11/2026:** l'elenco corrente è il registro
 `AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`: le dieci famiglie Energia
 sono tornate ai nomi originali «Energia + elemento». Il registro conta ora

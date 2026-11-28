@@ -1,5 +1,14 @@
 # Controllo dei nomi interni delle carte — 28 novembre 2026
 
+**Decisione successiva del 28/11:** l'autore ha scelto dodici nomi dei
+Personaggi. I nomi correnti sono nel
+[registro dei 42](REGISTRO_42_PERSONAGGI_CON_BOSS.json) e il confronto fra
+nome originario, intermedio e scelto è nella
+[mappatura](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md). Il controllo dei
+marchi simili resta preliminare; l'approvazione del nome non approva
+illustrazioni o abilità ancora proposte. Il testo sottostante descrive
+la ricognizione anteriore alla scelta.
+
 ## Risultato verificabile sul repository
 
 Il registro [strutturato](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json)

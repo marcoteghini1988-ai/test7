@@ -48,7 +48,7 @@ function commit(b,a=order(),enemy=order(),at=101){
 }
 const precision=r=>r.history.at(-1).impacts.find(x=>x.kind==='precision'&&x.by==='A');
 
-test('Serpe delle Fosse Abissali: due passive reali L1-L6; il mazzo non si crea se bloccato',()=>{
+test('Narevo Taqrenis, Domatore del Generatore: due passive reali L1-L6; il mazzo non si crea se bloccato',()=>{
  assert.equal(tacticalBossDeckReady('planet_char_8'),true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_8',

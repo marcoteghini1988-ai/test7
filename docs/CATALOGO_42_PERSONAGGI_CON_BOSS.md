@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Comune ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, Rara e durata sbloccata di tre turni propri confermate; Serpe delle Fosse Abissali Raro ha una sola abilità confermata di riduzione del raffreddamento del Generatore di un turno e dura tre turni propri dopo lo sblocco; Predone della Penombra Epico ha due abilità confermate, attacco progressivo +5% per turno (massimo +50%) e resistenza progressiva 2% per turno (massimo 20%), entrambe dal primo turno proprio; dura dieci turni propri dopo lo sblocco; l’Idra Criogenica Epica ha entrambe le abilità confermate in progettazione, anche dopo lo sblocco per cinque turni propri; restano dettagli operativi aperti, come le abilità degli altri quattro Boss. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Comune ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, Rara e durata sbloccata di tre turni propri confermate; Narevo Taqrenis, Domatore del Generatore Raro ha una sola abilità confermata di riduzione del raffreddamento del Generatore di un turno e dura tre turni propri dopo lo sblocco; Talviro Merqasin, Predone della Penombra Epico ha due abilità confermate, attacco progressivo +5% per turno (massimo +50%) e resistenza progressiva 2% per turno (massimo 20%), entrambe dal primo turno proprio; dura dieci turni propri dopo lo sblocco; l’Idra Criogenica Epica ha entrambe le abilità confermate in progettazione, anche dopo lo sblocco per cinque turni propri; restano dettagli operativi aperti, come le abilità degli altri quattro Boss. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -16,7 +16,7 @@ Per le decisioni aperte leggere [PROGETTAZIONE_30_PERSONAGGI_GENERICI.md](PROGET
 
 ## Personaggi generici
 
-### 1. Medico da campo — Comune
+### 1. Qemirun, Medica di Bordo — Comune
 
 Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
@@ -44,7 +44,7 @@ Durata: 2 turni propri. Stato: confermato; non ancora implementato.
 
 - Prolunga di un turno la prima Difesa temporanea giocata durante la permanenza; non aggiunge cariche o attivazioni.
 
-### 5. Decifratrice degli Scarti — Comune
+### 5. Lirena Vessalun, Recuperatrice di Strategie — Comune
 
 Durata: istantanea. Stato: confermato; non ancora implementato.
 
@@ -213,12 +213,12 @@ Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 25. Comandante d’Acciaio — Epica
+### 25. Telmuriq, Liberatore dell’Arsenale — Epica
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 - Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.
-- Attiva i potenziamenti dell'Impattatore del Comandante d'Acciaio alle soglie di HP già previste.
+- Attiva i potenziamenti dell'Impattatore di Telmuriq alle soglie di HP già previste.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
@@ -250,7 +250,7 @@ Durata: 3 turni propri. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 29. Tracciatore del Buio Astrale — Leggendaria
+### 29. Darev Ormavess, Vigilante degli Scarti — Leggendaria
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
@@ -272,11 +272,11 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Predone della Penombra sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Sovvertitore del Caso ha un'unica abilità Caos imprevedibile con sette eventi sull'avversario e cinque turni propri dopo lo sblocco confermati. Eccezione confermata il 27/11/2026: il Sovvertitore del Caso (settore 90) è Epico con una sola abilità, Caos imprevedibile, articolata in sette eventi casuali alternativi. La regola delle due abilità resta valida per gli altri Boss Epici.
+Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Talviro Merqasin, Predone della Penombra sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Averin Qarvenoth, Sovvertitore dei Turni ha un'unica abilità Caos imprevedibile con sette eventi sull'avversario e cinque turni propri dopo lo sblocco confermati. Eccezione confermata il 27/11/2026: il Averin Qarvenoth, Sovvertitore dei Turni (settore 90) è Epico con una sola abilità, Caos imprevedibile, articolata in sette eventi casuali alternativi. La regola delle due abilità resta valida per gli altri Boss Epici.
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime nove schede, da Gaia al Sovvertitore del Caso, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; gli altri tre Boss sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime nove schede, da Gaia al Averin Qarvenoth, Sovvertitore dei Turni, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; gli altri tre Boss sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
-### 31. Curatore delle Falde Vive — Terra · settore 10 · Comune
+### 31. Soreno Nerqavol, Guaritore di Flotta — Terra · settore 10 · Comune
 
 **Meccanica confermata il 27/11/2026; bilanciamento e implementazione ancora da fare.** Una sola abilità, rigenerazione HP.
 
@@ -318,7 +318,7 @@ ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e
 
 ID conservato: `boss-character-3`.
 
-### 34. Devastatore delle Ere — Saturno · settore 40 · Rara
+### 34. Tavren Qordelis, Stratega della Quarta Carta — Saturno · settore 40 · Rara
 
 **Meccanica approvata il 27/11/2026: sacrificio per la quarta giocata.** Una sola abilità; la precedente proposta di trasferimento del tempo è rifiutata. Madre Corvo a Impulsi, un supporto Corvo Esploratore. La pesca aggiuntiva del supporto è una sinergia, non un requisito.
 
@@ -345,7 +345,7 @@ Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel 
 
 ID conservato: `boss-character-7`.
 
-### 36. Serpe delle Fosse Abissali — Nettuno · settore 60 · Rara
+### 36. Narevo Taqrenis, Domatore del Generatore — Nettuno · settore 60 · Rara
 
 **Meccanica approvata il 27/11/2026:** una sola abilità di riduzione del raffreddamento. Madre Manta Ionica; due supporti Relè Ionico. Il Personaggio funziona anche senza supporti specifici.
 
@@ -358,7 +358,7 @@ Definire e collaudare la cumulabilità con il Relè Ionico, il limite minimo del
 
 ID conservato: `boss-character-8`.
 
-### 37. Predone della Penombra — Plutone · settore 70 · Epica
+### 37. Talviro Merqasin, Predone della Penombra — Plutone · settore 70 · Epica
 
 **Due abilità confermate il 27/11/2026:**
 - Attacco progressivo: dal primo turno proprio di attività, tutti i propri attacchi infliggono il 5% di danno aggiuntivo per turno proprio, fino a +50% al decimo turno; il bonus non si compone e resta al limite finché il Personaggio è attivo.
@@ -394,7 +394,7 @@ Le precedenti ipotesi di cura sono archiviate nel registro JSON come proposte no
 
 ID conservato: `boss-character-11`. Meccaniche e durata confermate, dettagli operativi e bilanciamento aperti; non implementata.
 
-### 39. Sovvertitore del Caso — Proxima b · settore 90 · Epica
+### 39. Averin Qarvenoth, Sovvertitore dei Turni — Proxima b · settore 90 · Epica
 
 Nave madre: Vortiluce (E02).
 
@@ -413,7 +413,7 @@ Nave madre: Vortiluce (E02).
 
 ID conservato: `boss-character-14`. Meccanica e durata confermate; dettagli operativi e bilanciamento aperti, non implementata.
 
-### 40. Boss del Sacrificio — Haumea · settore 100 · Leggendaria
+### 40. Vamor Vemarquil, Sacrificatore degli Scarti — Haumea · settore 100 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Aumenta la potenza dei propri colpi con il numero di carte avversarie negli scarti, entro un limite.
@@ -426,7 +426,7 @@ ID conservato: `boss-character-14`. Meccanica e durata confermate; dettagli oper
 
 ID conservato: `boss-character-17`.
 
-### 41. Divoratore delle Scorie — Io · settore 110 · Leggendaria
+### 41. Odelio Vencaril, Divoratore delle Scorie — Io · settore 110 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Ciclo pubblico a tre fasi: riscaldamento, sovraccarico con danni maggiorati, raffreddamento con penalità.
@@ -439,7 +439,7 @@ ID conservato: `boss-character-17`.
 
 ID conservato: `boss-character-19`.
 
-### 42. Custode dell’Antispazio — Encelado · settore 120 · Leggendaria
+### 42. Irelvo Gernavul, Interdittore d’Armi — Encelado · settore 120 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Ogni turno annuncia la famiglia Arma usata dal giocatore nel turno precedente; giocare nuovamente quella stessa famiglia è vietato soltanto nel turno successivo.
@@ -454,7 +454,7 @@ ID conservato: `boss-character-20`.
 
 ## Decisioni aperte
 
-- Il generico n.29 si chiama Tracciatore del Buio Astrale; il Boss di Plutone si chiama Predone della Penombra. La precedente nota di collisione e la proposta «Custode della Penombra» sono superate; le rinomine sono già applicate conservando gli ID.
+- Il generico n.29 si chiama Darev Ormavess, Vigilante degli Scarti; il Boss di Plutone si chiama Talviro Merqasin, Predone della Penombra. La precedente nota di collisione e la proposta «Custode della Penombra» sono superate; le rinomine sono già applicate conservando gli ID.
 - Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; entrambe le abilità del Boss Idra e della carta sbloccabile di cinque turni sono confermate; i dettagli operativi e le abilità e durate dei Boss 10–12 restano da definire individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.

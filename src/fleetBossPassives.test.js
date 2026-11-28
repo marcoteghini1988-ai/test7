@@ -59,7 +59,7 @@ test('Matriarca Tossica: colpo valido applica status e poi danneggia un sistema'
  const next=round(first.battle,order('engine'),order('engine'));
  assert.ok(next.battle.log.some(e=>e.text.includes('Neurotossina')));
 });
-test('Devastatore delle Ere punisce due speciali; Sifone ionico consuma solo il primo impulso',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta punisce due speciali; Sifone ionico consuma solo il primo impulso',()=>{
  const crono=match(6);
  assert.ok(round(crono,order('command',[0,1])).battle.log.some(e=>e.text.includes('Controtempo')));
  const ion=match(7);
@@ -67,14 +67,14 @@ test('Devastatore delle Ere punisce due speciali; Sifone ionico consuma solo il 
  const first=round(ion,order('command',[0]));
  assert.equal(first.battle.bossState.ionSiphonUsed,true);
 });
-test('Serpe delle Fosse Abissali: pressione quando la madre ha un vitale fratturato',()=>{
+test('Narevo Taqrenis, Domatore del Generatore: pressione quando la madre ha un vitale fratturato',()=>{
  const b=match(8);
  const fresh=round(b);
  assert.ok(!fresh.battle.log.some(e=>e.text.includes('Pressione degli abissi sul sistema')));
  const part=b.sides.A.ships[0].parts.find(p=>p.id==='engine');part.damage=1;
  assert.ok(round(b).battle.log.some(e=>e.text.includes('Pressione degli abissi sul sistema')));
 });
-test('Predone della Penombra sacrifica HP della propria evoluzione L3',()=>{
+test('Talviro Merqasin, Predone della Penombra sacrifica HP della propria evoluzione L3',()=>{
  const b=match(9,'N00','R04',1,3);b.round=2;
  const before=b.sides.B.escorts[0].hp;
  const next=round(b);

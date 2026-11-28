@@ -161,7 +161,7 @@ export function rememberTacticalIdraHit(side,damage,bonus,{vitalId=null}={}){
 }
 
 
-// Serpe delle Fosse Abissali — Marea del riciclo / Profondità tattica.
+// Narevo Taqrenis, Domatore del Generatore — Marea del riciclo / Profondità tattica.
 // Il riciclo esiste solo quando le carte numeriche esauriscono il
 // mazzo fisico e lo scarto è DAVVERO rimescolato. Un semplice scarto
 // o una carta speciale non attivano la passiva.
@@ -207,7 +207,7 @@ export function rememberTacticalLeviatanoHit(side,damage,bonus){
 }
 
 
-// Divoratore delle Scorie numeric deck — three independently graded passive
+// Odelio Vencaril, Divoratore delle Scorie numeric deck — three independently graded passive
 // abilities. This is NOT the planet-19 enemy's Magma cycle.
 // Risonanza termica: bonus only on the 3rd REAL shield hit (counts 1,2,3).
 // Corrosione ardente: real Corrosione card actually committed this round.
@@ -264,7 +264,7 @@ export function rememberTacticalMagmaVitalHit(side,damage,bonus){
 }
 
 
-// Custode dell’Antispazio NUMERIC deck, not the Encelado exclusive dominant-suit ability.
+// Irelvo Gernavul, Interdittore d’Armi NUMERIC deck, not the Encelado exclusive dominant-suit ability.
 // Ultimo presidio: 3 OWN destroyed vitals, exactly one remaining;
 // Vuoto difensivo: <=25% mother barrier at cycle start (when available).
 // Both share a bounded defensive factor, already in tacticalBossMotherFactor.

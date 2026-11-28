@@ -226,7 +226,7 @@ test('Audit LIVE: sei seed e 3 modelli in campagna senza PvP e senza carte grati
  assert.equal(results.length,4);
  assert.ok(results.every(r=>r.actions>0));
 });
-test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Devastatore delle Ere, Custode dell’Antispazio)',()=>{
+test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Tavren Qordelis, Stratega della Quarta Carta, Irelvo Gernavul, Interdittore d’Armi)',()=>{
  const chosen=[1,6,20];
  const results=chosen.map((id,i)=>{
   // Pianeti da catalogo storico: l'ID non equivale al loro indice.
@@ -360,10 +360,10 @@ test('Audit 12 boss contro tre navicelle a parita di livello e due seed',()=>{
 // non attribuisce a un boss una speciale che non ha pescato.
 test('Diagnostica 4 boss critici: uso speciale reale su 48 duelli multi-seed',()=>{
  const cases=[
-  {sector:60,bossId:8,name:'Serpe delle Fosse Abissali'},
-  {sector:70,bossId:9,name:'Predone della Penombra'},
+  {sector:60,bossId:8,name:'Narevo Taqrenis, Domatore del Generatore'},
+  {sector:70,bossId:9,name:'Talviro Merqasin, Predone della Penombra'},
   {sector:80,bossId:11,name:'Idra Criogenica'},
-  {sector:100,bossId:17,name:'Boss del Sacrificio'}
+  {sector:100,bossId:17,name:'Vamor Vemarquil, Sacrificatore degli Scarti'}
  ];
  const ships=['C01','E01','L04'],offsets=[1301,1531,1777,2017];
  const results=[];

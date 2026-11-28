@@ -95,14 +95,14 @@
     {
       "id": "character-general-05",
       "formerName": "Archivista",
-      "currentName": "Decifratrice degli Scarti",
+      "currentName": "Lirena Vessalun, Recuperatrice di Strategie",
       "reason": "Nome di personaggio/carta condiviso con il catalogo Magic; rinomina prudenziale",
       "source": "https://magic.wizards.com/it/news/card-image-gallery/strixhaven-school-of-mages-card-image-gallery"
     },
     {
       "id": "boss-character-1",
       "formerName": "Guardiano di Gaia",
-      "currentName": "Curatore delle Falde Vive",
+      "currentName": "Soreno Nerqavol, Guaritore di Flotta",
       "reason": "Somiglianza concettuale con Guardians of Gaia; rinomina prudenziale",
       "source": "https://store.steampowered.com/app/1718290/Guardians_Of_Gaia/"
     },
@@ -1280,7 +1280,7 @@
     {
       "group": "boss",
       "id": "boss-character-1",
-      "name": "Curatore delle Falde Vive",
+      "name": "Soreno Nerqavol, Guaritore di Flotta",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1301,7 +1301,7 @@
     {
       "group": "boss",
       "id": "boss-character-6",
-      "name": "Devastatore delle Ere",
+      "name": "Tavren Qordelis, Stratega della Quarta Carta",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1315,14 +1315,14 @@
     {
       "group": "boss",
       "id": "boss-character-8",
-      "name": "Serpe delle Fosse Abissali",
+      "name": "Narevo Taqrenis, Domatore del Generatore",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
     {
       "group": "boss",
       "id": "boss-character-9",
-      "name": "Predone della Penombra",
+      "name": "Talviro Merqasin, Predone della Penombra",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1336,35 +1336,35 @@
     {
       "group": "boss",
       "id": "boss-character-14",
-      "name": "Sovvertitore del Caso",
+      "name": "Averin Qarvenoth, Sovvertitore dei Turni",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
     {
       "group": "boss",
       "id": "boss-character-17",
-      "name": "Boss del Sacrificio",
+      "name": "Vamor Vemarquil, Sacrificatore degli Scarti",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
     {
       "group": "boss",
       "id": "boss-character-19",
-      "name": "Divoratore delle Scorie",
+      "name": "Odelio Vencaril, Divoratore delle Scorie",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
     {
       "group": "boss",
       "id": "boss-character-20",
-      "name": "Custode dell’Antispazio",
+      "name": "Irelvo Gernavul, Interdittore d’Armi",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
     {
       "group": "personaggi_generici",
       "id": "character-general-01",
-      "name": "Medico da campo",
+      "name": "Qemirun, Medica di Bordo",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1392,7 +1392,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-05",
-      "name": "Decifratrice degli Scarti",
+      "name": "Lirena Vessalun, Recuperatrice di Strategie",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1532,7 +1532,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-25",
-      "name": "Comandante d’Acciaio",
+      "name": "Telmuriq, Liberatore dell’Arsenale",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1560,7 +1560,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-29",
-      "name": "Tracciatore del Buio Astrale",
+      "name": "Darev Ormavess, Vigilante degli Scarti",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -2260,7 +2260,7 @@
     {
       "group": "armi_progettate_35",
       "id": "weapon-designed-metallic-impatto-comandante",
-      "name": "Impattatore del Comandante d’Acciaio",
+      "name": "Impattatore di Telmuriq",
       "source": "src/fleetNext/designedWeaponCards.js",
       "kind": "current"
     },
@@ -4510,18 +4510,20 @@
     {
       "cardId": "boss-character-1",
       "previousName": "Guardiano di Gaia",
-      "newName": "Curatore delle Falde Vive",
+      "newName": "Soreno Nerqavol, Guaritore di Flotta",
       "category": "boss",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "status": "approved-by-author-2026-11-28",
+      "intermediateName": "Curatore delle Falde Vive"
     },
     {
       "cardId": "character-general-05",
       "previousName": "Archivista",
-      "newName": "Decifratrice degli Scarti",
+      "newName": "Lirena Vessalun, Recuperatrice di Strategie",
       "category": "personaggi_generici",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "status": "approved-by-author-2026-11-28",
+      "intermediateName": "Decifratrice degli Scarti"
     },
     {
       "cardId": "weapon-designed-ionic-martello-tuono",
@@ -4626,6 +4628,94 @@
       "category": "carta_sistema_speciale",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "character-general-01",
+      "previousName": "Medico da campo",
+      "newName": "Qemirun, Medica di Bordo",
+      "category": "personaggi_generici",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "character-general-25",
+      "previousName": "Comandante d’Acciaio",
+      "newName": "Telmuriq, Liberatore dell’Arsenale",
+      "category": "personaggi_generici",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "character-general-29",
+      "previousName": "Tracciatore del Buio Astrale",
+      "newName": "Darev Ormavess, Vigilante degli Scarti",
+      "category": "personaggi_generici",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-6",
+      "previousName": "Devastatore delle Ere",
+      "newName": "Tavren Qordelis, Stratega della Quarta Carta",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-8",
+      "previousName": "Serpe delle Fosse Abissali",
+      "newName": "Narevo Taqrenis, Domatore del Generatore",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-9",
+      "previousName": "Predone della Penombra",
+      "newName": "Talviro Merqasin, Predone della Penombra",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-14",
+      "previousName": "Sovvertitore del Caso",
+      "newName": "Averin Qarvenoth, Sovvertitore dei Turni",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-17",
+      "previousName": "Boss del Sacrificio",
+      "newName": "Vamor Vemarquil, Sacrificatore degli Scarti",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-19",
+      "previousName": "Divoratore delle Scorie",
+      "newName": "Odelio Vencaril, Divoratore delle Scorie",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-20",
+      "previousName": "Custode dell’Antispazio",
+      "newName": "Irelvo Gernavul, Interdittore d’Armi",
+      "category": "boss",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "status": "approved-by-author-2026-11-28"
+    },
+    {
+      "cardId": "weapon-designed-metallic-impatto-comandante",
+      "previousName": "Impattatore del Comandante d’Acciaio",
+      "newName": "Impattatore di Telmuriq",
+      "category": "armi_progettate_35",
+      "reason": "Riferimento all’identità aggiornata del Personaggio 25; ID ed effetti invariati",
+      "status": "linked-name-update-2026-11-28"
     }
   ],
   "namesCompared": 437,

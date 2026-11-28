@@ -1,5 +1,19 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Decisione dell'autore sui nomi dei Personaggi — 28/11/2026
+
+L'autore ha scelto le dodici proposte presentate in conversazione: quattro
+Personaggi generici (ID 01, 05, 25, 29) e otto Boss (ID 1, 6, 8, 9, 14, 17,
+19, 20). I nomi correnti e lo stato di approvazione del **solo nome** sono in
+`docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json`; la mappatura completa è in
+`docs/RINOMINE_CARTE_PERSONAGGI_2026-11-28.md`. Anche l'Arma collegata al
+Personaggio 25 si chiama «Impattatore di Telmuriq». Conservare ID, abilità,
+rarità, sblocchi e risorse grafiche. Le illustrazioni finali delle carte
+Personaggio Boss restano in preparazione; approvare un nome non approva la
+meccanica di una scheda ancora proposta. I nomi precedenti citati nelle
+sezioni datate sotto sono storici. Le ricerche esatte preliminari non
+certificano la disponibilità dei marchi o l'assenza di segni simili.
+
 ## Nomi correnti dopo la revisione del 28/11/2026
 
 Il registro corrente `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`
@@ -12,19 +26,20 @@ Energia Acqua, Energia Ghiaccio, Energia Fulmine, Energia Terra, Energia
 Vento, Energia Luce, Energia Ombra, Energia Metallo, Energia Gravità**.
 Le proposte con «Riserva» sono state ritirate. Gli elementi non devono essere
 rinominati per una coincidenza di parole comuni con altri giochi. Fra le
-altre sette rinomine presenti nel codice: il Personaggio 05 **Decifratrice degli Scarti**, il
+altre sette rinomine presenti nel codice a quella data: il Personaggio 05 **Decifratrice degli Scarti**, il
 Boss 1 **Curatore delle Falde Vive**, la Strategia `sys-black-hole`
 **Collasso dei Due Campi**, il supporto C01 **Baluardo Eliovetro**, l'Arma
 `weapon-designed-ionic-martello-tuono` **Impattatore Folgorico**. Queste sette
-rinomine restano **provvisorie**, perché l'autore vuole vedere e scegliere
-i nomi nella conversazione prima di considerarli approvati. Non inserire
-nuove rinomine di carte o Personaggi prima della sua scelta. Gli ID, le rarità,
+rinomine erano **provvisorie**: i due nomi Personaggio sono stati sostituiti
+nella decisione successiva sopra; le altre cinque rimangono provvisorie.
+Non inserire ulteriori rinomine prima della scelta dell'autore. Gli ID, le rarità,
 le affinità e le abilità
 restano identici. Il modulo `singularity_core` è **Singolarità · Nodo di
 Assorbimento**. Le vecchie denominazioni nei documenti storici descrivono
 versioni precedenti; i nomi attivi sono nel registro e in
 `docs/RINOMINE_CARTE_PERSONAGGI_2026-11-28.md`. Le dodici carte Personaggio
-Boss restano prive di fronti approvati e portano etichette provvisorie.
+Boss restano prive di fronti approvati; otto hanno il nome scelto e quattro
+portano ancora etichette numerate provvisorie.
 Non presentare questa revisione come un'attestazione di libertà dei marchi.
 
 ## Rinomine prudenziali dopo la verifica dei marchi — 27/11/2026

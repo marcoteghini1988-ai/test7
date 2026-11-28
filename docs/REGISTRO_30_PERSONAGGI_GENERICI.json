@@ -48,7 +48,7 @@
   "characters": [
     {
       "id": "character-general-01",
-      "name": "Medico da campo",
+      "name": "Qemirun, Medica di Bordo",
       "rarity": "Comune",
       "category": "Personaggio",
       "element": null,
@@ -62,7 +62,8 @@
       ],
       "status": "confirmed",
       "playable": false,
-      "balancePending": true
+      "balancePending": true,
+      "nameStatus": "approved-2026-11-28"
     },
     {
       "id": "character-general-02",
@@ -126,7 +127,7 @@
     },
     {
       "id": "character-general-05",
-      "name": "Decifratrice degli Scarti",
+      "name": "Lirena Vessalun, Recuperatrice di Strategie",
       "rarity": "Comune",
       "category": "Personaggio",
       "element": null,
@@ -139,7 +140,8 @@
       ],
       "status": "confirmed",
       "playable": false,
-      "balancePending": true
+      "balancePending": true,
+      "nameStatus": "approved-2026-11-28"
     },
     {
       "id": "character-general-06",
@@ -569,7 +571,7 @@
     },
     {
       "id": "character-general-25",
-      "name": "Comandante d’Acciaio",
+      "name": "Telmuriq, Liberatore dell’Arsenale",
       "rarity": "Epica",
       "category": "Personaggio",
       "element": null,
@@ -579,7 +581,7 @@
       },
       "abilities": [
         "Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.",
-        "Attiva i potenziamenti dell'Impattatore del Comandante d'Acciaio alle soglie di HP già previste."
+        "Attiva i potenziamenti dell'Impattatore di Telmuriq alle soglie di HP già previste."
       ],
       "status": "proposed",
       "playable": false,
@@ -590,7 +592,8 @@
       ],
       "open": [
         "Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova."
-      ]
+      ],
+      "nameStatus": "approved-2026-11-28"
     },
     {
       "id": "character-general-26",
@@ -676,7 +679,7 @@
     },
     {
       "id": "character-general-29",
-      "name": "Tracciatore del Buio Astrale",
+      "name": "Darev Ormavess, Vigilante degli Scarti",
       "rarity": "Leggendaria",
       "category": "Personaggio",
       "element": null,
@@ -699,7 +702,8 @@
       ],
       "open": [
         "Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova."
-      ]
+      ],
+      "nameStatus": "approved-2026-11-28"
     },
     {
       "id": "character-general-30",
