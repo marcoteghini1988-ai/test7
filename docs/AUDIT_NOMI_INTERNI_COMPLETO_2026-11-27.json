@@ -118,17 +118,47 @@
     {
       "id": "energy-plasma",
       "formerName": "Energia Fuoco",
-      "currentName": "Riserva Braciotramata",
-      "reason": "Famiglia di carte rinominata insieme alle altre nove per distinguersi dai nomi delle Energie Pokémon; l’affinità Fuoco non cambia",
+      "currentName": "Energia Fuoco",
+      "reason": "Nome descrittivo originario ripristinato per decisione dell’autore; la coincidenza con altri cataloghi non conferisce copyright sulle parole degli elementi. Nome completo e presentazione da valutare separatamente.",
       "source": "https://www.pokemon.com/it/approfondimenti/tre-mazzi-dell-espansione-spada-e-scudo-tempesta-argentata-con-protagonisti-ho-oh-v-chesnaught-v-e-wailord"
     }
   ],
   "secondPassNameReview": [
-    {"id": "energy-plasma", "intermediateName": "Riserva Pirofusa / Pyrofused Reserve", "currentName": "Riserva Braciotramata / Braciotramata Reserve", "similaritySource": "https://oldschoolmags.com/mags/SuperBMX_8104.pdf"},
-    {"id": "energy-cryogenic", "intermediateName": "Riserva Crioviva / Cryovive Reserve", "currentName": "Riserva Gelitessuta / Gelitessuta Reserve", "similaritySource": "https://ttabvue.uspto.gov/ttabvue/v?pnam=Vive+Health%2C+LLC++"},
-    {"id": "energy-ionic", "intermediateName": "Riserva Ionolampo / Ionoflash Reserve", "currentName": "Riserva Saettatrama / Saettatrama Reserve", "similaritySource": "https://ioniflash.com/"},
-    {"id": "energy-mineral", "intermediateName": "Riserva Georisonante / Georesonant Reserve", "currentName": "Riserva Rocciatrama / Rocciatrama Reserve", "similaritySource": "https://www.atlantisbahamas.com/the-dig-tour"},
-    {"id": "energy-metallic", "intermediateName": "Riserva Ferropulsiva / Ferropulse Reserve", "currentName": "Riserva Ferrintrama / Ferrintrama Reserve", "similaritySource": "https://ferropulse.com/"}
+    {
+      "id": "energy-plasma",
+      "intermediateName": "Riserva Pirofusa / Pyrofused Reserve",
+      "similaritySource": "https://oldschoolmags.com/mags/SuperBMX_8104.pdf",
+      "provisionalName": "Riserva Braciotramata / Braciotramata Reserve",
+      "restoredName": "Energia Fuoco"
+    },
+    {
+      "id": "energy-cryogenic",
+      "intermediateName": "Riserva Crioviva / Cryovive Reserve",
+      "similaritySource": "https://ttabvue.uspto.gov/ttabvue/v?pnam=Vive+Health%2C+LLC++",
+      "provisionalName": "Riserva Gelitessuta / Gelitessuta Reserve",
+      "restoredName": "Energia Ghiaccio"
+    },
+    {
+      "id": "energy-ionic",
+      "intermediateName": "Riserva Ionolampo / Ionoflash Reserve",
+      "similaritySource": "https://ioniflash.com/",
+      "provisionalName": "Riserva Saettatrama / Saettatrama Reserve",
+      "restoredName": "Energia Fulmine"
+    },
+    {
+      "id": "energy-mineral",
+      "intermediateName": "Riserva Georisonante / Georesonant Reserve",
+      "similaritySource": "https://www.atlantisbahamas.com/the-dig-tour",
+      "provisionalName": "Riserva Rocciatrama / Rocciatrama Reserve",
+      "restoredName": "Energia Terra"
+    },
+    {
+      "id": "energy-metallic",
+      "intermediateName": "Riserva Ferropulsiva / Ferropulse Reserve",
+      "similaritySource": "https://ferropulse.com/",
+      "provisionalName": "Riserva Ferrintrama / Ferrintrama Reserve",
+      "restoredName": "Energia Metallo"
+    }
   ],
   "caveats": [
     "Un inventario di fonti principali non prova che ogni stringa del repository sia stata esaminata.",
@@ -138,7 +168,8 @@
     "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie.",
     "Altri riferimenti storici a Crono permangono in log, test e meccaniche legacy: da distinguere dalle stringhe effettivamente mostrate.",
     "La provenienza degli asset grafici, dei video e del font non risulta certificata da questo audit.",
-    "Il confronto dei 460 nomi verifica i cataloghi interni; la ricerca esterna sui nomi nuovi è preliminare. Non risultano ricerche ufficiali nominative complete UIBM/TMview/WIPO per tutti i nomi, né è attestata l’assenza di marchi simili."
+    "Il confronto dei 460 nomi verifica i cataloghi interni; la ricerca esterna sui nomi nuovi è preliminare. Non risultano ricerche ufficiali nominative complete UIBM/TMview/WIPO per tutti i nomi, né è attestata l’assenza di marchi simili.",
+    "Le dieci carte Energia hanno ripreso i nomi descrittivi originari. Sette ulteriori rinomine visibili nel codice sono ancora provvisorie in attesa della decisione dell’autore."
   ],
   "currentNames": [
     {
@@ -3049,70 +3080,70 @@
     {
       "group": "carte_energia",
       "id": "energy-plasma",
-      "name": "Riserva Braciotramata",
+      "name": "Energia Fuoco",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-refrigerant",
-      "name": "Riserva Idropressa",
+      "name": "Energia Acqua",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-cryogenic",
-      "name": "Riserva Gelitessuta",
+      "name": "Energia Ghiaccio",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-ionic",
-      "name": "Riserva Saettatrama",
+      "name": "Energia Fulmine",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-mineral",
-      "name": "Riserva Rocciatrama",
+      "name": "Energia Terra",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-aerial",
-      "name": "Riserva Aerotorsiva",
+      "name": "Energia Vento",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-radiant",
-      "name": "Riserva Fotoprismatica",
+      "name": "Energia Luce",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-void",
-      "name": "Riserva Umbradensa",
+      "name": "Energia Ombra",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-metallic",
-      "name": "Riserva Ferrintrama",
+      "name": "Energia Metallo",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-gravity",
-      "name": "Riserva Gravitessuta",
+      "name": "Energia Gravità",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
@@ -4680,82 +4711,82 @@
     {
       "cardId": "energy-plasma",
       "previousName": "Energia Fuoco",
-      "newName": "Riserva Braciotramata",
+      "newName": "Energia Fuoco",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-refrigerant",
       "previousName": "Energia Acqua",
-      "newName": "Riserva Idropressa",
+      "newName": "Energia Acqua",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-cryogenic",
       "previousName": "Energia Ghiaccio",
-      "newName": "Riserva Gelitessuta",
+      "newName": "Energia Ghiaccio",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-ionic",
       "previousName": "Energia Fulmine",
-      "newName": "Riserva Saettatrama",
+      "newName": "Energia Fulmine",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-mineral",
       "previousName": "Energia Terra",
-      "newName": "Riserva Rocciatrama",
+      "newName": "Energia Terra",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-aerial",
       "previousName": "Energia Vento",
-      "newName": "Riserva Aerotorsiva",
+      "newName": "Energia Vento",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-radiant",
       "previousName": "Energia Luce",
-      "newName": "Riserva Fotoprismatica",
+      "newName": "Energia Luce",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-void",
       "previousName": "Energia Ombra",
-      "newName": "Riserva Umbradensa",
+      "newName": "Energia Ombra",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-metallic",
       "previousName": "Energia Metallo",
-      "newName": "Riserva Ferrintrama",
+      "newName": "Energia Metallo",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "energy-gravity",
       "previousName": "Energia Gravità",
-      "newName": "Riserva Gravitessuta",
+      "newName": "Energia Gravità",
       "category": "carte_energia",
-      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
-      "status": "renamed-in-catalogue-2026-11-28"
+      "reason": "Rinominata provvisoriamente e poi ripristinata nel nome originario con elemento esplicito, su scelta dell’autore; ID e meccanica invariati.",
+      "status": "restored-original-2026-11-28"
     },
     {
       "cardId": "sys-black-hole",

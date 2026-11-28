@@ -16,7 +16,7 @@ test('English is the default for every core text, including name, full effect an
  for(const id of LOCALIZED_WEAPON_CARD_IDS.filter(id=>id.startsWith(CORE_FAMILY))){
   const fields=cardTextFields(id),text=localizedCardText(card(id));
   assert.deepEqual(fields.slice(0,2).map(f=>f.text),['GROWING THUNDER','CORE CANNON']);
-  assert.equal(text.name,'Growing Thunder Core Cannon');assert.match(text.description,/play a new Saettatrama Reserve card/);
+  assert.equal(text.name,'Growing Thunder Core Cannon');assert.match(text.description,/play a new Lightning Energy card/);
   assert.equal(fields[2].text,'WEAPON');assert.equal(fields[5].text,'LIGHTNING');
   assert.equal(fields[10].text,WEAPON_NEAR_FINAL_BY_ID[id].effectSpec.weaponProfile.damageStages.join(' / '));
  }
@@ -56,14 +56,8 @@ test('Migration backgrounds are verified RGBA HD assets and original approved ca
  }
 });
 test('Native Energy card names and full effects share the locale without changing their charge count',()=>{
- const englishNames=new Set(),italianNames=new Set();
  for(const c of ENERGY_CARDS){
-  const text=localizedCardText(c,'en');assert.match(text.name,/Reserve$/);assert.match(text.description,new RegExp('Adds '+c.effectSpec.charges+' '));
-  const italian=localizedCardText(c,'it');
-  assert.doesNotMatch(text.name,/void|gravity|Energia/);
-  assert.equal(italian.name,c.name);assert.match(italian.name,/^Riserva /);
-  assert.doesNotMatch(italian.name,/^Energia (Fuoco|Acqua|Metallo|Fulmine|Terra|Vento|Luce|Ombra|Ghiaccio|Gravità)$/);
-  englishNames.add(text.name);italianNames.add(italian.name);
+  const text=localizedCardText(c,'en');assert.match(text.name,/Energy$/);assert.match(text.description,new RegExp('Adds '+c.effectSpec.charges+' '));
+  assert.doesNotMatch(text.name,/void|gravity|Energia/);assert.match(localizedCardText(c,'it').name,/^Energia /);
  }
- assert.equal(englishNames.size,10);assert.equal(italianNames.size,10);
 });

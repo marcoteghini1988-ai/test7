@@ -9,19 +9,10 @@ export const ENERGY_RARITIES=Object.freeze(['Comune','Rara','Epica','Leggendaria
 export const ENERGY_CHARGES_BY_RARITY=Object.freeze({Comune:1,Rara:2,Epica:3,Leggendaria:4});
 export const ENERGY_RARITY_SUFFIX=Object.freeze({Comune:'',Rara:'-r',Epica:'-e',Leggendaria:'-l'});
 export const ENERGY_ELEMENT_COUNT=Object.keys(FLEET_ELEMENTS).length;
-// I nomi delle carte sono distinti dalle affinità elementali: gli ID, i costi e
-// i simboli continuano a usare FLEET_ELEMENTS.
-export const ENERGY_FAMILY_NAMES=Object.freeze({
- plasma:'Riserva Braciotramata',refrigerant:'Riserva Idropressa',
- cryogenic:'Riserva Gelitessuta',ionic:'Riserva Saettatrama',
- mineral:'Riserva Rocciatrama',aerial:'Riserva Aerotorsiva',
- radiant:'Riserva Fotoprismatica',void:'Riserva Umbradensa',
- metallic:'Riserva Ferrintrama',gravity:'Riserva Gravitessuta'
-});
 export const energyIdForRarity=(elementId,rarity)=>FLEET_ELEMENTS[elementId]&&
  Object.hasOwn(ENERGY_RARITY_SUFFIX,rarity)?'energy-'+elementId+ENERGY_RARITY_SUFFIX[rarity]:null;
 export const energyCardDescription=(elementName,charges)=>
- 'Aggiungi '+charges+(charges===1?' carica':' cariche')+' dell\'elemento '+elementName+
+ 'Aggiungi '+charges+(charges===1?' carica':' cariche')+' Energia '+elementName+
  ' alla pila unica senza limite. La carta resta nella pila fino al consumo dell\'ultima carica; solo allora va negli scarti. Alimenta Speciali e Armi compatibili.';
 export const ENERGY_CARDS=Object.freeze(Object.entries(FLEET_ELEMENTS).flatMap(([elementId,element])=>
  ENERGY_RARITIES.map(rarity=>{
@@ -29,7 +20,7 @@ export const ENERGY_CARDS=Object.freeze(Object.entries(FLEET_ELEMENTS).flatMap((
   const id=energyIdForRarity(elementId,rarity);
   const effectText=energyCardDescription(element.name,charges);
   return Object.freeze({
-   id,name:ENERGY_FAMILY_NAMES[elementId],nome:ENERGY_FAMILY_NAMES[elementId],
+   id,name:'Energia '+element.name,nome:'Energia '+element.name,
    rarita:rarity,rarity,charges,energyCharges:charges,
    categoria:'Energia',category:'Energia',sottotipo:'Carica elementale',
    kind:'support',playable:true,nativeFace:true,maxCopiesPerDeck:ENERGY_COPIES_PER_DECK,
@@ -46,8 +37,6 @@ export const ENERGY_BASE_CARDS=Object.freeze(ENERGY_CARDS.filter(c=>c.rarita==='
 export const ENERGY_CARD_COUNT=ENERGY_CARDS.length;
 export const isEnergyCard=id=>Object.hasOwn(ENERGY_CARD_BY_ID,id);
 if(ENERGY_ELEMENT_COUNT!==10||ENERGY_CARD_COUNT!==40||
- Object.keys(ENERGY_FAMILY_NAMES).length!==10||
- new Set(Object.values(ENERGY_FAMILY_NAMES)).size!==10||
  ENERGY_BASE_CARDS.length!==10||new Set(ENERGY_CARDS.map(c=>c.id)).size!==40||
  ENERGY_CARDS.some(c=>!Number.isInteger(c.charges)||c.charges<1||c.charges>4))
  throw Error('Quaranta Carte Energia, dieci per ogni rarità, obbligatorie');

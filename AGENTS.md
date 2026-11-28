@@ -3,12 +3,20 @@
 ## Nomi correnti dopo la revisione del 28/11/2026
 
 Il registro corrente `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`
-elenca 460 denominazioni e annota 17 etichette rinominate nella revisione
-del 28/11. Fra queste: il Personaggio 05 **Decifratrice degli Scarti**, il
+elenca 460 denominazioni. Il 28/11, su indicazione dell'autore, le dieci
+famiglie di carte Energia sono tornate ai nomi originali **Energia Fuoco,
+Energia Acqua, Energia Ghiaccio, Energia Fulmine, Energia Terra, Energia
+Vento, Energia Luce, Energia Ombra, Energia Metallo, Energia Gravità**.
+Le proposte con «Riserva» sono state ritirate. Gli elementi non devono essere
+rinominati per una coincidenza di parole comuni con altri giochi. Fra le
+altre sette rinomine presenti nel codice: il Personaggio 05 **Decifratrice degli Scarti**, il
 Boss 1 **Curatore delle Falde Vive**, la Strategia `sys-black-hole`
 **Collasso dei Due Campi**, il supporto C01 **Baluardo Eliovetro**, l'Arma
-`weapon-designed-ionic-martello-tuono` **Impattatore Folgorico** e le dieci
-famiglie Energia **Riserva**. Gli ID, le rarità, le affinità e le abilità
+`weapon-designed-ionic-martello-tuono` **Impattatore Folgorico**. Queste sette
+rinomine restano **provvisorie**, perché l'autore vuole vedere e scegliere
+i nomi nella conversazione prima di considerarli approvati. Non inserire
+nuove rinomine di carte o Personaggi prima della sua scelta. Gli ID, le rarità,
+le affinità e le abilità
 restano identici. Il modulo `singularity_core` è **Singolarità · Nodo di
 Assorbimento**. Le vecchie denominazioni nei documenti storici descrivono
 versioni precedenti; i nomi attivi sono nel registro e in

@@ -4,5 +4,5 @@
  "duration":"DURATA","turns":"TURNI","damage":"DANNO / HP","base":"BASE","support":"/ SUPPORTO VIVO",
  "requirement":"OGNI TURNO PROPRIO","conditions":["GIOCA NUOVA ENERGIA","SENZA: NESSUN COLPO","ALLEATI: NESSUN COSTO HP"],
  "target":"1 BERSAGLIO","shots":"1 COLPO / TURNO",
- "description":"Dura 3 tuoi turni. Ogni colpo richiede una nuova Riserva Saettatrama giocata e consuma 1 carica. Infligge {base} HP nominali piu {bonus} HP per ogni supporto alleato vivo, senza sacrificare HP alleati. Saltare un pagamento salta il colpo di quel turno; puo riprendere nei turni rimasti. Difese e copertura si applicano normalmente."
+ "description":"Dura 3 tuoi turni. Ogni colpo richiede una nuova carta Energia Fulmine giocata e consuma 1 carica. Infligge {base} HP nominali piu {bonus} HP per ogni supporto alleato vivo, senza sacrificare HP alleati. Saltare un pagamento salta il colpo di quel turno; puo riprendere nei turni rimasti. Difese e copertura si applicano normalmente."
 }

@@ -9,6 +9,9 @@ denominazioni correnti distinte**: questo numero include anche 16 Personaggi
 generici ancora **proposti**. I 42 Personaggi sono 30 generici più 12 Boss;
 solo 14 generici sono confermati. Le dodici carte Personaggio Boss illustrate
 non sono ancora approvate e nel gioco mantengono etichette temporanee.
+Le sette rinomine qui sotto sono già nel codice ma l'autore non ne ha ancora
+approvato i nomi: presentarle come **provvisorie** e non introdurre altre
+rinomine prima di proporle nella conversazione.
 
 | ID invariato | Nome precedente | Nome corrente | Motivo della modifica |
 | --- | --- | --- | --- |
@@ -28,48 +31,50 @@ elemento o asset illustrativo è stato cambiato.
 
 ## Dieci famiglie Energia, quaranta carte
 
-Ogni famiglia conserva lo stesso elemento e le quattro rarità, da una a
-quattro cariche. Le affinità Fuoco, Acqua e così via restano termini che
-identificano il funzionamento; il **nome della carta** diventa distinto
-dalla formula «Energia + elemento» presente nel GCC Pokémon.
+Per decisione dell'autore, i nomi comprensibili delle carte Energia tornano
+alla formula originaria **Energia + elemento**. Le dieci parole Fuoco, Acqua,
+Ghiaccio, Fulmine, Terra, Vento, Luce, Ombra, Metallo e Gravità designano
+le affinità del gioco. Ogni famiglia mantiene quattro rarità e da una a
+quattro cariche. La corrispondenza di alcuni nomi descrittivi con Pokémon
+non attribuisce a quel gioco il copyright sulle singole parole degli
+elementi; il nome completo, l'illustrazione e la presentazione restano temi
+distinti di verifica. Nessuna nuova famiglia di nomi va inserita senza
+proposta e decisione dell'autore.
 
 | Elemento | ID comune | Nome italiano | Nome inglese |
 | --- | --- | --- | --- |
-| Fuoco | `energy-plasma` | Riserva Braciotramata | Braciotramata Reserve |
-| Acqua | `energy-refrigerant` | Riserva Idropressa | Hydropressed Reserve |
-| Ghiaccio | `energy-cryogenic` | Riserva Gelitessuta | Gelitessuta Reserve |
-| Fulmine | `energy-ionic` | Riserva Saettatrama | Saettatrama Reserve |
-| Terra | `energy-mineral` | Riserva Rocciatrama | Rocciatrama Reserve |
-| Vento | `energy-aerial` | Riserva Aerotorsiva | Aerotorsion Reserve |
-| Luce | `energy-radiant` | Riserva Fotoprismatica | Photoprismatic Reserve |
-| Ombra | `energy-void` | Riserva Umbradensa | Umbradense Reserve |
-| Metallo | `energy-metallic` | Riserva Ferrintrama | Ferrintrama Reserve |
-| Gravità | `energy-gravity` | Riserva Gravitessuta | Gravithread Reserve |
+| Fuoco | `energy-plasma` | Energia Fuoco | Fire Energy |
+| Acqua | `energy-refrigerant` | Energia Acqua | Water Energy |
+| Ghiaccio | `energy-cryogenic` | Energia Ghiaccio | Ice Energy |
+| Fulmine | `energy-ionic` | Energia Fulmine | Lightning Energy |
+| Terra | `energy-mineral` | Energia Terra | Earth Energy |
+| Vento | `energy-aerial` | Energia Vento | Wind Energy |
+| Luce | `energy-radiant` | Energia Luce | Light Energy |
+| Ombra | `energy-void` | Energia Ombra | Shadow Energy |
+| Metallo | `energy-metallic` | Energia Metallo | Metal Energy |
+| Gravità | `energy-gravity` | Energia Gravità | Gravity Energy |
 
-Il codice delle carte usa nomi italiani distinti, mentre il livello di testo
+Il codice delle carte usa i nomi italiani originari; il livello di testo
 mostra la traduzione inglese quando la lingua predefinita è `en`. Le
-descrizioni continuano a indicare l'elemento e le cariche spendibili. Le
-referenze meccaniche alle carte fisiche sono state aggiornate dove il nome
-specifico serve a capire l'effetto.
+descrizioni indicano l'elemento e le cariche spendibili. ID, rarità,
+effetti, affinità e illustrazioni restano invariati.
 
 ### Seconda verifica delle famiglie Energia, 28 novembre
 
-Una seconda ricerca ha trovato corrispondenze o somiglianze che erano sfuggite
-alla prima passata. Sono state quindi sostituite anche le denominazioni
-intermedie: **Pirofusa/Pyrofused → Braciotramata**,
+Una seconda ricerca aveva trovato corrispondenze o somiglianze nelle
+denominazioni sperimentali: **Pirofusa/Pyrofused → Braciotramata**,
 **Crioviva/Cryovive → Gelitessuta**,
 **Ionolampo/Ionoflash → Saettatrama**,
 **Georisonante/Georesonant → Rocciatrama** e
-**Ferropulsiva/Ferropulse → Ferrintrama**. La parola *Reserve* rimane la
-traduzione di *Riserva*, mentre il secondo termine è un nome proprio della
-famiglia, identico nelle due lingue. Le corrispondenze rilevate includono
+**Ferropulsiva/Ferropulse → Ferrintrama**. Tutte queste denominazioni con
+*Riserva/Reserve* sono ora **ritirate** a favore dei nomi originari con
+l'elemento esplicito. Le corrispondenze rilevate includevano
 *PyroFused™* in una pubblicità Scorpion BMX, *CRIOVIVA* in un bollettino
 brasiliano dei marchi, *CRYOVIVE* nei documenti USPTO, il prodotto
 *IONIFLASH MACH®* del produttore e *FERROPULSE* come nome di un'app.
 *Georesonant* compare inoltre nel nome di un dispositivo di un'ambientazione
-fittizia. Questo
-controllo non stabilisce se tali usi comportino un divieto giuridico per il
-gioco: la sostituzione segue la scelta prudenziale dell'autore.
+fittizia. Il controllo non stabiliva se tali usi comportassero un divieto
+giuridico per il gioco.
 
 Fonti per la seconda verifica:
 [Scorpion BMX](https://oldschoolmags.com/mags/SuperBMX_8104.pdf),
@@ -86,10 +91,9 @@ Fonti per la seconda verifica:
 - [Bungie: Bastione solare](https://help.bungie.net/hc/it/articles/360048720192-Problemi-conosciuti-e-informazioni-vitali-Archivio-anno-1-e-2-di-Destiny-2) e [Steam: Guardians of Gaia](https://store.steampowered.com/app/1718290/Guardians_Of_Gaia/) documentano gli usi preesistenti citati.
 - [Wizards of the Coast: Archivista a Ingranaggi](https://magic.wizards.com/it/news/card-image-gallery/strixhaven-school-of-mages-card-image-gallery) documenta il termine in una carta Magic; *Archivista* compare anche come nome di carta del gioco.
 
-La ricerca testuale preliminare non ha evidenziato nelle risposte consultate
-coincidenze esatte dei nuovi titoli composti dopo la seconda revisione. Ha
-però individuato somiglianze nelle denominazioni intermedie, poi sostituite;
-la ricerca web non è esaustiva. Restano da valutare **segni simili e marchi** nei
+La ricerca web fatta sulle denominazioni sperimentali non è esaustiva. Per
+le carte Energia sono stati ripristinati i nomi originari su scelta
+dell'autore. Restano da valutare **segni simili e marchi** nei
 territori e nelle categorie pertinenti tramite UIBM/TMview e altri registri,
 nonché i nomi delle carte che saranno ancora progettate. Nessun nome viene
 certificato libero; la scelta del titolo commerciale del gioco è rimandata
