@@ -28,7 +28,7 @@
     {
       "id": "nx-n00-02",
       "shipId": "N00",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Raffica di prova",
       "effectText": "Spara due colpi leggeri contro la stessa unità. Ogni colpo incontra separatamente le sue protezioni.",
@@ -41,7 +41,7 @@
     {
       "id": "nx-n00-03",
       "shipId": "N00",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Tiro di smontaggio",
       "effectText": "Colpisci normalmente. Se scegli un modulo aggiunto della madre, infliggi due danni invece di uno.",
@@ -158,7 +158,7 @@
     {
       "id": "nx-c01-02",
       "shipId": "C01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Sorpasso solare",
       "effectText": "Aggira le unità e infliggi un colpo leggero a un vitale. Non può ricevere Perforazione.",
@@ -171,7 +171,7 @@
     {
       "id": "nx-c01-03",
       "shipId": "C01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Artiglio di coda",
       "effectText": "Infliggi tre danni a un’unità già danneggiata, oppure un colpo leggero a un’altra unità.",
@@ -249,7 +249,7 @@
     {
       "id": "nx-c01-09",
       "shipId": "C01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 4,
       "name": "Disimpegno armato",
       "effectText": "Colpisci normalmente un’unità; poi puoi riprendere in mano il tuo modulo d’arma, conservandone i danni.",
@@ -262,7 +262,7 @@
     {
       "id": "nx-c01-10",
       "shipId": "C01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Incursione cremisi",
       "effectText": "Scarta un tuo modulo operativo: colpisci un vitale con Aggiramento e ignora una protezione scoperta.",
@@ -288,7 +288,7 @@
     {
       "id": "nx-c02-02",
       "shipId": "C02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Scheggia riflessa",
       "effectText": "Colpisci un’unità. Se il colpo è bloccato, infliggi un colpo leggero a un’altra unità scelta.",
@@ -353,7 +353,7 @@
     {
       "id": "nx-c02-07",
       "shipId": "C02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 2,
       "name": "Geometria spezzata",
       "effectText": "Spara tre colpi leggeri: assegnane due a un’unità e uno a una seconda unità.",
@@ -392,7 +392,7 @@
     {
       "id": "nx-c02-10",
       "shipId": "C02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Rosa di cristallo",
       "effectText": "Con entrambi i supporti operativi, spara tre colpi leggeri su bersagli distinti e raggiungibili.",
@@ -418,7 +418,7 @@
     {
       "id": "nx-c03-02",
       "shipId": "C03",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Dardo intermittente",
       "effectText": "Infliggi un colpo leggero a un’unità e silenziane la passiva per il prossimo turno avversario.",
@@ -483,7 +483,7 @@
     {
       "id": "nx-c03-07",
       "shipId": "C03",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 2,
       "name": "Cortocircuito mirato",
       "effectText": "Infliggi un colpo leggero a una macchina. Se la danneggi, disattivala fino alla fine del prossimo turno avversario.",
@@ -548,7 +548,7 @@
     {
       "id": "nx-r01-02",
       "shipId": "R01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Tiro d’assedio",
       "effectText": "Prepara un colpo pesante contro un’unità. Lo eseguirai all’inizio del prossimo tuo turno, se l’Arsenale funziona.",
@@ -561,7 +561,7 @@
     {
       "id": "nx-r01-03",
       "shipId": "R01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Salva di taratura",
       "effectText": "Spara un colpo leggero. Se danneggia un’unità, il tuo colpo preparato contro quella stessa unità infligge due danni aggiuntivi.",
@@ -613,7 +613,7 @@
     {
       "id": "nx-r01-07",
       "shipId": "R01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 2,
       "name": "Camera Gemella Binaria",
       "effectText": "Prepara due colpi leggeri contro la stessa unità, da eseguire all’inizio del prossimo tuo turno.",
@@ -652,7 +652,7 @@
     {
       "id": "nx-r01-10",
       "shipId": "R01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Triangolazione Falco",
       "effectText": "Con entrambi i supporti operativi, prepara un colpo pesante su un’unità e un colpo leggero su un’altra.",
@@ -678,7 +678,7 @@
     {
       "id": "nx-r02-02",
       "shipId": "R02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Arco di scarica",
       "effectText": "Colpisci un’unità. Puoi spendere un’energia per silenziarne la passiva nel prossimo turno avversario, se subisce danno.",
@@ -769,7 +769,7 @@
     {
       "id": "nx-r02-09",
       "shipId": "R02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 4,
       "name": "Scarica totale",
       "effectText": "Spendi due energie: infliggi tre danni a una macchina e, se sopravvive, disattivala per il prossimo turno avversario.",
@@ -808,7 +808,7 @@
     {
       "id": "nx-r04-02",
       "shipId": "R04",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Morso del Vuoto",
       "effectText": "Colpisci un’unità. Se un tuo supporto è danneggiato, ignora una protezione scoperta di quel bersaglio.",
@@ -860,7 +860,7 @@
     {
       "id": "nx-r04-06",
       "shipId": "R04",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Siluro di ritorsione",
       "effectText": "Sacrifica una tua macchina danneggiata: infliggi un colpo pesante a un’unità nemica.",
@@ -899,7 +899,7 @@
     {
       "id": "nx-r04-09",
       "shipId": "R04",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 4,
       "name": "Risposta spietata",
       "effectText": "Se un attacco avversario ha distrutto una tua unità nel suo ultimo turno, aggira le unità e colpisci un vitale.",
@@ -938,7 +938,7 @@
     {
       "id": "nx-e01-02",
       "shipId": "E01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Ago nella nebbia",
       "effectText": "Colpisci un’unità. Se nel tuo campo c’è un supporto occultato, il colpo ignora una protezione scoperta.",
@@ -1003,7 +1003,7 @@
     {
       "id": "nx-e01-07",
       "shipId": "E01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 2,
       "name": "Nebbia polare",
       "effectText": "Infliggi un colpo leggero a un’unità. Se subisce danno, non può ricevere protezioni nel prossimo turno avversario.",
@@ -1068,7 +1068,7 @@
     {
       "id": "nx-e02-02",
       "shipId": "E02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Onda a pettine",
       "effectText": "Infliggi un colpo leggero a ciascuna unità nemica operativa, fino a quattro. Non colpisce la madre.",
@@ -1081,7 +1081,7 @@
     {
       "id": "nx-e02-03",
       "shipId": "E02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Fulmine di rimbalzo",
       "effectText": "Spara un colpo leggero a un’unità. Se la distrugge, esegui un colpo normale su un’altra unità.",
@@ -1120,7 +1120,7 @@
     {
       "id": "nx-e02-06",
       "shipId": "E02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Ripresa del tuono",
       "effectText": "Infliggi tre danni a un’unità che hai danneggiato nel turno precedente. Altrimenti infliggi un colpo leggero.",
@@ -1133,7 +1133,7 @@
     {
       "id": "nx-e02-07",
       "shipId": "E02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 2,
       "name": "Scarica selettiva",
       "effectText": "Distribuisci tre colpi leggeri fra due unità: due alla prima e uno alla seconda, ignorando una protezione sul colpo singolo.",
@@ -1172,7 +1172,7 @@
     {
       "id": "nx-e02-10",
       "shipId": "E02",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Quadrante di Vortiluce",
       "effectText": "Con due supporti operativi, infliggi due colpi leggeri a ciascuna di due unità diverse.",
@@ -1198,7 +1198,7 @@
     {
       "id": "nx-l01-02",
       "shipId": "L01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Pioggia reale",
       "effectText": "Con due supporti operativi, scegli: un colpo pesante a un’unità oppure due colpi leggeri a due unità diverse.",
@@ -1289,7 +1289,7 @@
     {
       "id": "nx-l01-09",
       "shipId": "L01",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 4,
       "name": "Giudizio coordinato",
       "effectText": "Scarta una protezione scoperta su un tuo supporto: quel supporto esegue un colpo pesante su un’unità.",
@@ -1328,7 +1328,7 @@
     {
       "id": "nx-l03-02",
       "shipId": "L03",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Tiro d’Assedio Ossidiano",
       "effectText": "Prepara un colpo pesante contro una macchina. Al rilascio ignora una protezione scoperta su quella macchina.",
@@ -1341,7 +1341,7 @@
     {
       "id": "nx-l03-03",
       "shipId": "L03",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Frattura d’assedio",
       "effectText": "Colpisci normalmente un’unità; se aveva una protezione scoperta alla dichiarazione, ignora la corazza che riduce quel colpo.",
@@ -1432,7 +1432,7 @@
     {
       "id": "nx-l03-10",
       "shipId": "L03",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Sentenza del Titano",
       "effectText": "Con la fusione operativa, prepara due colpi pesanti sulla stessa unità per il prossimo tuo turno.",
@@ -1458,7 +1458,7 @@
     {
       "id": "nx-l04-02",
       "shipId": "L04",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 1,
       "name": "Raggio conservativo",
       "effectText": "Infliggi un colpo leggero a un’unità. Se la danneggi, ripara un punto a un tuo supporto vivo scelto.",
@@ -1562,7 +1562,7 @@
     {
       "id": "nx-l04-10",
       "shipId": "L04",
-      "type": "Attacco",
+      "type": "Strategia",
       "minShipLevel": 5,
       "name": "Convergenza astrale",
       "effectText": "Con due fusioni operative, esegui un colpo pesante su ciascuna di due unità nemiche diverse.",

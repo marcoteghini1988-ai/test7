@@ -5,7 +5,7 @@ import {EXCLUSIVE_CARDS,FUSION_SHIP_CARDS} from './fleetNext/rules.js';
 import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
 const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
-const types=['Modulo utilità','Modulo d’arma','Attacco','Difesa','Trappola','Tattica','Personaggio','Fusione'];
+const types=['Modulo utilità','Modulo d’arma','Strategia','Difesa','Trappola','Tattica','Personaggio','Fusione'];
 
 test('Catalogo sorgente storico: 120 carte ragionate, dieci per madre',()=>{
  assert.equal(design.cards.length,120);
@@ -27,6 +27,12 @@ test('Catalogo sorgente storico: 120 carte ragionate, dieci per madre',()=>{
   assert.match(c.state,/executable-in-combat-v[12]/,'Tutte le 120 carte devono essere state implementate');
  }
  assert.equal(design.cards.filter(c=>c.type==='Personaggio').length,12);
+ const strategies=design.cards.filter(c=>c.type==='Strategia');
+ assert.equal(strategies.length,34,'Le esclusive offensive sono Carte Strategia');
+ for(const c of strategies){
+  assert.equal(EXCLUSIVE_CARDS[c.id].category,'Strategia',c.id);
+  assert.equal(EXCLUSIVE_CARDS[c.id].kind,'attack',c.id+' conserva il ruolo tecnico offensivo');
+ }
  assert.equal(design.cards.filter(c=>c.type==='Fusione').length,0,
   'le esclusive delle madri non devono contenere Fusioni');
  assert.equal(FUSION_SHIP_CARDS.length,13,
@@ -61,7 +67,7 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
 test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e vengono pescate',async()=>{
  const {exclusiveUnlocked,effectiveDeck,cardFacePath,card,eligibleExclusives,deckFromCounts}=await import('./fleetNext/rules.js');
  const {effectUnavailableReason,createFleetNextBattle}=await import('./fleetNext/combat.js');
- const sample=design.cards.find(c=>c.shipId==='L04'&&c.type==='Attacco');
+ const sample=design.cards.find(c=>c.shipId==='L04'&&c.type==='Strategia');
  assert.ok(sample);
  const def=card(sample.id);
  assert.ok(def&&def.shipId===sample.shipId);

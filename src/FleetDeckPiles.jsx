@@ -10,7 +10,7 @@ import {cardTextName,localizedCardText} from './cardTextPresentation.js';
 const FALLBACK_ART={attack:'shot-ion',energy:'shot-ion',defense:'tactical-cover',
  trap:'tactic-reactive',character:'module-card-planet_char_1',
  terrain:'tactic-vulnerability-rift',support:'support-shield-repair',control:'tactic-suppress'};
-const ROLE_LABELS={attack:'ATTACCO',energy:'ENERGIA',defense:'DIFESA',trap:'TRAPPOLA',
+const ROLE_LABELS={attack:'STRATEGIA',energy:'ENERGIA',defense:'DIFESA',trap:'TRAPPOLA',
  character:'PERSONAGGIO',terrain:'TERRENO',support:'SUPPORTO',control:'CONTROLLO'};
 
 export function FleetPileCardFace({id}){
