@@ -34,7 +34,7 @@ test('Storm approved PNGs and independent EN/IT layers preserve the exact four o
   assert.equal(cardDisplayFacePath(c.id),cardTextBasePath(c.id));
   for(const locale of ['en','it']){assert.equal(cardTextFields(c.id,locale).length,18);assert.match(cardTextSvgContents(c.id,locale,'storm'),/<path d="M/);}
   assert.equal(localizedCardText(card(c.id),'en').name,'Stellar Storm Capacitor Cannon');
-  assert.match(localizedCardText(card(c.id),'it').description,/Riserva Ionolampo/);
+  assert.match(localizedCardText(card(c.id),'it').description,/Riserva Saettatrama/);
  }
 });
 test('Storm live resolver matches printed 31/45/59 and 43/62/81 nominal HP without multiplying rarity twice',()=>{

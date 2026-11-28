@@ -16,7 +16,7 @@ export const DISCARD_WEAPON=calibratedWeaponCard(Object.freeze({
   damageMode:'discard-attacks',elementId:'plasma',
   baseDamage:10,perDiscardAttack:10,energyMultiplier:2,maxNominalDamage:120
  }),
- effectProposed:'Arma Fuoco per un turno: 10 HP di danno base, +10 HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Riserva Pirofusa, raddoppia il danno totale una sola volta. Gli scarti avversari non contano. Danno base massimo 120 HP nominali prima dei modificatori di Arsenale, elementi e Terreno.',
+ effectProposed:'Arma Fuoco per un turno: 10 HP di danno base, +10 HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Riserva Braciotramata, raddoppia il danno totale una sola volta. Gli scarti avversari non contano. Danno base massimo 120 HP nominali prima dei modificatori di Arsenale, elementi e Terreno.',
  visualBrief:'Cannone spaziale che assorbe frammenti luminosi delle carte Strategia scartate e scarica una raffica di plasma. Immagine definitiva da approvare.'
 }));
 export const DISCARD_WEAPONS=Object.freeze([DISCARD_WEAPON]);

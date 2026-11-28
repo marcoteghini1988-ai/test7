@@ -242,7 +242,7 @@ const RAW=[
       "freshEnergyCost": 1,
       "provisional": true
     },
-    "description": "Spara 24/36/54 HP in 3 turni; per salire allo stadio successivo occorre giocare una nuova Riserva Ionolampo a ogni turno proprio e consumarne una carica. Se un caricamento manca, resta a 24 HP."
+    "description": "Spara 24/36/54 HP in 3 turni; per salire allo stadio successivo occorre giocare una nuova Riserva Saettatrama a ogni turno proprio e consumarne una carica. Se un caricamento manca, resta a 24 HP."
   },
   {
     "id": "weapon-designed-ionic-sonda-ionica",
@@ -294,7 +294,7 @@ const RAW=[
       "energyCost": 1,
       "provisional": true
     },
-    "description": "Per 3 tuoi turni, se giochi una nuova Riserva Ionolampo ne consuma 1 carica e spara 18 HP +8 HP per ogni supporto alleato vivo, senza sacrificare HP."
+    "description": "Per 3 tuoi turni, se giochi una nuova Riserva Saettatrama ne consuma 1 carica e spara 18 HP +8 HP per ogni supporto alleato vivo, senza sacrificare HP."
   },
   {
     "id": "weapon-transferred-aerial-cicloreattore",

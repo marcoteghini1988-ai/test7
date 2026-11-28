@@ -59,7 +59,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
- 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Strategia negli scarti. Almeno una Riserva Pirofusa nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
+ 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Strategia negli scarti. Almeno una Riserva Braciotramata nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Strategia: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',

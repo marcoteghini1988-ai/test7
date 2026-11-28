@@ -100,7 +100,7 @@ test('Tre Attacchi scartati = 40 HP; cinque = 60 HP',()=>{
  assert.equal(charge(ATTACKS).damage,60);
 });
 
-test('Cinque Attacchi personali e almeno una Riserva Pirofusa negli scarti = 120 HP',()=>{
+test('Cinque Attacchi personali e almeno una Riserva Braciotramata negli scarti = 120 HP',()=>{
  const r=charge([...ATTACKS,'energy-plasma']);
  assert.equal(r.attackCards,5);
  assert.equal(r.energyMatched,true);
@@ -128,7 +128,7 @@ test('Tre cariche di Fuoco non producono triplo o quadruplo bonus',()=>{
  assert.equal(r.multiplier,2);
 });
 
-test('Una Riserva Pirofusa di qualsiasi rarità negli scarti attiva il bonus una sola volta',()=>{
+test('Una Riserva Braciotramata di qualsiasi rarità negli scarti attiva il bonus una sola volta',()=>{
  for(const id of ['energy-plasma','energy-plasma-r','energy-plasma-e','energy-plasma-l']){
   const r=charge([...ATTACKS,id]);
   assert.equal(r.energyMatched,true,id);
@@ -231,7 +231,7 @@ test('Se il giocatore passa, nessun danno automatico viene inflitto',()=>{
  assert.ok(!event(result),'nessun evento di sparo quando si passa');
 });
 
-test('La Riserva Pirofusa giocata resta nella pila e NON negli scarti, quindi non amplifica subito l Arma',()=>{
+test('La Riserva Braciotramata giocata resta nella pila e NON negli scarti, quindi non amplifica subito l Arma',()=>{
  const b=battle();
  const result=fire(b,'A',[W,'energy-plasma']);
  assert.equal(event(result).nominalDamage,10);

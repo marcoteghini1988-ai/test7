@@ -131,13 +131,13 @@ function description(source,s){
    ' turni; il danno eccedente passa al prossimo bersaglio spendendo '+
    p.energyTransferCost+(p.energyTransferCost===1?' carica':' cariche')+' di Metallo.';
   case 'growing-thunder-core':return prefix+fmt(p.damageStages)+
-   ' HP nei tre turni se giochi una nuova Riserva Ionolampo e spendi una carica in ogni turno di ricarica; altrimenti ricade al minimo.';
+   ' HP nei tre turni se giochi una nuova Riserva Saettatrama e spendi una carica in ogni turno di ricarica; altrimenti ricade al minimo.';
   case 'ion-probe':return prefix+b+' HP; lascia un segnale combinabile con Impattatore Folgorico.';
   case 'thunder-hammer':return prefix+b+' HP e +'+p.comboBonusDamage+
    ' HP con il segnale della Sonda Ionica, che viene consumato.';
   case 'command-lance':return prefix+b+' HP piu '+p.characterBonusDamage+
    ' HP con un Personaggio attivo; il Personaggio e obbligatorio.';
-  case 'storm-capacitor':return prefix+'per '+active+' turni, con nuova Riserva Ionolampo: '+
+  case 'storm-capacitor':return prefix+'per '+active+' turni, con nuova Riserva Saettatrama: '+
    b+' HP +'+p.perSupportDamage+' HP per ogni supporto operativo.';
   case 'wind-cycloreactor':return prefix+'per '+active+' turni colpisce tutte le navi nemiche per '+
    fmt(p.damageStages)+' HP; congela la mano per '+fmt(p.freezeSeconds)+

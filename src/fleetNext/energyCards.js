@@ -12,11 +12,11 @@ export const ENERGY_ELEMENT_COUNT=Object.keys(FLEET_ELEMENTS).length;
 // I nomi delle carte sono distinti dalle affinità elementali: gli ID, i costi e
 // i simboli continuano a usare FLEET_ELEMENTS.
 export const ENERGY_FAMILY_NAMES=Object.freeze({
- plasma:'Riserva Pirofusa',refrigerant:'Riserva Idropressa',
- cryogenic:'Riserva Crioviva',ionic:'Riserva Ionolampo',
- mineral:'Riserva Georisonante',aerial:'Riserva Aerotorsiva',
+ plasma:'Riserva Braciotramata',refrigerant:'Riserva Idropressa',
+ cryogenic:'Riserva Gelitessuta',ionic:'Riserva Saettatrama',
+ mineral:'Riserva Rocciatrama',aerial:'Riserva Aerotorsiva',
  radiant:'Riserva Fotoprismatica',void:'Riserva Umbradensa',
- metallic:'Riserva Ferropulsiva',gravity:'Riserva Gravitessuta'
+ metallic:'Riserva Ferrintrama',gravity:'Riserva Gravitessuta'
 });
 export const energyIdForRarity=(elementId,rarity)=>FLEET_ELEMENTS[elementId]&&
  Object.hasOwn(ENERGY_RARITY_SUFFIX,rarity)?'energy-'+elementId+ENERGY_RARITY_SUFFIX[rarity]:null;

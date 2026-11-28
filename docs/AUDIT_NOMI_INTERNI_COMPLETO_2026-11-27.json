@@ -118,10 +118,17 @@
     {
       "id": "energy-plasma",
       "formerName": "Energia Fuoco",
-      "currentName": "Riserva Pirofusa",
+      "currentName": "Riserva Braciotramata",
       "reason": "Famiglia di carte rinominata insieme alle altre nove per distinguersi dai nomi delle Energie Pokémon; l’affinità Fuoco non cambia",
       "source": "https://www.pokemon.com/it/approfondimenti/tre-mazzi-dell-espansione-spada-e-scudo-tempesta-argentata-con-protagonisti-ho-oh-v-chesnaught-v-e-wailord"
     }
+  ],
+  "secondPassNameReview": [
+    {"id": "energy-plasma", "intermediateName": "Riserva Pirofusa / Pyrofused Reserve", "currentName": "Riserva Braciotramata / Braciotramata Reserve", "similaritySource": "https://oldschoolmags.com/mags/SuperBMX_8104.pdf"},
+    {"id": "energy-cryogenic", "intermediateName": "Riserva Crioviva / Cryovive Reserve", "currentName": "Riserva Gelitessuta / Gelitessuta Reserve", "similaritySource": "https://ttabvue.uspto.gov/ttabvue/v?pnam=Vive+Health%2C+LLC++"},
+    {"id": "energy-ionic", "intermediateName": "Riserva Ionolampo / Ionoflash Reserve", "currentName": "Riserva Saettatrama / Saettatrama Reserve", "similaritySource": "https://ioniflash.com/"},
+    {"id": "energy-mineral", "intermediateName": "Riserva Georisonante / Georesonant Reserve", "currentName": "Riserva Rocciatrama / Rocciatrama Reserve", "similaritySource": "https://www.atlantisbahamas.com/the-dig-tour"},
+    {"id": "energy-metallic", "intermediateName": "Riserva Ferropulsiva / Ferropulse Reserve", "currentName": "Riserva Ferrintrama / Ferrintrama Reserve", "similaritySource": "https://ferropulse.com/"}
   ],
   "caveats": [
     "Un inventario di fonti principali non prova che ogni stringa del repository sia stata esaminata.",
@@ -3042,7 +3049,7 @@
     {
       "group": "carte_energia",
       "id": "energy-plasma",
-      "name": "Riserva Pirofusa",
+      "name": "Riserva Braciotramata",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
@@ -3056,21 +3063,21 @@
     {
       "group": "carte_energia",
       "id": "energy-cryogenic",
-      "name": "Riserva Crioviva",
+      "name": "Riserva Gelitessuta",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-ionic",
-      "name": "Riserva Ionolampo",
+      "name": "Riserva Saettatrama",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-mineral",
-      "name": "Riserva Georisonante",
+      "name": "Riserva Rocciatrama",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
@@ -3098,7 +3105,7 @@
     {
       "group": "carte_energia",
       "id": "energy-metallic",
-      "name": "Riserva Ferropulsiva",
+      "name": "Riserva Ferrintrama",
       "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
@@ -4673,7 +4680,7 @@
     {
       "cardId": "energy-plasma",
       "previousName": "Energia Fuoco",
-      "newName": "Riserva Pirofusa",
+      "newName": "Riserva Braciotramata",
       "category": "carte_energia",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"
@@ -4689,7 +4696,7 @@
     {
       "cardId": "energy-cryogenic",
       "previousName": "Energia Ghiaccio",
-      "newName": "Riserva Crioviva",
+      "newName": "Riserva Gelitessuta",
       "category": "carte_energia",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"
@@ -4697,7 +4704,7 @@
     {
       "cardId": "energy-ionic",
       "previousName": "Energia Fulmine",
-      "newName": "Riserva Ionolampo",
+      "newName": "Riserva Saettatrama",
       "category": "carte_energia",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"
@@ -4705,7 +4712,7 @@
     {
       "cardId": "energy-mineral",
       "previousName": "Energia Terra",
-      "newName": "Riserva Georisonante",
+      "newName": "Riserva Rocciatrama",
       "category": "carte_energia",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"
@@ -4737,7 +4744,7 @@
     {
       "cardId": "energy-metallic",
       "previousName": "Energia Metallo",
-      "newName": "Riserva Ferropulsiva",
+      "newName": "Riserva Ferrintrama",
       "category": "carte_energia",
       "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
       "status": "renamed-in-catalogue-2026-11-28"

@@ -35,15 +35,15 @@ dalla formula «Energia + elemento» presente nel GCC Pokémon.
 
 | Elemento | ID comune | Nome italiano | Nome inglese |
 | --- | --- | --- | --- |
-| Fuoco | `energy-plasma` | Riserva Pirofusa | Pyrofused Reserve |
+| Fuoco | `energy-plasma` | Riserva Braciotramata | Braciotramata Reserve |
 | Acqua | `energy-refrigerant` | Riserva Idropressa | Hydropressed Reserve |
-| Ghiaccio | `energy-cryogenic` | Riserva Crioviva | Cryovive Reserve |
-| Fulmine | `energy-ionic` | Riserva Ionolampo | Ionoflash Reserve |
-| Terra | `energy-mineral` | Riserva Georisonante | Georesonant Reserve |
+| Ghiaccio | `energy-cryogenic` | Riserva Gelitessuta | Gelitessuta Reserve |
+| Fulmine | `energy-ionic` | Riserva Saettatrama | Saettatrama Reserve |
+| Terra | `energy-mineral` | Riserva Rocciatrama | Rocciatrama Reserve |
 | Vento | `energy-aerial` | Riserva Aerotorsiva | Aerotorsion Reserve |
 | Luce | `energy-radiant` | Riserva Fotoprismatica | Photoprismatic Reserve |
 | Ombra | `energy-void` | Riserva Umbradensa | Umbradense Reserve |
-| Metallo | `energy-metallic` | Riserva Ferropulsiva | Ferropulse Reserve |
+| Metallo | `energy-metallic` | Riserva Ferrintrama | Ferrintrama Reserve |
 | Gravità | `energy-gravity` | Riserva Gravitessuta | Gravithread Reserve |
 
 Il codice delle carte usa nomi italiani distinti, mentre il livello di testo
@@ -52,6 +52,33 @@ descrizioni continuano a indicare l'elemento e le cariche spendibili. Le
 referenze meccaniche alle carte fisiche sono state aggiornate dove il nome
 specifico serve a capire l'effetto.
 
+### Seconda verifica delle famiglie Energia, 28 novembre
+
+Una seconda ricerca ha trovato corrispondenze o somiglianze che erano sfuggite
+alla prima passata. Sono state quindi sostituite anche le denominazioni
+intermedie: **Pirofusa/Pyrofused → Braciotramata**,
+**Crioviva/Cryovive → Gelitessuta**,
+**Ionolampo/Ionoflash → Saettatrama**,
+**Georisonante/Georesonant → Rocciatrama** e
+**Ferropulsiva/Ferropulse → Ferrintrama**. La parola *Reserve* rimane la
+traduzione di *Riserva*, mentre il secondo termine è un nome proprio della
+famiglia, identico nelle due lingue. Le corrispondenze rilevate includono
+*PyroFused™* in una pubblicità Scorpion BMX, *CRIOVIVA* in un bollettino
+brasiliano dei marchi, *CRYOVIVE* nei documenti USPTO, il prodotto
+*IONIFLASH MACH®* del produttore e *FERROPULSE* come nome di un'app.
+*Georesonant* compare inoltre nel nome di un dispositivo di un'ambientazione
+fittizia. Questo
+controllo non stabilisce se tali usi comportino un divieto giuridico per il
+gioco: la sostituzione segue la scelta prudenziale dell'autore.
+
+Fonti per la seconda verifica:
+[Scorpion BMX](https://oldschoolmags.com/mags/SuperBMX_8104.pdf),
+[INPI Brasile, CRIOVIVA](https://revistas.inpi.gov.br/pdf/marcas1922.pdf),
+[USPTO, CRYOVIVE](https://ttabvue.uspto.gov/ttabvue/v?pnam=Vive+Health%2C+LLC++),
+[France Paratonnerres, IONIFLASH](https://ioniflash.com/),
+[FERROPULSE](https://ferropulse.com/),
+[Atlantis: The Dig](https://www.atlantisbahamas.com/the-dig-tour).
+
 ## Evidenze e limiti del controllo
 
 - [Yu-Gi-Oh! Neuron: Buco Nero](https://www.db.yugioh-card.com/yugiohdb/card_search.action?cid=4342&ope=2&request_locale=it) è una carta ufficiale con effetto di rimozione dal terreno.
@@ -59,9 +86,10 @@ specifico serve a capire l'effetto.
 - [Bungie: Bastione solare](https://help.bungie.net/hc/it/articles/360048720192-Problemi-conosciuti-e-informazioni-vitali-Archivio-anno-1-e-2-di-Destiny-2) e [Steam: Guardians of Gaia](https://store.steampowered.com/app/1718290/Guardians_Of_Gaia/) documentano gli usi preesistenti citati.
 - [Wizards of the Coast: Archivista a Ingranaggi](https://magic.wizards.com/it/news/card-image-gallery/strixhaven-school-of-mages-card-image-gallery) documenta il termine in una carta Magic; *Archivista* compare anche come nome di carta del gioco.
 
-La ricerca testuale preliminare dei nomi proposti non ha evidenziato nelle
-risposte consultate una coincidenza immediata dei titoli composti, ma non è
-una ricerca esaustiva. Restano da valutare **segni simili e marchi** nei
+La ricerca testuale preliminare non ha evidenziato nelle risposte consultate
+coincidenze esatte dei nuovi titoli composti dopo la seconda revisione. Ha
+però individuato somiglianze nelle denominazioni intermedie, poi sostituite;
+la ricerca web non è esaustiva. Restano da valutare **segni simili e marchi** nei
 territori e nelle categorie pertinenti tramite UIBM/TMview e altri registri,
 nonché i nomi delle carte che saranno ancora progettate. Nessun nome viene
 certificato libero; la scelta del titolo commerciale del gioco è rimandata

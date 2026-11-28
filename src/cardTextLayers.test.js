@@ -16,7 +16,7 @@ test('English is the default for every core text, including name, full effect an
  for(const id of LOCALIZED_WEAPON_CARD_IDS.filter(id=>id.startsWith(CORE_FAMILY))){
   const fields=cardTextFields(id),text=localizedCardText(card(id));
   assert.deepEqual(fields.slice(0,2).map(f=>f.text),['GROWING THUNDER','CORE CANNON']);
-  assert.equal(text.name,'Growing Thunder Core Cannon');assert.match(text.description,/play a new Ionoflash Reserve card/);
+  assert.equal(text.name,'Growing Thunder Core Cannon');assert.match(text.description,/play a new Saettatrama Reserve card/);
   assert.equal(fields[2].text,'WEAPON');assert.equal(fields[5].text,'LIGHTNING');
   assert.equal(fields[10].text,WEAPON_NEAR_FINAL_BY_ID[id].effectSpec.weaponProfile.damageStages.join(' / '));
  }
