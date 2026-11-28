@@ -14,6 +14,19 @@ nelle sezioni datate e nei filmati sono storiche. Mappatura e portata della
 ricerca in `docs/RINOMINE_DUE_ARMI_APPROVATE_2026-11-28.md`; nessuna
 certificazione di disponibilità dei marchi.
 
+Rinomine salvate nel commit di codice `9fd9a4652d4ab67af25b08369a021c49fd3920ca`:
+53 test mirati e compilazione riusciti; PNG e basi originali verificati per
+hash. Nella copia StackBlitz esistente `github-edu2s6xy` il riferimento di
+avvio è salvato a quel commit e verificato dopo reload (812 sorgenti).
+Tutte le tre varianti sono state lette in EN/IT nella plancia ufficiale:
+nomi corretti, stesse basi native 3072×4608 e stessi URL al cambio lingua.
+È un controllo della rinomina; i video del 27/11 restano storici.
+Per aggiornare l'avvio conservare l'intera configurazione e tutti i dodici
+script: sostituire soltanto lo SHA. Fermare il primo terminale prima del
+sync; modificare nell'editor la singola occorrenza, salvare a sync fermo e
+verificare il riferimento dopo reload. Il salvataggio globale dopo il sync
+ha dato errore; questa procedura con il solo riferimento è riuscita.
+
 ## Decisione dell'autore sui nomi dei Personaggi — 28/11/2026
 
 L'autore ha scelto le dodici proposte presentate in conversazione: quattro

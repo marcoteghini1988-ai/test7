@@ -104,3 +104,31 @@ conservazione di ID/valori e compilazione. Il collaudo audiovisivo del
 27 novembre rimane quello storico del lotto; non viene presentato come
 una nuova prova StackBlitz della rinomina. Non sono introdotti nuovi
 asset o nuove meccaniche.
+
+## Controllo visivo StackBlitz della rinomina
+
+Codice verificato: `9fd9a4652d4ab67af25b08369a021c49fd3920ca`, salvato su
+`test7/main`. È stata aggiornata soltanto la singola occorrenza dello SHA
+nel `predev` del `package.json` della copia StackBlitz già esistente
+`github-edu2s6xy`, conservando tutta la configurazione e tutti i dodici
+script. Il primo tentativo di Save dopo il sync aveva restituito errore;
+fermando l'avvio prima del sync e salvando soltanto il riferimento, Save
+è tornato disabilitato. Il reload ha confermato il nuovo SHA, i dodici
+script e il bootstrap di 812 sorgenti dal commit aggiornato.
+
+Nel pannello `.maglio-review.html`, che usa la plancia ufficiale, sono
+stati verificati il selettore delle Armi, i nomi nella mano e i fronti
+ingranditi con il selettore di lingua. Riscontri:
+
+| Variante | Nome IT | Nome EN | Base effettivamente caricata |
+| --- | --- | --- | --- |
+| Quervaldissio Leggendaria | CANNONE QUERVALDISSIO | QUERVALDISSIO CANNON | 3072×4608 |
+| Svarquendica Epica | TURBINA SVARQUENDICA | SVARQUENDICA TURBINE | 3072×4608 |
+| Svarquendica Leggendaria | TURBINA SVARQUENDICA | SVARQUENDICA TURBINE | 3072×4608 |
+
+Per ciascuna variante EN/IT ha mantenuto esattamente lo stesso URL della
+base `-text-base.png` del commit verificato; cambiano solo testo e
+impaginazione del titolo. Titoli centrati e leggibili controllati nelle
+schermate effettive. La lingua del pannello è stata riportata a `en`.
+Questa verifica non è una nuova registrazione audiovisiva degli effetti
+né un collaudo aptico hardware; quei contenuti non sono stati modificati.
