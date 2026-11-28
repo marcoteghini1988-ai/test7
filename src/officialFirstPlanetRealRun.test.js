@@ -17,7 +17,6 @@ import {planTacticalAi} from './tacticalDuelAi.js';
 import {sealTacticalOrder,advanceTacticalDuel,TACTICAL_TIMING} from './simultaneousDuelEngine.js';
 const seeds=[37,113,397];
 const MAX_ATTEMPTS_PER_SECTOR=48;
-const PILOT={pilot_com_1:{unlocked:true,level:1}};
 function storage(){
  const entries=new Map();
  return {getItem:id=>entries.get(id)??null,setItem:(id,v)=>entries.set(id,v)};
@@ -74,7 +73,7 @@ test('Terra: tre percorsi 1..10 con combattimenti, sblocchi e acquisti davvero c
     const seed=(initialSeed+sector*4109+attempt*7919)>>>0;
     const setup=officialBattleSetup({mode:'adventure',sectorNumber:sector,
      bossPlanetId:1,bossSectorLevel:sector,shipCollection:snapshot,
-     specialCollection:specials,selectedPilot:'pilot_com_1',pilotInventory:PILOT,
+     specialCollection:specials,
      nowMs:100,seed});
     assert.equal(setup.battle.sides.A.shipId,equipped.shipId);
     assert.equal(setup.battle.sides.A.level,equipped.level);

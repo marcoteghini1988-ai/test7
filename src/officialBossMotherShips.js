@@ -4,7 +4,7 @@
 // NON riguarda il motore legacy, il PvP o la plancia. Nessuna nave e donata.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {CAMPAIGN_SHIP_ORDER} from './fleetNext/progression.js';
-import {getShipDefinition} from './mathDuelEngine.js';
+import {getShipDefinition} from './fleetNext/shipCore.js';
 
 // Ogni boss ha una madre diversa fra le dodici approvate.
 // Le soglie provvisorie delle ricompense non modificano la sua identità.

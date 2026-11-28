@@ -11,22 +11,19 @@ import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 
 const starter=createSpecialCollection();
-const pilot={id:'pilot_com_1',level:1,scope:'fleet'};
-const ownedPilot={pilot_com_1:{unlocked:true,level:1}};
 const seeds=[17,171,2026,4096,8127];
 function fixedOrOriginal(shipId,enemyShipId,seed,level=3){
  const shipCollection={cards:[{instanceId:'ship:'+shipId,shipId,level}],
   loadout:['ship:'+shipId]};
  const original=officialBattleSetup({mode:'adventure',sectorNumber:10,
   bossPlanetId:1,bossSectorLevel:10,shipCollection,specialCollection:starter,
-  selectedPilot:'pilot_com_1',pilotInventory:ownedPilot,
+
   seed,nowMs:100}).battle;
  const rival=original.sides.B;
  const controlled=createTacticalDuel({
   shipA:shipId,levelA:level,shipB:enemyShipId,levelB:rival.level,
   seed,nowMs:100,mode:'adventure',arenaId:original.arenaId,
   shuffleNumericOpening:true,
-  commanderA:pilot,commanderB:rival.commander,
   bossNumericDeckA:null,
   bossNumericDeckB:{id:rival.bossNumericDeck.id,level:rival.bossNumericDeck.level},
   specialDeckA:starter.loadout,specialDeckB:buildTacticalBossDeck(1,rival.level,level),

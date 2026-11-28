@@ -6,9 +6,8 @@ import {readSpecialCollection} from './specialDeckBuilder.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
-import {newVessel} from './mathDuelEngine.js';
+import {newVessel} from './fleetNext/shipCore.js';
 import {VITAL_IDS} from './vitalDefense.js';
-import {tacticalCommanderReady} from './tacticalCommanders.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 
@@ -21,16 +20,13 @@ const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 // Il cambio non modifica la collezione, la progressione o le ricompense.
 export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
   bossPlanetId=null,bossSectorLevel=null,selectedBossDeck='neutral_starter',
-  bossDeckInventory={},selectedPilot='pilot_com_1'}={}){
+  bossDeckInventory={}}={}){
  if(!BATTLE_MODES.has(gameMode))return {enabled:false,reason:'mode'};
  // Una carta boss equipaggiata resta attiva, anche con inventari vecchi.
  if(selectedBossDeck&&selectedBossDeck!=='neutral_starter'&&
    (!tacticalBossDeckReady(selectedBossDeck)||
     bossDeckInventory?.[selectedBossDeck]?.unlocked!==true))
   return {enabled:false,reason:'equipped_boss_passives'};
- // I 33 piloti del catalogo sono convertiti; solo ID sconosciuti restano incompatibili.
- if(selectedPilot&&!tacticalCommanderReady(selectedPilot))
-  return {enabled:false,reason:'commander_abilities_pending'};
  const last=Number(bossSectorLevel??((Math.max(1,Number(sectorNumber)||1)-1)%10+1));
  if(['adventure','campaign'].includes(gameMode)&&last===10){
   const encounter=officialBossEncounter({mode:gameMode,sectorNumber,
@@ -46,7 +42,7 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
 }
 
 // Unico creatore ufficiale: i controlli e il gioco passano dalla STESSA
-// validazione di collezioni, boss, piloti e ambienti. Non esiste un secondo
+// validazione di collezioni, boss e ambienti. Non esiste un secondo
 // combattimento con regole diverse. Questo adattatore non scrive salvataggi.
 export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage=null){
  const shipCollection=storage?readShipCollection(storage):readShipCollection();
@@ -55,7 +51,6 @@ export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage
  const setup=officialBattleSetup({
   mode:props.gameMode??'campaign',sectorNumber:props.sectorNumber,
   bossPlanetId:props.bossPlanetId,bossSectorLevel:props.bossSectorLevel,
-  selectedPilot:props.selectedPilot,pilotInventory:props.pilotInventory,
   selectedBossDeck:props.selectedBossDeck,bossDeckInventory:props.bossDeckInventory,
   pilotLevel:props.pilotLevel??oldEpics.pilotLevel,
   epicRiftOpened:props.epicRiftOpened??oldEpics.hasCollapsed,

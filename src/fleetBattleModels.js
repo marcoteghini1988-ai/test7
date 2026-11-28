@@ -1,4 +1,4 @@
-import {PHASE1_SHIPS} from './mathDuelEngine.js';
+import {PHASE1_SHIPS} from './fleetNext/shipCore.js';
 
 const shipFormats=new Map([
  ...PHASE1_SHIPS.map(ship=>[ship.id,ship.rarita==='Comune'?'png':'webp']),

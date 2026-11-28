@@ -84,8 +84,7 @@ function playEncounter(scenario,specialCollection,seed){
   bossPlanetId:scenario.planetId,bossSectorLevel:10,
   shipCollection:{cards:[{instanceId:'owned',shipId:scenario.ship,level:5}],
    loadout:['owned']},
-  specialCollection,selectedPilot:'pilot_com_1',
-  pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+  specialCollection,
   nowMs:100,seed
  });
  return fight(b.battle);

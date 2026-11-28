@@ -1,8 +1,9 @@
 import {equipBossNumericDeck,reduceBossNumericStatuses} from './bossNumericDecks.js';
-import {equipFleetCommander} from './fleetCommander.js';
 import {arenaForBattle} from './battleArenas.js';
 // Eclissi Stellare — Fase 1: calcolo = grilletto, carte = munizioni, navi = armi integrate.
-import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {ENGINE_KEYS,validFleet,fleetCompatibility,newVessel} from './fleetNext/shipCore.js';
+export {ENGINE_KEYS,META,SUIT_SIGNS,PHASE1_SHIPS,rankLabel,getShipDefinition,
+ getWeaponsForShip,shipSuits,validFleet,fleetCompatibility,newVessel} from './fleetNext/shipCore.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/phase16ACatalog.js';
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 import {buildLinkedEscorts,impactLinkedEscort,interceptMotherVolley} from './linkedEscorts.js';
@@ -14,12 +15,8 @@ import {evaluateMathChain,inspectMathChain} from './mathChains.js';
 import {prototypeModelSignatures} from './modelSignatures.js';
 import {previewStrategicImpact,strategicShieldDamage,finalizeStrategicImpact} from './strategicShots.js';
 import {SYSTEM_CONSEQUENCES,SYSTEM_DAMAGE_MESSAGES,systemState} from './fleetSystems.js';
-export const ENGINE_KEYS=['plus','minus','times','divide'];
-export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
-export const SUIT_SIGNS={H:'♥',D:'♦',C:'♣',S:'♠'};
 // Rank cards are displayed as letters, while arithmetic always uses 1..13.
-export const rankLabel=value=>value===1?'A':value===11?'J':value===12?'Q':value===13?'K':String(value);
 export const BASE_HP={plus:72,minus:72,times:85,divide:72};
 export const TOTAL_LEVELS=30;
 // Nessun timer per il giocatore; i tempi appartengono solo all'IA.
@@ -45,43 +42,9 @@ export function nextAiActionDelay(rng=Math.random,level=1,mode='campaign'){
  const unit=Number.isFinite(sample)?Math.min(0.999999999,Math.max(0,sample)):0;
  return minMs+Math.floor(unit*(maxMs-minMs+1));
 }
-export const PHASE1_SHIPS=PHASE1_CATALOG.ships;
 export function shuffled(a,rng=Math.random){const v=[...a];for(let i=v.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[v[i],v[j]]=[v[j],v[i]];}return v;}
 export function newDeck(rng=Math.random){return shuffled(['♥','♦','♣','♠'].flatMap(suit=>Array.from({length:13},(_,i)=>({id:`${suit}${i+1}`,suit,value:i+1}))),rng);}
-export function getShipDefinition(id){return PHASE1_CATALOG.ships.find(x=>x.id===id)||null;}
-export function getWeaponsForShip(id){return PHASE1_CATALOG.weapons.filter(x=>x.nave_id===id);}
-export function shipSuits(id){
- return [...new Set(getWeaponsForShip(id).flatMap(w=>[
-  w.seme_trigger,...w.combo.split('@')[0].split('+'),
- ]).filter(s=>Object.hasOwn(SUIT_SIGNS,s)))];
-}
 export function supportedOperators(side){const found=new Set();for(const v of side.fleet)for(const k of ENGINE_KEYS)if(v.engines[k]?.max>0&&v.engines[k].hp>0)found.add(k);return ENGINE_KEYS.filter(x=>found.has(x));}
-export function validFleet(ids){
- if(!Array.isArray(ids)||ids.length<1||ids.length>3||ids.some(x=>!getShipDefinition(x))||new Set(ids).size!==ids.length)return false;
- const counts={H:0,D:0,C:0,S:0};
- for(const id of ids){if(id==='N00')continue;for(const suit of shipSuits(id))if(++counts[suit]>2)return false;}
- return true;
-}
-function vesselLevel(level){return Math.max(1,Math.min(5,Math.floor(Number(level)||1)));}
-function shipLevel(id,level){return PHASE1_CATALOG.shipLevels.find(x=>x.nave_id===id&&x.livello===level);}
-function gunLevel(id,level){return PHASE1_CATALOG.weaponLevels.find(x=>x.arma_id===id&&x.livello===level);}
-// Both fleets must be able to target every operator installed at battle start.
-export function fleetCompatibility(playerIds,enemyIds,level=1,playerLevels={},enemyLevels={}){
- if(!validFleet(playerIds)||!validFleet(enemyIds))return {compatible:false,playerMissing:[],enemyMissing:[]};
- const operators=(ids,levels)=>new Set(ids.flatMap(id=>
-  ENGINE_KEYS.slice(0,shipLevel(id,vesselLevel(levels[id]??level)).motori)));
- const player=operators(playerIds,playerLevels),enemy=operators(enemyIds,enemyLevels);
- const playerMissing=ENGINE_KEYS.filter(op=>enemy.has(op)&&!player.has(op));
- const enemyMissing=ENGINE_KEYS.filter(op=>player.has(op)&&!enemy.has(op));
- return {compatible:!playerMissing.length&&!enemyMissing.length,playerMissing,enemyMissing};
-}
-export function newVessel(id='N00',level=1){
- const def=getShipDefinition(id);if(!def)throw Error('Nave inesistente '+id);
- const l=vesselLevel(level);
- const prog=shipLevel(id,l);if(!prog)throw Error('Progressione assente '+id+'/'+l);
- const engines={};ENGINE_KEYS.forEach((op,i)=>{if(i<prog.motori)engines[op]={hp:prog.hp_per_motore,max:prog.hp_per_motore};});
- return {id,name:def.nome,rarity:def.rarita,level:l,engines,weapons:getWeaponsForShip(id).map(w=>({...w,damage:gunLevel(w.id,l)?.danno_per_proiettile??w.danno_colpo_L1,charge:0})),};
-}
 export function newShip(_level=1,isEnemy=false,upgrades={}){
  const ids=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
  const fleet=ids.map(id=>newVessel(id,upgrades.shipLevels?.[id]??upgrades.shipLevel));
@@ -378,14 +341,8 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
   rng,upgrades.specialDeckTypes??null);
  const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets,supportedOperators(rawPlayer)):rawEnemy,
   rng,upgrades.enemySpecialDeckTypes??upgrades.specialDeckTypes??null);
- // A commander belongs to the entire side: losing a ship does not detach it.
- // Pilot effects are intentionally inactive until their math-combat rules exist.
- const equippedPlayer=equipFleetCommander(
-  equipBossNumericDeck(player,upgrades.playerBossDeckId,upgrades.playerBossDeckLevel),
-  upgrades.playerCommanderId,upgrades.playerCommanderLevel);
- const equippedEnemy=equipFleetCommander(
-  equipBossNumericDeck(enemy,upgrades.enemyBossDeckId,upgrades.enemyBossDeckLevel),
-  upgrades.enemyCommanderId,upgrades.enemyCommanderLevel);
+ const equippedPlayer=equipBossNumericDeck(player,upgrades.playerBossDeckId,upgrades.playerBossDeckLevel);
+ const equippedEnemy=equipBossNumericDeck(enemy,upgrades.enemyBossDeckId,upgrades.enemyBossDeckLevel);
  return {level,mode,arena:arenaForBattle(level,mode,upgrades.arenaId,{planetId:upgrades.arenaPlanetId,sectorLevel:upgrades.arenaSectorLevel}),player:equippedPlayer,enemy:equippedEnemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
   targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};

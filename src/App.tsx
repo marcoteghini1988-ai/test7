@@ -38,7 +38,7 @@ import {validateShipUpgradePurchase} from './shipUpgrades.js';
 import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
 import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
 import {normalizeOfficialForgeQueue,applyOfficialForgeCompletion,isOfficialForgeJobInQueue} from './officialForgeProgress.js';
-import { validatePhase13Settlement, createPhase13OnceGuard } from './newCombat/phase13Campaign.js';
+import { validatePhase13Settlement, createPhase13OnceGuard } from './newCombat/phase13Settlement.js';
 import { phase17PilotHp, phase17CampaignXpAward, phase17CampaignDustAward } from './newCombat/phase17Balance.js';
 
 

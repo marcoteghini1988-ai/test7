@@ -41,8 +41,7 @@ function run(collection,seed,phaseAware){
   bossPlanetId:19,bossSectorLevel:10,
   shipCollection:{cards:[{instanceId:'owned',shipId:'L03',level:5}],
    loadout:['owned']},
-  specialCollection:collection,selectedPilot:'pilot_com_1',
-  pilotInventory:{pilot_com_1:{unlocked:true,level:1}},nowMs:100,seed}).battle;
+  specialCollection:collection,nowMs:100,seed}).battle;
  let guard=0,phaseGuards=0,cycles=0;
  while(battle.phase!=='finished'&&cycles<TACTICAL_TIMING.maxRounds){
   const planning=phaseAware?battle:structuredClone(battle);
@@ -111,8 +110,7 @@ test('Io: telemetria di Carica/Eruzione/Raffreddamento e guardie vere, con contr
     bossPlanetId:19,bossSectorLevel:10,
     shipCollection:{cards:[{instanceId:'owned',shipId:'L03',level:5}],
      loadout:['owned']},specialCollection:collection,
-    selectedPilot:'pilot_com_1',
-    pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+
     nowMs:100,seed}).battle;
    while(battle.phase!=='finished'){
     assert.ok(battle.round<=TACTICAL_TIMING.maxRounds,'Io oltre 20 cicli');
@@ -218,8 +216,7 @@ test('Io: risultati comparati con/senza potere esclusivo, 40 duelli controllati'
      bossPlanetId:19,bossSectorLevel:10,
      shipCollection:{cards:[{instanceId:'owned',shipId:'L03',level:5}],
       loadout:['owned']},specialCollection,
-     selectedPilot:'pilot_com_1',
-     pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+
      seed,nowMs:100}).battle;
     if(!active)battle.sides.B.bossExclusive=null;
     let rounds=0;

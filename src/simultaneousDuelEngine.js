@@ -27,7 +27,6 @@ import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,ini
  validateLegacyTactics,prepareLegacyTactics,resolveLegacyTactics,armLegacyBombs}
  from './tacticalLegacyEvents.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
-import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalBossVitalBonus,rememberTacticalBossVitalHit,tacticalBossConditionSnapshot,
  tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit,
@@ -43,7 +42,6 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
-import {tacticalBossCommanderAttackBonus,tacticalBossCommanderDefenseBonus,rememberTacticalBossCommanderImpact,rememberTacticalCommanderEscortHit} from './tacticalBossCommanderBridge.js';
 import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard,bossCharacterActive,activateBossCharacter,expireBossCharacter,bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterIonFactor,bossCharacterPrecisionExtra,bossCharacterEscortExtra,bossCharacterSyncExtra,bossCharacterCounterSync,bossCharacterRememberHit,bossCharacterApplyRegen} from './bossCharacterCards.js';
@@ -174,7 +172,7 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false,commander=null,bossNumericDeck=null,equipmentLevels={}){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false,bossNumericDeck=null,equipmentLevels={}){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
@@ -196,20 +194,17 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   legacy:initialLegacyTactics(),equipmentLevels:{...equipmentLevels},riftUsed:false,
   neurotoxinUntilRound:0,neurotoxinPendingRound:0,
   bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
-  commander:commander&&tacticalCommanderReady(commander.id)?{
-   id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
-  }:null,
   epic:{active:null,used:[],entitlements:[...epicEntitlements],peek:[],exchangeCredits:0,
    exchangeUntilRound:0,dustPreview:0},
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)},bossNumericDeck);
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',mode='classic',
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],equipmentLevelsA={},equipmentLevelsB={},previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],equipmentLevelsA={},equipmentLevelsB={},previewEpicOpeningA=null,shuffleNumericOpening=false,bossNumericDeckA=null,bossNumericDeckB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  const battle={schemaVersion:1,arenaId,mode,seed,activeTerrain:null,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA,equipmentLevelsA),
-   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB,equipmentLevelsB)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,bossNumericDeckA,equipmentLevelsA),
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,bossNumericDeckB,equipmentLevelsB)},
   history:[],lastEvents:bossPlanetB===20?[
    'B: Custode dell’Antispazio · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
@@ -494,15 +489,6 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const characterNative=bossCharacterNativeBonus(atk,def,round,base,
   cycleStart[key].defense.shield.hp);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
- const standardPilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
- const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round,
-  {suppressFirstEscort:t.suppressFirstEscort,defenderCover:res.cover&&def.defense.shield.hp>0});
- const pilot=advancedPilot.active?advancedPilot:standardPilot;
- if(pilot.active){
-  atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
-  log.push(key+': '+pilot.pilotId+' · calcolo '+orders[key].op+
-   ' valido, bonus pilota '+pilot.percentage+'% ('+pilot.extra+' HP, resto '+pilot.remainder+'/100)');
- }
  // Every bonus modifies the REAL native weapon packet; two different special
  // cards never exceed the established +45% offensive cap.
  const bonusWithoutAbyss=(t.types.includes('tactic-power-shift')?6:0)+
@@ -526,10 +512,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const appliedResonanceExtra=Math.min(cap,bonusWithResonance)-Math.min(cap,bonusWithMagmaDeck);
  const bonus=bonusWithResonance+supremacy.extra;
  const appliedSupremacyExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithResonance);
- // Il pilota è un modificatore dell'armamento originale, distinto dal
- // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=Math.max(0,base-magma.penalty+
-  Math.min(cap,bonus+characterNative.extra)+pilot.extra);
+  Math.min(cap,bonus+characterNative.extra));
  if(res.types.includes('tactic-power-shift'))total+=3;
  const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
  total+=ombre.extra;
@@ -542,7 +526,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  // Il colpo nativo resta invariato fino all'intercettazione. Le carte
  // difensive si applicano dopo, ai soli HP destinati alla madre.
  const before=total;
- let intercepted=0,splash=0,firstEscortIndex=null;
+ let intercepted=0,splash=0;
  // Kinetic and the real Piercing card bypass ESCORT interception, never mother
  // shields nor numeric vital signatures.
  const bypass=(t.piercing?.20:0)+(t.tech==='cinetico'?.10:0);
@@ -558,7 +542,6 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   if(res.cover&&live.length&&def.defense.shield.hp>0){
    const take=Math.min(live[0].hp,Math.floor(total*.75*escortEfficiency),maxIntercept);
    live[0].hp-=take;intercepted+=take;res.coverUsed=take>0;
-   if(take>0&&firstEscortIndex===null)firstEscortIndex=def.escorts.indexOf(live[0]);
   }
   let suppressed=false;
   const supported=live.filter(e=>e.hp>0).length;
@@ -571,7 +554,6 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    const nerfed=res.ionizedDefense&&res.fusionDefense?share*.5:share;
    const take=Math.max(0,Math.min(e.hp,Math.floor(escortPacket*nerfed*escortEfficiency),maxIntercept-intercepted));
    e.hp-=take;intercepted+=take;
-   if(take>0&&firstEscortIndex===null)firstEscortIndex=def.escorts.indexOf(e);
    if(res.fusion==='fusion-barrier'||res.fusion==='fusion-strike')break;
   }
   // Explosive native technology spreads a small real HP impact to a second
@@ -580,7 +562,6 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    splash=Math.min(2,def.escorts[1].hp);def.escorts[1].hp-=splash;
   }
  }
- if(firstEscortIndex!==null)rememberTacticalCommanderEscortHit(atk,firstEscortIndex,intercepted);
  if(intercepted>0&&escortEfficiency<1)
   log.push(other(key)+': Centralina danneggiata, intercettazione scudiere −15%');
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
@@ -589,18 +570,14 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  if(barrierGuard.absorbed>0)log.push(other(key)+': difese Carta Speciale assorbono '+barrierGuard.absorbed+' HP sulla barriera madre');
  const bossDefenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
- const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
  const effectivePacket=Math.floor(Math.floor(barrierGuard.packet*bossDefenseFactor*
-  exclusiveDefenseFactor*pilotDefense.factor*characterGuard)*(modifiers?.shieldDamageFactor||1)*
+  exclusiveDefenseFactor*characterGuard)*(modifiers?.shieldDamageFactor||1)*
   (modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  if(bossCharacterRememberHit(def,round,hit.damage))
   log.push(other(key)+': Personaggio Idra · rigenerazione prevista al prossimo ciclo');
- rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
- if(pilotDefense.active&&hit.damage>0)
-  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul danno reale alla madre');
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
@@ -665,7 +642,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   guardAbsorbed:barrierGuard.absorbed,
   technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id),
-  pilotBonus:pilot.extra,pilotId:pilot.active?pilot.pilotId:null});
+  });
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
@@ -706,15 +683,11 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  if(barrierGuard.absorbed>0)log.push(other(key)+': difese Carta Speciale assorbono '+barrierGuard.absorbed+' HP dalla scudiera');
  const defenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const armor=exclusiveBossShieldFactor(def);
- const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
- const actual=Math.floor(Math.floor(barrierGuard.packet*defenseFactor*armor*pilotDefense.factor*characterGuard)*
+ const actual=Math.floor(Math.floor(barrierGuard.packet*defenseFactor*armor*characterGuard)*
   (modifiers?.shieldDamageFactor||1)*(modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,actual);
  def.defense=hit.defense;
- rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
- if(pilotDefense.active&&hit.damage>0)
-  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% contro scudiera');
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberTacticalResonanceCooperationHit(atk,hit.damage,harmony);
@@ -821,8 +794,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   }
  }
  const bossDefenseFactor=tacticalBossMotherFactor(def,status[other(key)].bossSnapshot);
- const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
- damage=Math.floor(damage*bossDefenseFactor*pilotDefense.factor);
+ damage=Math.floor(damage*bossDefenseFactor);
  if(status[key].moduleFx?.precisionFactor)damage=Math.max(0,Math.floor(damage*status[key].moduleFx.precisionFactor));
  if(riftBypasses)damage=riftProtectedDamage(damage,true);
  const hit=riftBypasses?hitMotherPartThroughRift(defense,target,damage,cards):
@@ -831,9 +803,6 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  def.defense=hit.defense;
  if(characterPrecision>0&&hit.damage>0)
   log.push(key+': Carta Custode dell’Antispazio · precisione multi-seme +'+characterPrecision+' HP potenziali');
- rememberTacticalBossCommanderImpact(atk,def,order,status[key].types,hit.damage,round,{vitalId:target});
- if(pilotDefense.active&&hit.damage>0)
-  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul vitale '+target);
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);

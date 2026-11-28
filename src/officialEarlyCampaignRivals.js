@@ -2,7 +2,7 @@
 // Il nemico non deve anticipare navi Rare o armi gia dal primo turno.
 // Le 17 navi, il motore legacy e il PvP rimangono invariati.
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
-import {getShipDefinition} from './mathDuelEngine.js';
+import {getShipDefinition} from './fleetNext/shipCore.js';
 export const FIRST_PLANET_RIVAL_SHIPS=Object.freeze(Array.from({length:9},(_,i)=>{
  const sector=i+1;
  const latest=SHIP_CAMPAIGN_UNLOCKS.filter(item=>item.sector<sector).at(-1);

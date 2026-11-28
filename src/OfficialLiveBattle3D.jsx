@@ -157,10 +157,10 @@ function LiveSpecialArt({card}){
 export default function OfficialLiveBattle3D({
  nickname,gameMode='campaign',sectorNumber=1,displaySector='',
  bossPlanetId=null,bossSectorLevel=null,selectedBossDeck,bossDeckInventory,
- selectedPilot,pilotInventory,onResult,onExit
+ onResult,onExit
 }){
  const options={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel,
-  selectedBossDeck,bossDeckInventory,selectedPilot,pilotInventory};
+  selectedBossDeck,bossDeckInventory};
  const [session,setSession]=useState(()=>startSession(options));
  const [battle,setBattle]=useState(session.battle);
  const [now,setNow]=useState(Date.now);

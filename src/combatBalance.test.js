@@ -5,8 +5,6 @@ import assert from 'node:assert/strict';
 import {balancedCombatImpact,COMBAT_BALANCE_LIMITS} from './combatBalance.js';
 import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
 import {BOSS_NUMERIC_DECK_IDS,BOSS_NUMERIC_DECKS,equipBossNumericDeck,bossNumericDamageFactor,bossNumericDefenseFactor} from './bossNumericDecks.js';
-import {COMMANDER_ABILITY_IDS,commanderAttackFactor,commanderDefenseFactor} from './commanderAbilities.js';
-import {equipFleetCommander} from './fleetCommander.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {arenaAttackFactor,arenaMotherDefenseFactor,arenaEnvironment,applyArenaIonResistance} from './battleArenas.js';
 import {battlePacingReport} from './battlePacing.js';
@@ -58,46 +56,6 @@ test('45: nessun bonus inventa danni e input invalidi sono neutrali',()=>{
  assert.equal(invalid.defenseFactor,1);
  const r=balancedCombatImpact(100,{bossDefense:.62,commanderDefense:.62,arenaDefense:.62});
  assert.equal(r.defenseFactor,COMBAT_BALANCE_LIMITS.minMotherDefenseFactor);
-});
-
-test('45: 12 boss, 33 comandanti e tre fasi rispettano i limiti simultanei',()=>{
- const initial=battle();
- let scanned=0;
- for(const bossId of BOSS_NUMERIC_DECK_IDS){
-  const boss=equipBossNumericDeck(initial.player,bossId,BOSS_NUMERIC_DECKS[bossId].maxLevel);
-  const defender=equipBossNumericDeck(initial.enemy,'planet_char_20',9);
-  for(const pilotId of COMMANDER_ABILITY_IDS){
-   const attacker=equipFleetCommander(boss,pilotId,5);
-   const defended=equipFleetCommander(defender,pilotId,5);
-   for(const round of [1,4,7]){
-    const planet=PHASE16A_CAMPAIGN_PLANETS.find(p=>p.deck===bossId);
-    assert.ok(planet,'Boss without a corresponding planet');
-    const arenaId='boss_'+planet.id,environmentStage=arenaEnvironment(arenaId,round).stage;
-    const context={
-     legalAttack:true,cards,op:'plus',environmentStage,
-     escortIndex:null,vitalId:null,nowMs:1000,
-     strikeEffects:['shot-ion'],motherShot:true,escortShot:false,
-     reshufflesAtLaunch:0
-    };
-    const params={
-     bossAttack:bossNumericDamageFactor(attacker,defended,context),
-     commanderAttack:commanderAttackFactor(attacker,defended,context),
-     arenaAttack:arenaAttackFactor(arenaId,context),
-     bossDefense:bossNumericDefenseFactor(defended,context),
-     commanderDefense:commanderDefenseFactor(defended,attacker,context),
-     arenaDefense:arenaMotherDefenseFactor(arenaId,defended,context),
-     unmodifiedVolleyDamage:100
-    };
-    const result=balancedCombatImpact(125,params);
-    assert.ok(result.damage>=0&&result.damage<=145);
-    assert.ok(result.passiveFactor>=1&&result.passiveFactor<=1.35);
-    assert.ok(result.defenseFactor>=.65&&result.defenseFactor<=1);
-    assert.ok(result.damage<=Math.floor(125*1.35+1e-9));
-    scanned++;
-   }
-  }
- }
- assert.equal(scanned,12*33*3);
 });
 
 test('45: boss ionico + arena in PICCO non supera 50% riduzione cumulativa',()=>{

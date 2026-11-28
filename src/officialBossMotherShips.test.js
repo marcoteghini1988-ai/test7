@@ -11,7 +11,7 @@ import {FIRST_PLANET_RIVAL_SHIPS,officialEarlyCampaignRivalShip} from './officia
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
-import {chooseCampaignMotherRival,prepareMotherDuelOptions} from './motherDuelLoadout.js';
+import {chooseCampaignMotherRival,prepareMotherDuelOptions} from './campaignMotherRival.js';
 import {fleetCompatibility} from './mathDuelEngine.js';
 const specials=createSpecialCollection();
 function ownedShip(shipId,level){

@@ -12,8 +12,7 @@ function caseForBoss(index){
   bossPlanetId:planet.id,bossSectorLevel:10,
   shipCollection:{cards:[{instanceId:'owned',shipId:'L03',level:5}],
    loadout:['owned']},
-  specialCollection:createSpecialCollection(),selectedPilot:'pilot_com_1',
-  pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+  specialCollection:createSpecialCollection(),
   seed:171,nowMs:100}).battle;
 }
 function ownCards(battle,types){

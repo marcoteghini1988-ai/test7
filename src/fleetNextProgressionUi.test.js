@@ -19,7 +19,7 @@ import {newVessel} from './mathDuelEngine.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
-import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
+import {chooseCampaignMotherRival} from './campaignMotherRival.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';

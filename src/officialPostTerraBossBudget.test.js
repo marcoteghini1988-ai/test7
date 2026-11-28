@@ -20,7 +20,6 @@ import {sealTacticalOrder,advanceTacticalDuel,TACTICAL_TIMING} from './simultane
 
 const seeds=[17,171,2026,4096,8127];
 const starter=createSpecialCollection();
-const ownedPilot={pilot_com_1:{unlocked:true,level:1}};
 function storage(){
  const data=new Map();
  return {getItem:key=>data.get(key)??null,setItem:(key,val)=>data.set(key,val)};
@@ -83,7 +82,7 @@ test('Boss Marte-Encelado: livelli L3/L5 finanziabili solo da premi precedenti, 
    for(const seed of seeds){
     const setup=officialBattleSetup({mode:'adventure',sectorNumber:sector,
      bossPlanetId:planet.id,bossSectorLevel:10,shipCollection:owned.shipCollection,
-     specialCollection:starter,selectedPilot:'pilot_com_1',pilotInventory:ownedPilot,
+     specialCollection:starter,
      pilotLevel:1,selectedBossDeck:'neutral_starter',bossDeckInventory:{},
      nowMs:100,seed});
     assert.equal(setup.battle.sides.A.shipId,owned.shipId);

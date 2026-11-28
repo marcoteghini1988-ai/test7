@@ -1,4 +1,4 @@
-import {getShipDefinition, validFleet} from './mathDuelEngine.js';
+import {getShipDefinition, validFleet} from './fleetNext/shipCore.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 import {nativeMotherRarity,rarityFromLegacyLevel,isShipRarity,
  rarityIndex,nextShipRarity,RARITY_DUPLICATE_COPIES} from './fleetNext/shipRarity.js';

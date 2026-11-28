@@ -2,7 +2,7 @@
 // recovery-era hull damage renderer and destructible motor renderer.
 // This adapter feeds them the four ACTUAL vital HP from the 30+8 battle.
 import React from 'react';
-import {ShipSkin,Engine} from './BossBattle3D.jsx';
+import {ShipSkin,Engine} from './FleetPhysicalRenderer.jsx';
 import {engineVisualState} from './mathFleetGeometry.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {

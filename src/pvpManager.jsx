@@ -355,7 +355,7 @@ function generateNewWeeklyRoster(currentWeekKey, monday) {
     const losses = Math.max(0, Math.floor(wins * 0.45));
 
     pilots.push({
-      id: `pilot_${i + 1}`,
+      id: `bot_${i + 1}`,
       nickname: name,
       level,
       deck: poolDecks[i % poolDecks.length],

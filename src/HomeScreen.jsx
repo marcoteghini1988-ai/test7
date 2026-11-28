@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SciFiIcon, TacticalVisual } from './visualAssets';
 import { playSound } from './audio';
-import { SUIT_SIGNS } from './mathDuelEngine.js';
+import { SUIT_SIGNS } from './fleetNext/shipCore.js';
 import { ASSET_ROOT } from './ShipPresentation';
 import {officialNumericDeckBackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import './HomeScreen.css';

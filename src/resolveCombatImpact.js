@@ -4,7 +4,6 @@
 // Nessuna mutazione dei parametri; i danni e gli status restano a evento reale.
 import {applyPendingHit} from './mathDuelEngine.js';
 import {bossNumericDamageFactor,bossNumericDefenseFactor,rememberBossNumericImpact,applyBossNumericSync} from './bossNumericDecks.js';
-import {commanderAttackFactor,commanderDefenseFactor,rememberCommanderImpact} from './commanderAbilities.js';
 import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance} from './battleArenas.js';
 import {balancedCombatImpact} from './combatBalance.js';
 
@@ -15,8 +14,6 @@ export function resolveCombatImpact({attacker,defender,arenaId,effect,context={}
  const factors={
   bossAttack:bossNumericDamageFactor(attacker,defender,context),
   bossDefense:bossNumericDefenseFactor(defender,context),
-  commanderAttack:commanderAttackFactor(attacker,defender,context),
-  commanderDefense:commanderDefenseFactor(defender,attacker,context),
   arenaAttack:arenaAttackFactor(arenaId,context),
   arenaDefense:arenaMotherDefenseFactor(arenaId,defender,context),
   unmodifiedVolleyDamage:effect.unmodifiedVolleyDamage
@@ -27,10 +24,9 @@ export function resolveCombatImpact({attacker,defender,arenaId,effect,context={}
  const afterArena=applyArenaIonResistance(result.defender,arenaId,result.strategicApplied,
   hitOptions.nowMs??context.nowMs??0,context.environmentStage);
  const remembered=rememberBossNumericImpact(attacker,afterArena,context,result);
- const commander=rememberCommanderImpact(remembered.attacker,remembered.defender,context,result);
  const previousSync=Number(defender.maneuvers?.sync)||0;
- const credited=(Number(commander.defender.maneuvers?.sync)||0)-previousSync;
- return {attacker:commander.attacker,
-  defender:applyBossNumericSync(commander.defender,credited),
+ const credited=(Number(remembered.defender.maneuvers?.sync)||0)-previousSync;
+ return {attacker:remembered.attacker,
+  defender:applyBossNumericSync(remembered.defender,credited),
   result,balance,reason:'ok'};
 }

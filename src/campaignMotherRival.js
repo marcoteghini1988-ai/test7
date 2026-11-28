@@ -2,14 +2,13 @@
 // UNA carta-navicella madre per parte; le scudiere dipendono da modello/livello
 // e vengono create dal motore. Il vecchio inventario con 2-3 carte equipaggiate
 // rimane intatto, ma le navi aggiuntive non entrano come madri nel nuovo duello.
-import {PHASE1_SHIPS,newVessel,fleetCompatibility,getShipDefinition} from './mathDuelEngine.js';
-import {commanderAbility} from './commanderAbilities.js';
+import {PHASE1_SHIPS,fleetCompatibility,getShipDefinition} from './fleetNext/shipCore.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 
-const boundedLevel=(value,id)=>Math.max(1,Math.min(shipMaxLevel(id)||5,Math.floor(Number(value)||1)));
-const sector=value=>Math.max(1,Math.min(120,Math.floor(Number(value)||1)));
-const legalId=id=>getShipDefinition(id)?id:'N00';
+export const boundedLevel=(value,id)=>Math.max(1,Math.min(shipMaxLevel(id)||5,Math.floor(Number(value)||1)));
+export const sector=value=>Math.max(1,Math.min(120,Math.floor(Number(value)||1)));
+export const legalId=id=>getShipDefinition(id)?id:'N00';
 const canFight=(playerId,playerLevel,enemyId,enemyLevel)=>
  fleetCompatibility([playerId],[enemyId],1,
   {[playerId]:playerLevel},{[enemyId]:enemyLevel}).compatible;
@@ -62,39 +61,4 @@ export function prepareMotherDuelOptions(options={},{
  // multi-card saved loadout; no collection change is made here.
  if(!canFight(motherId,level,rivalId,rivalLevel))throw new Error('Madri incompatibili');
  return prepared;
-}
-
-const BOSS_RIVAL_COMMANDERS=Object.freeze({
- 1:'pilot_boss_1',2:'pilot_boss_2',3:'pilot_boss_3',
- 6:'pilot_boss_6',7:'pilot_boss_7',8:'pilot_boss_8',
- 9:'pilot_boss_9',11:'pilot_boss_11',
- 14:'pilot_epic_2', // Generatore: sinergia con due speciali autentiche
- 17:'pilot_leg_1', // Risonanza: alternanza reale delle operazioni
- 19:'pilot_boss_19',20:'pilot_boss_20'
-});
-// I comandanti nemici non sono carte concesse al giocatore e non
-// modificano la sua collezione. Solo le abilità del catalogo originale.
-export function chooseCampaignRivalCommander({
- mode='adventure',globalSector=1,planetId=null,planetSector=null,
- shipId='N00',shipLevel=1,practice=false
-}={}){
- if(practice||!['adventure','campaign'].includes(mode))
-  return Object.freeze({id:'pilot_com_1',level:1,isBoss:false});
- const global=sector(globalSector),planetIndex=PHASE16A_CAMPAIGN_PLANETS.findIndex(
-  p=>p.id===Number(planetId));
- const idx=planetIndex>=0?planetIndex:Math.floor((global-1)/10);
- const planet=PHASE16A_CAMPAIGN_PLANETS[idx];
- const local=Number.isInteger(Number(planetSector))&&Number(planetSector)>=1&&Number(planetSector)<=10?
-  Number(planetSector):((global-1)%10+1);
- const isBoss=local===10;
- const enemyLevel=boundedLevel(shipLevel,shipId);
- const ops=Object.entries(newVessel(legalId(shipId),enemyLevel).engines)
-  .filter(([,e])=>e.hp>0).map(([op])=>op);
- const basic={plus:'pilot_com_1',minus:'pilot_com_2',
-  times:'pilot_com_3',divide:'pilot_com_4'};
- const secondary=ops.length?basic[ops[(idx+local-1)%ops.length]]:'pilot_com_1';
- const desired=isBoss?(BOSS_RIVAL_COMMANDERS[planet.id]||secondary):secondary;
- const id=commanderAbility(desired)?desired:'pilot_com_1';
- return Object.freeze({id,level:Math.min(5,1+Math.floor((global-1)/30)),
-  isBoss,planetId:planet.id});
 }

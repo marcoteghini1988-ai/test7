@@ -7,24 +7,27 @@ import {restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {exclusiveNeurotoxinRepairAmount,exclusiveNeurotoxinActive,clearExclusiveNeurotoxin}
  from './tacticalExclusiveBosses.js';
+// Etichette provvisorie delle carte: le dodici raffigurazioni e i nomi
+// commerciali dei Personaggi richiedono ancora creazione e approvazione.
 const defs=[
- [1,'Guardiano di Gaia','Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
- [2,'Colosso di Tharsis','Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
- [3,'Matriarca Tossica','Spora corrosiva','corrosion','Una salva nativa dannosa può applicare Corrosione autentica, rimovibile con Pulizia.'],
- [6,'Devastatore delle Ere','Contrattacco cronometrico','counter','Una Contromisura che ferma un vero attacco vitale genera +8 Sincronia.'],
- [7,'Sentinella Ionica','Gabbia dielettrica','ionGuard','Gli impulsi ionici subiti durano il 30% in meno.'],
- [8,'Serpe delle Fosse Abissali','Guardia degli abissi','escortGuard','Con almeno una scudiera viva: -12% al danno sulla barriera madre.'],
- [9,'Predone della Penombra','Lama delle ombre','shadow','Con scudo proprio al 35% o meno all’inizio del ciclo, armi native +9%.'],
- [11,'Idra Criogenica','Riserva criogenica','regeneration','Dopo un colpo reale alla propria barriera, ripara fino a 4 HP nel ciclo successivo (una volta).'],
- [14,'Sovvertitore del Caso','Convertitore di flusso','sync','Un calcolo matematico valido concede +5 Sincronia effettiva, fino a 100.'],
- [17,'Boss del Sacrificio','Coro delle scudiere','harmonic','Scudiera +10% se anche la madre colpisce la barriera nello stesso ciclo.'],
- [19,'Divoratore delle Scorie','Forgia instabile','magma','Armi native +8% se il nemico era già corroso all’inizio del ciclo.'],
- [20,'Custode dell’Antispazio','Frattura del vuoto','precision','Precisione valida con almeno due semi diversi: +8% al danno su vitale esposto.']
+ [1,'Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
+ [2,'Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
+ [3,'Spora corrosiva','corrosion','Una salva nativa dannosa può applicare Corrosione autentica, rimovibile con Pulizia.'],
+ [6,'Contrattacco cronometrico','counter','Una Contromisura che ferma un vero attacco vitale genera +8 Sincronia.'],
+ [7,'Gabbia dielettrica','ionGuard','Gli impulsi ionici subiti durano il 30% in meno.'],
+ [8,'Guardia degli abissi','escortGuard','Con almeno una scudiera viva: -12% al danno sulla barriera madre.'],
+ [9,'Lama delle ombre','shadow','Con scudo proprio al 35% o meno all’inizio del ciclo, armi native +9%.'],
+ [11,'Riserva criogenica','regeneration','Dopo un colpo reale alla propria barriera, ripara fino a 4 HP nel ciclo successivo (una volta).'],
+ [14,'Convertitore di flusso','sync','Un calcolo matematico valido concede +5 Sincronia effettiva, fino a 100.'],
+ [17,'Coro delle scudiere','harmonic','Scudiera +10% se anche la madre colpisce la barriera nello stesso ciclo.'],
+ [19,'Forgia instabile','magma','Armi native +8% se il nemico era già corroso all’inizio del ciclo.'],
+ [20,'Frattura del vuoto','precision','Precisione valida con almeno due semi diversi: +8% al danno su vitale esposto.']
 ];
 export const BOSS_CHARACTER_DURATION_CYCLES=2;
 export const BOSS_CHARACTER_CATALOG=Object.freeze(Object.fromEntries(defs.map(
- ([planetId,name,skill,effect,description])=>{
+ ([planetId,skill,effect,description],index)=>{
   const id='boss-character-'+planetId;
+  const name='Personaggio Boss '+String(index+1).padStart(2,'0');
   return [id,Object.freeze({id,planetId,name,skill,effect,description,
    family:'boss-character',short:skill.toUpperCase(),durationCycles:BOSS_CHARACTER_DURATION_CYCLES,
    // Nessuna carta completa approvata: il catalogo conserva identità e regole.

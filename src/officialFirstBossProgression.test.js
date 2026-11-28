@@ -20,7 +20,6 @@ function storage(){
  const entries=new Map();
  return {getItem:key=>entries.get(key)??null,setItem:(key,value)=>entries.set(key,value)};
 }
-const startingPilot={pilot_com_1:{level:1,unlocked:true}};
 async function prepareFirstBoss({shipId='C03',starsPerSector=1,claimCapsule=false}={}){
  const store=storage();
  let dust=F17D_START_RESOURCES.dust;
@@ -81,7 +80,7 @@ test('Terra 10: il catalogo non anticipa mai la quarta nave, la prima rara o una
  assert.equal(withoutClaim.level,4,'Le stelle senza riscatto NON regalano polvere');
 });
 
-test('Boss Terra settore 10: prove con madri veramente ottenibili, pilota e 24 speciali reali',async()=>{
+test('Boss Terra settore 10: prove con madri veramente ottenibili e 24 speciali reali',async()=>{
  const planet=PHASE16A_CAMPAIGN_PLANETS[0];
  const configs=[
   {shipId:'N00',starsPerSector:1,claimCapsule:false},
@@ -98,11 +97,10 @@ test('Boss Terra settore 10: prove con madri veramente ottenibili, pilota e 24 s
   for(const seed of seeds){
    let battle=officialBattleSetup({mode:'adventure',sectorNumber:10,
     bossPlanetId:planet.id,bossSectorLevel:10,shipCollection:prepared.ships,
-    specialCollection:prepared.specials,selectedPilot:'pilot_com_1',
-    pilotInventory:startingPilot,nowMs:100,seed}).battle;
+    specialCollection:prepared.specials,nowMs:100,seed}).battle;
    assert.equal(battle.sides.A.shipId,config.shipId);
    assert.equal(battle.sides.A.level,prepared.level);
-   assert.equal(battle.sides.A.commander?.id,'pilot_com_1');
+   assert.equal(battle.sides.A.commander??null,null);
    assert.equal(battle.sides.B.bossPlanetId,planet.id);
    assert.equal(battle.sides.B.bossNumericDeck.id,planet.deck);
    let rounds=0;

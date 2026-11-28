@@ -1,6 +1,6 @@
 // Costi di potenziamento in polvere stellare già esistente.
 // Nessuna valuta reale, nessun pacchetto acquistato, nessun livello saltato.
-import {getShipDefinition} from './mathDuelEngine.js';
+import {getShipDefinition} from './fleetNext/shipCore.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 
 export const SHIP_UPGRADE_DUST=Object.freeze({

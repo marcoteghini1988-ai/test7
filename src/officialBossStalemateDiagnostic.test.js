@@ -20,8 +20,7 @@ function runScenario(scenario,seed){
   bossPlanetId:scenario.planetId,bossSectorLevel:10,
   shipCollection:{cards:[{instanceId:'owned',shipId:scenario.shipId,level:5}],
    loadout:['owned']},
-  specialCollection:starter,selectedPilot:'pilot_com_1',
-  pilotInventory:{pilot_com_1:{unlocked:true,level:1}},seed,nowMs:100}).battle;
+  specialCollection:starter,seed,nowMs:100}).battle;
  const actions=Object.fromEntries(['A','B'].map(side=>[side,{
   mathematical:0,precisionHits:0,attemptedTargets:{},specials:{},
   shieldMin:60,exposures:0

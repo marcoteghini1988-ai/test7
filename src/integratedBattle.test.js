@@ -36,8 +36,6 @@ const make=(planet,local,seed=3)=>{
  const options={
   vitalPrototype:true,fleetIds:['N00'],shipLevel:5,
   arenaPlanetId:planet.id,arenaSectorLevel:local,
-  playerCommanderId:'pilot_com_1',playerCommanderLevel:5,
-  enemyCommanderId:'pilot_boss_1',enemyCommanderLevel:5,
   ...(local===10?{enemyBossDeckId:planet.deck,
    enemyBossDeckLevel:BOSS_NUMERIC_DECKS[planet.deck].maxLevel}:{})
  };

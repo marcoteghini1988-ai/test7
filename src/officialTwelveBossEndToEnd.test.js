@@ -18,7 +18,6 @@ import {bossCharacterTypeForPlanet} from './bossCharacterCards.js';
 const seeds=[17,171,2026];
 const modes=['campaign','adventure'];
 const starter=createSpecialCollection();
-const pilotInventory={pilot_com_1:{unlocked:true,level:1}};
 
 function assertBattleState(battle,encounter,label){
  assert.equal(battle.arenaId,encounter.arenaId,label+' arena del boss bloccata');
@@ -106,19 +105,18 @@ test('Regressione completa 12 boss x due percorsi x tre seed: 72 duelli ufficial
   for(const mode of modes)for(const seed of seeds){
    const label=planet.name+' settore '+sector+' '+mode+' seed '+seed;
    const eligibility=officialSimultaneousEligibility({gameMode:mode,
-    sectorNumber:sector,bossPlanetId:planet.id,bossSectorLevel:10,
-    selectedPilot:'pilot_com_1'});
+    sectorNumber:sector,bossPlanetId:planet.id,bossSectorLevel:10});
    assert.equal(eligibility.enabled,true,label+' percorso simultaneo');
    const setup=officialBattleSetup({mode,sectorNumber:sector,bossPlanetId:planet.id,
     bossSectorLevel:10,shipCollection,specialCollection:starter,
-    selectedPilot:'pilot_com_1',pilotInventory,seed,nowMs:100});
+    seed,nowMs:100});
    const encounter=setup.bossEncounter;
    assert.ok(encounter,label+' boss individuato');
    assert.equal(encounter.globalSector,sector);
    assert.equal(encounter.motherShipId,setup.shipB,label+' madre fissa');
    assert.equal(setup.battle.sides.A.shipId,milestone.latestShip,label+' nave antecedente');
    assert.equal(setup.battle.sides.B.level,milestone.enemyLevel,label+' livello boss non regalato');
-   assert.equal(setup.battle.sides.A.commander?.id,'pilot_com_1',label+' pilota posseduto');
+   assert.equal(setup.battle.sides.A.commander??null,null,label+' nessun Pilota storico');
    assert.equal(setup.battle.sides.A.bossNumericDeck??null,null,label+' mazzo boss non regalato');
    const result=play(setup.battle,encounter,label);
    const verdict=officialBattleResult(result.battle,mode,sector);
@@ -149,10 +147,10 @@ test('12 boss: settori e pianeti incoerenti non generano boss fittizi',()=>{
   const wrong=PHASE16A_CAMPAIGN_PLANETS[(index+1)%12];
   assert.equal(officialSimultaneousEligibility({gameMode:'campaign',
    sectorNumber:sector,bossPlanetId:wrong.id,bossSectorLevel:10,
-   selectedPilot:'pilot_com_1'}).enabled,false);
+   }).enabled,false);
   assert.equal(officialSimultaneousEligibility({gameMode:'adventure',
    sectorNumber:sector,bossPlanetId:wrong.id,bossSectorLevel:10,
-   selectedPilot:'pilot_com_1'}).enabled,false);
+   }).enabled,false);
   assert.equal(verifiedBossRelicReward({winner:'player',mode:'adventure',
    sectorNumber:sector,bossPlanetId:wrong.id,bossSectorLevel:10}),null);
   assert.equal(verifiedBossRelicReward({winner:'enemy',mode:'campaign',

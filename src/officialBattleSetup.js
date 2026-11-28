@@ -1,7 +1,5 @@
 // Ingresso unico al duello simultaneo della campagna: inventari reali, mai carte gratuite.
-import {chooseCampaignMotherRival,chooseCampaignRivalCommander} from './motherDuelLoadout.js';
-import {commanderFromInventory,normalizeFleetCommander} from './fleetCommander.js';
-import {tacticalCommanderReady} from './tacticalCommanders.js';
+import {chooseCampaignMotherRival} from './campaignMotherRival.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {numericBossDeck} from './bossNumericDecks.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
@@ -19,7 +17,7 @@ const EARLY_NPC_STARTER_TYPES=Object.freeze([...createSpecialCollection().loadou
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
- shipCollection,specialCollection,selectedPilot=null,pilotInventory={},
+ shipCollection,specialCollection,
  selectedBossDeck='neutral_starter',bossDeckInventory={},pilotLevel=1,
  epicRiftOpened=false,moduleLevels={},nowMs=0,seed=18
 }={}){
@@ -80,24 +78,12 @@ export function officialBattleSetup({
  const rivalLevel=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:equipped.level});
  const arena=arenaForBattle(sectorNumber,mode,null,{planetId:encounterPlanet,
   sectorLevel:bossSectorLevel});
- // L'ID del giocatore deve essere sbloccato nell'inventario persistente.
- // L'IA usa la scelta ufficiale del comandante avversario, mai carte del giocatore.
- const ownedPilot=commanderFromInventory(selectedPilot,pilotInventory);
- if(ownedPilot&&!tacticalCommanderReady(ownedPilot.id))
-  throw new Error('Pilota equipaggiato non ancora convertito: usare il duello 3D compatibile');
- const rivalPilot=chooseCampaignRivalCommander({
-  mode,globalSector:sectorNumber,planetId:encounterPlanet,planetSector:bossSectorLevel,
-  shipId:rivalShipId,shipLevel:rivalLevel
- });
- const enemyPilot=tacticalCommanderReady(rivalPilot.id)?
-  normalizeFleetCommander(rivalPilot.id,rivalPilot.level):null;
  const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rivalLevel,equipped.level):
   earlyRivalShip?[...EARLY_NPC_STARTER_TYPES]:[...TACTICAL_STARTER_TYPES];
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
   shipB:rivalShipId,levelB:rivalLevel,
   seed,nowMs,mode,arenaId:arena.id,shuffleNumericOpening:true,
-  commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckA:battleSpecialDeck,epicEntitlementsA:epicEntitlements,

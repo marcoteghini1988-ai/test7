@@ -54,8 +54,7 @@ test('Ricambio intelligente confrontato a rotazione su stessi 16 semi contro Plu
      bossPlanetId:scenario.planetId,bossSectorLevel:10,
      shipCollection:{cards:[{instanceId:'owned',shipId:scenario.ship,level:5}],
       loadout:['owned']},
-     specialCollection:starter,selectedPilot:'pilot_com_1',
-     pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+     specialCollection:starter,
      nowMs:100,seed
     });
     const played=play(setup.battle,variant);

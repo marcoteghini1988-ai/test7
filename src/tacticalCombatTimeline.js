@@ -99,7 +99,6 @@ export function tacticalCombatTimeline(battle){
    events.push({id:'barrier-'+impact.by,type:'barrier',by:impact.by,
     atMs:4610,durationMs:750,damage:impact.damage,intercepted:impact.intercepted,
     guardAbsorbed:impact.guardAbsorbed??0,
-    pilotBonus:impact.pilotBonus||0,pilotId:impact.pilotId||null,
     label:(impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO')+
       ((impact.guardAbsorbed??0)>0?' · DIFESA '+impact.guardAbsorbed:'')});
   }

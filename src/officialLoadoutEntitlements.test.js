@@ -2,9 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BOSS_NUMERIC_DECK_IDS,numericBossDeck,activeNumericBossAbilities}
  from './bossNumericDecks.js';
-import {COMMANDER_ABILITY_IDS,commanderAbility} from './commanderAbilities.js';
-import {commanderFromInventory} from './fleetCommander.js';
-import {tacticalCommanderReady} from './tacticalCommanders.js';
 import {officialSimultaneousEligibility,createOfficialSimultaneousDuel}
  from './officialSimultaneousBridge.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
@@ -53,32 +50,6 @@ test('12 mazzi numerici: solo inventario sbloccato e grado posseduto, mai passiv
  assert.equal(neutral.bossNumericDeck??null,null);
 });
 
-test('33 piloti: tutti pronti nella 3D simultanea, solo carte sbloccate',()=>{
- assert.equal(COMMANDER_ABILITY_IDS.length,33);
- const ready=COMMANDER_ABILITY_IDS.filter(tacticalCommanderReady);
- assert.equal(ready.length,33);
- for(const id of COMMANDER_ABILITY_IDS){
-  assert.ok(commanderAbility(id));
-  assert.equal(commanderFromInventory(id,{}),null,id);
-  assert.equal(commanderFromInventory(id,{[id]:{unlocked:false,level:5}}),null,id);
-  const actual=commanderFromInventory(id,{[id]:{unlocked:true,level:5}});
-  assert.equal(actual.id,id);assert.equal(actual.level,5);
-  const eligibility=officialSimultaneousEligibility({
-   gameMode:'campaign',sectorNumber:1,selectedPilot:id});
-  assert.equal(eligibility.enabled,tacticalCommanderReady(id),
-   'tutti gli ID del catalogo sono convertiti: '+id);
-  if(tacticalCommanderReady(id)){
-   const active=setup({selectedPilot:id,
-    pilotInventory:{[id]:{unlocked:true,level:4}}}).battle.sides.A;
-   assert.equal(active.commander.id,id);
-   assert.equal(active.commander.level,4);
-   const locked=setup({selectedPilot:id,pilotInventory:{}}).battle.sides.A;
-   assert.equal(locked.commander,null,
-    'un pilota scelto senza inventario non concede il bonus');
-  }
- }
-});
-
 test('35 moduli: acquisto storico necessario, una vera carta nel mazzo; nessuna abilitazione passiva',()=>{
  assert.equal(MODULE_CARD_TYPES.length,35);
  assert.equal(Object.keys(PHASE16F_MODULES).length,35);
@@ -99,8 +70,7 @@ test('35 moduli: acquisto storico necessario, una vera carta nel mazzo; nessuna 
  updateSpecialCollection(c=>equipSpecialDeck(c,[chosen,...c.loadout.slice(1)]),store);
  assert.equal(store.getItem(MODULE_STORAGE_KEY),before,'inventario legacy non riscritto');
  const game=createOfficialSimultaneousDuel({gameMode:'campaign',sectorNumber:1,
-  selectedPilot:'pilot_com_1',
-  pilotInventory:{pilot_com_1:{unlocked:true,level:1}}},100,store);
+  },100,store);
  const a=game.battle.sides.A;
  assert.equal(a.equipmentLevels[chosen],4);
  assert.equal([...a.special.hand,...a.special.deck].filter(c=>c.type===chosen).length,1);
@@ -109,6 +79,5 @@ test('35 moduli: acquisto storico necessario, una vera carta nel mazzo; nessuna 
  assert.throws(()=>officialBattleSetup({
   mode:'campaign',sectorNumber:1,shipCollection:ships,
   specialCollection:readSpecialCollection(store),moduleLevels:{},
-  selectedPilot:'pilot_com_1',pilotInventory:{pilot_com_1:{unlocked:true,level:1}}
  }),/Carta Modulo non autorizzata/);
 });

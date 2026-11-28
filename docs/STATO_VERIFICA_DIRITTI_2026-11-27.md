@@ -1,5 +1,39 @@
 # Controllo dei diritti — stato verificato il 27/11/2026
 
+## Aggiornamento del 28/11/2026 — Personaggi
+
+La versione attiva e i sorgenti `src/` non contengono più gli ID del catalogo
+storico `pilot_com_*`, `pilot_rare_*`, `pilot_epic_*`, `pilot_leg_*`,
+`pilot_boss_*` e `pilot_sentinel_*`. Sono stati eliminati i moduli delle
+abilità dei vecchi Piloti e i relativi test dedicati. Le funzioni condivise
+per le navi, il renderer fisico, la scelta della nave rivale e la
+rendicontazione della campagna sono state separate dal vecchio motore. I test
+rimasti non inventano più un Pilota né lo assegnano a uno scontro.
+
+Le dodici definizioni `boss-character-*` **restano come regole e ricompense
+del gioco attuale**, senza illustrazioni approvate (`imagePath:null` e
+`cardFacePath:null`). Le carte mostrano le etichette temporanee
+**Personaggio Boss 01–12**. Questi codici e queste etichette numerate non
+sono i nomi commerciali definitivi né un'affermazione che esistano dodici
+carte illustrate. I nomi dei Boss avversari nella campagna sono un tema
+separato e restano nomi di lavorazione.
+
+Nessuna parola comune o inventata garantisce da sola disponibilità legale.
+Prima della pubblicazione bisogna verificare segni identici e simili nei
+territori e nei prodotti/servizi interessati (per esempio software di gioco
+e intrattenimento online), confrontare i risultati e sottoporre i conflitti
+concreti a una valutazione professionale. Anche una ricerca senza risultati
+non esclude contestazioni. I documenti storici e i commit precedenti restano
+nella cronologia del repository: non sono inclusi nella build corrente e non
+sono stati riscritti.
+
+Verifiche locali: `npm run preflight` e `npm run build` superati; suite completa
+da 2.434 test, con due asserzioni residue sul vecchio Pilota successivamente
+aggiornate e superate in una verifica mirata. Il collaudo visivo della nuova
+etichetta nella partita e il run CI dello stesso commit sono ancora da
+confermare. Le sezioni sotto documentano la fotografia precedente e sono
+superate, dove parlano di Piloti ancora nel menu.
+
 **Perimetro:** contenuti interni del gioco, repository `marcoteghini1988-ai/test7`. Il **titolo commerciale è escluso** su richiesta dell'utente. `Eclissi Stellare` è un nome di lavorazione.
 
 **Aggiornamento nomi:** `E01` **Nefelarca** (ex Nebulosa), `E02` **Vortiluce** (ex Tempesta), `pilot_rare_3` **Mazziere dell'Etere** (ex Il Baro), `pilot_leg_3` **Armiere dei Tre Fronti** (ex Il Fissatore). Anche le etichette delle navi, gli eventi e le carte esclusive collegate sono stati aggiornati; ID, effetti, statistiche e immagini sono conservati. Le ricerche esatte UIBM e di base EUIPO sui quattro nuovi nomi non hanno restituito risultati pubblicabili; non certificano assenza di segni simili o libertà commerciale. I nomi precedenti nelle righe seguenti sono evidenze storiche della verifica.

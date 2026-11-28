@@ -92,7 +92,7 @@ test('Plutone e Io: starter contro 3 Carte Personaggio VERE ottenute da boss pre
     const setup=officialBattleSetup({mode:'adventure',sectorNumber:earned.sector,
      bossPlanetId:planet.id,bossSectorLevel:10,
      shipCollection:earned.ships,specialCollection,seed,nowMs:100,
-     selectedPilot:'pilot_com_1',pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+
      selectedBossDeck:'neutral_starter',bossDeckInventory:{},pilotLevel:1});
     assert.equal(setup.battle.sides.A.shipId,earned.shipId);
     assert.equal(setup.battle.sides.A.level,5);

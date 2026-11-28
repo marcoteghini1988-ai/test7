@@ -15,8 +15,6 @@ import {planTacticalAi} from './tacticalDuelAi.js';
 import {sealTacticalOrder,advanceTacticalDuel,TACTICAL_TIMING} from './simultaneousDuelEngine.js';
 
 const INITIAL_DUST=100;
-const BEGINNER_PILOT_ID='pilot_com_1';
-const BEGINNER_PILOT_INVENTORY=Object.freeze({pilot_com_1:{level:1,unlocked:true}});
 const seeds=[17,171,2026,4096,8127];
 function memoryStorage(){
  const map=new Map();
@@ -95,7 +93,7 @@ test('Prima di Terra 10: soltanto 4 madri, 1000 Polvere incluse 100 iniziali, 9 
  }
 });
 
-test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto e upgrade acquistati',async()=>{
+test('Boss Terra: matrice verificabile con equip reale starter e upgrade acquistati',async()=>{
  const firstBoss=PHASE16A_CAMPAIGN_PLANETS[0];
  const rows=[];
  for(const shipId of ['N00','C01','C02','C03']){
@@ -112,13 +110,12 @@ test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto
     const setup=officialBattleSetup({
      mode:'adventure',sectorNumber:10,bossPlanetId:firstBoss.id,bossSectorLevel:10,
      shipCollection:collection,specialCollection,
-     selectedPilot:BEGINNER_PILOT_ID,pilotInventory:BEGINNER_PILOT_INVENTORY,
      selectedBossDeck:'neutral_starter',bossDeckInventory:{},
      moduleLevels:{},epicRiftOpened:false,pilotLevel:1,nowMs:100,seed
     });
     assert.equal(setup.battle.sides.A.shipId,shipId);
     assert.equal(setup.battle.sides.A.level,level);
-    assert.equal(setup.battle.sides.A.commander?.id,BEGINNER_PILOT_ID);
+    assert.equal(setup.battle.sides.A.commander??null,null);
     assert.equal(setup.battle.sides.A.bossNumericDeck??null,null);
     assert.equal(setup.battle.sides.B.level,1,'boss non copia potenziamenti giocatore');
     if(rivalShipId===null)rivalShipId=setup.battle.sides.B.shipId;

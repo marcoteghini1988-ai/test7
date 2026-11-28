@@ -1,5 +1,5 @@
 import React,{useId} from 'react';
-import {META,PHASE1_SHIPS,SUIT_SIGNS,getShipDefinition,newVessel,shipSuits} from './mathDuelEngine.js';
+import {META,PHASE1_SHIPS,SUIT_SIGNS,getShipDefinition,newVessel,shipSuits} from './fleetNext/shipCore.js';
 import {engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {shipEvolution} from './shipEvolution.js';
 import {getShipProgression,shipProgressionProfile} from './fleetNext/progression.js';

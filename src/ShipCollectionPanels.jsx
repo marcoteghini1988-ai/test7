@@ -1,7 +1,7 @@
 // Hangar madri: quattro rarità collezionabili, nessun livello numerico esposto.
 // I livelli del motore sono proiezioni interne per non rifare la plancia 3D.
 import React,{useEffect,useState} from 'react';
-import {getShipDefinition,PHASE1_SHIPS} from './mathDuelEngine.js';
+import {getShipDefinition,PHASE1_SHIPS} from './fleetNext/shipCore.js';
 import {ShipCard} from './ShipPresentation.jsx';
 import FleetCollectionWorkshop from './FleetCollectionWorkshop.jsx';
 import SupportHangarPanel from './SupportHangarPanel.jsx';

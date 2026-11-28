@@ -38,7 +38,7 @@ test('Tutti i 12 boss leggono soltanto le navi sbloccate prima della vittoria',a
   const battle=officialBattleSetup({mode:'adventure',sectorNumber:sector,
    bossPlanetId:planet.id,bossSectorLevel:10,
    shipCollection:readShipCollection(collected),specialCollection:specials,
-   selectedPilot:'pilot_com_1',pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+
    nowMs:100,seed:171}).battle;
   assert.equal(battle.sides.A.shipId,milestone.latestShip);
   assert.equal(battle.sides.B.level,milestone.enemyLevel);

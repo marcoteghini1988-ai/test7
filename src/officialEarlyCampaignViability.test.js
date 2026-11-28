@@ -11,10 +11,9 @@ import {officialBattleSetup} from './officialBattleSetup.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {sealTacticalOrder,advanceTacticalDuel,TACTICAL_TIMING} from './simultaneousDuelEngine.js';
 import {phase17CampaignDustAward} from './newCombat/phase17Balance.js';
-import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
+import {chooseCampaignMotherRival} from './campaignMotherRival.js';
 
 const seeds=[17,171,2026,4096,8127];
-const pilotInventory={pilot_com_1:{level:1,unlocked:true}};
 const initialSpecials=createSpecialCollection();
 function makeInventory(sector,shipId,level){
  const available=shipsUnlockableBeforeSector(sector);
@@ -67,7 +66,7 @@ test('Terra 1–9: osservatorio 5 seed con inventari e budget realmente preceden
    for(const seed of seeds){
     const setup=officialBattleSetup({mode:'adventure',sectorNumber:sector,
      bossPlanetId:1,bossSectorLevel:sector,shipCollection:collection,
-     specialCollection:initialSpecials,selectedPilot:'pilot_com_1',pilotInventory,
+     specialCollection:initialSpecials,
      selectedBossDeck:'neutral_starter',bossDeckInventory:{},nowMs:100,seed});
     assert.equal(setup.bossId,null,'settori 1–9 NON ricevono poteri boss');
     assert.equal(setup.battle.sides.A.shipId,shipId);

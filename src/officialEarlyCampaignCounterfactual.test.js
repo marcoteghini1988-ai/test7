@@ -4,15 +4,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {shipsUnlockableBeforeSector} from './officialBossProgressionAudit.js';
-import {chooseCampaignRivalCommander,chooseCampaignMotherRival} from './motherDuelLoadout.js';
-import {normalizeFleetCommander} from './fleetCommander.js';
+import {chooseCampaignMotherRival} from './campaignMotherRival.js';
 import {readShipCollection,grantShipCard,equipShipCards} from './shipCollection.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder}
  from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 const specials=createSpecialCollection();
-const ownedPilot={pilot_com_1:{unlocked:true,level:1}};
 const seeds=[17,171,2026,4096,8127];
 function shipCollection(shipId,sector){
  let c=readShipCollection({getItem:()=>null});
@@ -22,19 +20,16 @@ function shipCollection(shipId,sector){
 function battle(sector,shipId,seed,variant){
  const official=officialBattleSetup({mode:'adventure',sectorNumber:sector,
   bossPlanetId:1,bossSectorLevel:sector,shipCollection:shipCollection(shipId,sector),
-  specialCollection:specials,selectedPilot:'pilot_com_1',pilotInventory:ownedPilot,
+  specialCollection:specials,
   seed,nowMs:100}).battle;
  // Variante 'same' replica il vecchio selettore legacy, senza toccarlo.
  const previousRival=chooseCampaignMotherRival(shipId,1,sector,1,sector).shipId;
  const enemyShip=variant==='same'||variant==='same_owned'?previousRival:
   shipsUnlockableBeforeSector(sector).at(-1);
  const enemyDeck=variant==='same'||variant==='accessible'?TACTICAL_STARTER_TYPES:specials.loadout;
- const pilot=chooseCampaignRivalCommander({mode:'adventure',globalSector:sector,
-  planetId:1,planetSector:sector,shipId:enemyShip,shipLevel:1});
  const controlled=createTacticalDuel({shipA:shipId,levelA:1,
   shipB:enemyShip,levelB:1,seed,nowMs:100,mode:'adventure',arenaId:official.arenaId,
-  shuffleNumericOpening:true,commanderA:official.sides.A.commander,
-  commanderB:normalizeFleetCommander(pilot.id,pilot.level),
+  shuffleNumericOpening:true,
   specialDeckA:specials.loadout,specialDeckB:enemyDeck,
   equipmentLevelsA:{},epicEntitlementsA:[],
   bossNumericDeckA:null,bossNumericDeckB:null,bossPlanetB:null});

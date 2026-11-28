@@ -7,7 +7,6 @@ import { TURN_PHASES, PHASE_MAX_SECONDS } from './config.js';
 import { auditPhase10Duel, createPhase10Handoff } from './phase10Audit.js';
 import { finishPhase6Animation, exchangePhase6Cards, extractPhase6WithEther, markPhase6Ready } from './phase6Engine.js';
 import { planPhase9Preparation } from './phase9AI.js';
-import { resolvePhase12CampaignExchange } from './phase12CampaignAbilities.js';
 import { commitPhase5Move } from './phase5Engine.js';
 import { resolvePhase14WeaponEffects } from './phase14WeaponEffects.js';
 import { resolvePhase15Passives, exchangePhase15Cards } from './phase15LegacyPassives.js';
@@ -89,7 +88,7 @@ export function resolvePhase13Environment(state) {
 export function commitPhase13Move(state,side,placements=[],isPass=false,weaponId=null,boost=null) {
   if(!isPhase13BoostAllowed(state,boost)) throw Error('Operatore Boost bloccato dall’anomalia del settore');
   const next=commitPhase5Move(state,side,placements,isPass,weaponId,boost);
-  return resolvePhase16EExchange(resolvePhase15Passives(resolvePhase14WeaponEffects(resolvePhase13Environment(resolvePhase12CampaignExchange(next)))));
+  return resolvePhase16EExchange(resolvePhase15Passives(resolvePhase14WeaponEffects(resolvePhase13Environment(next))));
 }
 export function exchangePhase13Cards(state,side,indices) {
   if(state.campaignEnvironment?.swapsDisabled && !(side==='player'&&state.phase16E?.id==='ophiuchus')) throw Error('Il modificatore del settore blocca i cambi di carte');
@@ -184,10 +183,4 @@ export function createPhase13OnceGuard() {
   const claimed=new Set();
   return {claim(key){if(typeof key!=='string'||!key||claimed.has(key))return false;claimed.add(key);return true;},
     has:key=>claimed.has(key)};
-}
-
-/** Alcuni boss storici (13–17) non hanno una carta pilota boss nel catalogo:
- * per loro si usa la sentinella del pianeta più il profilo boss F12. */
-export function getPhase13EnemyPilotId(planet,sector) {
-  return sector===10 && (planet<=12 || planet>=18) ? `pilot_boss_${planet}` : `pilot_sentinel_${planet}`;
 }

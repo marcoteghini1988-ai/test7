@@ -2,7 +2,7 @@
 // boss deck they actually used in the historical 3D battle. No extra unlocks.
 // This resolver is read-only and never edits progression or inventory.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
-import {tacticalBossProfile} from './tacticalSpecialPresets.js';
+import {PHASE16D_BOSS_PROFILES} from './newCombat/phase16DBosses.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {numericBossDeck} from './bossNumericDecks.js';
 import {battleArena} from './battleArenas.js';
@@ -27,7 +27,9 @@ export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=n
  if(mode==='campaign'&&selected&&selected.id!==fromGlobal?.id)return null;
  const planet=selected??fromGlobal;
  if(!planet)return null;
- const profile=tacticalBossProfile(planet.id);
+ const legacyProfile=PHASE16D_BOSS_PROFILES[planet.id];
+ const profile=legacyProfile?{id:planet.id,name:legacyProfile.name,
+  ability:legacyProfile.ability,description:legacyProfile.description}:null;
  const deck=numericBossDeck(planet.deck);
  const arena=battleArena('boss_'+planet.id);
  const motherShipId=officialBossMotherShip(planet.id);

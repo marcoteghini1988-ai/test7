@@ -5,7 +5,7 @@ import React,{useEffect,useMemo,useState,useRef} from 'react';
 import {MagneticGrappleTethers} from './MagneticWeaponEffects.jsx';
 import FleetDeckPiles from './FleetDeckPiles.jsx';
 import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
-import {newVessel} from './mathDuelEngine.js';
+import {newVessel} from './fleetNext/shipCore.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {readShipCollection} from './shipCollection.js';
 import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
@@ -16,7 +16,7 @@ import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
-import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
+import {chooseCampaignMotherRival} from './campaignMotherRival.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {card,cardRole,cardDisplayFacePath as cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
 import {cardVisualFamily,cardCategoryLabel} from './fleetNext/cardCategory.js';
