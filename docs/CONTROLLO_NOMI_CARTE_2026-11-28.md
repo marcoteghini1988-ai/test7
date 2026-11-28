@@ -34,6 +34,18 @@ hanno ancora illustrazioni/fronti approvati e in gioco hanno etichette
 provvisorie numerate. Non considerare i nomi delle professioni come nomi
 propri definitivi dei Personaggi.
 
+Nel [catalogo delle 120 esclusive](NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json)
+ci sono **altre 12 carte di tipo Personaggio**, una per nave madre, con stato
+`executable-in-combat-v1; final-art-pending`: Cartografo Aurora, Pilota
+Helios, Artigiana Prisma, Comandante Risonante, Artigliere Binario,
+Navigatrice Manta, Ammiraglio Abissale, Arconte della Bruma, Capitano di
+Vortiluce, Sovrano dell’Eclisse, Magistro Ossidiana e Vegliatore delle Rotte
+Celesti. Hanno ID distinti dal registro dei 42; i fronti finali attendono
+arte approvata. Anche questi nomi vanno sottoposti all'autore quando si
+decideranno nomi propri per i personaggi. Il vecchio campo tecnico `type`
+delle esclusive non ridefinisce le categorie editoriali correnti Arma e
+Strategia.
+
 Sette denominazioni cambiate in una fase precedente sono presenti nel codice
 ma restano **provvisorie**, perché l'autore vuole decidere prima di approvare
 nuovi nomi: Archivista → Decifratrice degli Scarti; Guardiano di Gaia →
