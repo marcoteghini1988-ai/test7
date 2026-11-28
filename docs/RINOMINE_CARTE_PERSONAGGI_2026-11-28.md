@@ -1,5 +1,38 @@
 # Nomi correnti delle carte e dei Personaggi — 28 novembre 2026
 
+## Nomi Personaggio scelti dall'autore nella decisione successiva
+
+Queste dodici proposte sono state scelte dall'autore il 28/11/2026; i nomi dei
+Personaggi 01 e 25 sono stati sostituiti nella decisione successiva. Il nome
+precedente è conservato per ricostruire la cronologia; il nome nella quarta
+colonna è quello corrente. È approvato **il nome**, non la meccanica o il
+fronte di una scheda ancora in proposta.
+
+| ID invariato | Nome originario | Nome intermedio, se presente | Nome scelto |
+| --- | --- | --- | --- |
+| `character-general-01` | Medico da campo | Qemirun, Medica di Bordo | Juqelvessa, Medica di Bordo |
+| `character-general-05` | Archivista | Decifratrice degli Scarti | Lirena Vessalun, Recuperatrice di Strategie |
+| `character-general-25` | Comandante d’Acciaio | Telmuriq, Liberatore dell’Arsenale | Arqevrasto, Liberatore dell’Arsenale |
+| `character-general-29` | Signore delle Ombre | Tracciatore del Buio Astrale | Darev Ormavess, Vigilante degli Scarti |
+| `boss-character-1` | Guardiano di Gaia | Curatore delle Falde Vive | Soreno Nerqavol, Guaritore di Flotta |
+| `boss-character-6` | Crono il Distruttore | Devastatore delle Ere | Tavren Qordelis, Stratega della Quarta Carta |
+| `boss-character-8` | Leviatano Abissale | Serpe delle Fosse Abissali | Narevo Taqrenis, Domatore del Generatore |
+| `boss-character-9` | Signore delle Ombre | Predone della Penombra | Talviro Merqasin, Predone della Penombra |
+| `boss-character-14` | Generatore del Caos | Sovvertitore del Caso | Averin Qarvenoth, Sovvertitore dei Turni |
+| `boss-character-17` | Cristallo di Risonanza | Boss del Sacrificio | Vamor Vemarquil, Sacrificatore degli Scarti |
+| `boss-character-19` | Nucleo Magmatico | Divoratore delle Scorie | Odelio Vencaril, Divoratore delle Scorie |
+| `boss-character-20` | Sovrano del Vuoto | Custode dell’Antispazio | Irelvo Gernavul, Interdittore d’Armi |
+
+L'Arma `weapon-designed-metallic-impatto-comandante`, collegata al
+Personaggio 25, passa da **Impattatore del Comandante d’Acciaio** attraverso
+**Impattatore di Telmuriq** a **Impattatore di Arqevrasto**. ID ed effetti non
+cambiano. Le ricerche web sulle dodici diciture complete non hanno rilevato
+usi identici indicizzati. Per Juqelvessa e Arqevrasto, la ricerca WIPO per
+termine contenuto e quella per somiglianza ortografica non hanno mostrato
+risultati; la ricerca web esatta non ha trovato usi identici indicizzati.
+TMview non era accessibile in questa sessione. Nessuna verifica certifica un
+nome «libero» o esclude ogni marchio simile.
+
 ## Decisione e perimetro
 
 Su richiesta dell'autore, le coincidenze e le somiglianze riconoscibili con
@@ -12,10 +45,12 @@ storici. Il registro dedicato dei 42 Personaggi contiene 30 generici e 12 Boss;
 nel catalogo delle 120 esclusive ci sono altre 12 carte Personaggio con ID
 distinti e arte finale ancora da approvare;
 solo 14 generici sono confermati. Le dodici carte Personaggio Boss illustrate
-non sono ancora approvate e nel gioco mantengono etichette temporanee.
-Le sette rinomine qui sotto sono già nel codice ma l'autore non ne ha ancora
-approvato i nomi: presentarle come **provvisorie** e non introdurre altre
-rinomine prima di proporle nella conversazione.
+non sono ancora approvate; otto nomi sono stati scelti nella decisione sopra,
+quattro etichette numerate rimangono temporanee.
+La tabella qui sotto ricostruisce lo **stato intermedio** precedente alla
+decisione sui dodici Personaggi. I due nomi Personaggio nella tabella non
+sono più correnti; gli altri cinque rimangono provvisori finché l'autore
+non li decide.
 
 | ID invariato | Nome precedente | Nome corrente | Motivo della modifica |
 | --- | --- | --- | --- |

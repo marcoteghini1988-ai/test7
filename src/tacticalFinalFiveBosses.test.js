@@ -92,7 +92,7 @@ test('Idra: limite del generatore e cooldown; scudo al massimo non produce vita 
  assert.equal(full.defense.shield.hp,full.defense.shield.max);
 });
 
-test('Sovvertitore del Caso: tre veri colpi caricano, soltanto il quarto libera +10% e azzera',()=>{
+test('Averin Qarvenoth, Sovvertitore dei Turni: tre veri colpi caricano, soltanto il quarto libera +10% e azzera',()=>{
  let b=duel(14);
  const control=duel(null);
  let base=control;
@@ -114,7 +114,7 @@ test('Sovvertitore del Caso: tre veri colpi caricano, soltanto il quarto libera 
  assert.deepEqual(prior,[1,2,3,0,1]);
 });
 
-test('Sovvertitore del Caso: zero danni conserva la carica e non produce scarica gratuita',()=>{
+test('Averin Qarvenoth, Sovvertitore dei Turni: zero danni conserva la carica e non produce scarica gratuita',()=>{
  const b=duel(14,{ah:0});
  b.sides.B.bossExclusive.chaosCharges=3;
  const x=cycle(b);
@@ -126,7 +126,7 @@ test('Sovvertitore del Caso: zero danni conserva la carica e non produce scarica
  assert.equal(helper.bossExclusive.chaosCharges,3);
 });
 
-test('Boss del Sacrificio: 2 vere carte numeriche consumate nel ciclo N danno +5 Sincronia dopo un colpo in N+1',()=>{
+test('Vamor Vemarquil, Sacrificatore degli Scarti: 2 vere carte numeriche consumate nel ciclo N danno +5 Sincronia dopo un colpo in N+1',()=>{
  let a=duel(17,{ah:500}),b=duel(null,{ah:500});
  const numeric={numericIndices:[3,2],vitalId:'weapons',op:'minus'};
  a=cycle(a,numeric);
@@ -142,7 +142,7 @@ test('Boss del Sacrificio: 2 vere carte numeriche consumate nel ciclo N danno +5
  assert.equal(a.sides.B.bossExclusive.resonanceReadyRound,0);
 });
 
-test('Boss del Sacrificio: un solo scarto, barriera a zero o Sincronia piena non concedono risorse false',()=>{
+test('Vamor Vemarquil, Sacrificatore degli Scarti: un solo scarto, barriera a zero o Sincronia piena non concedono risorse false',()=>{
  const side=duel(17).sides.B;
  assert.equal(rememberExclusiveResonanceDiscards(side,1,1),false);
  assert.equal(side.bossExclusive.resonanceReadyRound,0);
@@ -158,7 +158,7 @@ test('Boss del Sacrificio: un solo scarto, barriera a zero o Sincronia piena non
  assert.equal(side.sync,100);
 });
 
-test('Divoratore delle Scorie: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica deterministica',()=>{
+test('Odelio Vencaril, Divoratore delle Scorie: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica deterministica',()=>{
  let a=duel(19),b=duel(null);
  assert.ok(a.lastEvents.some(e=>e.includes('fase CARICA per il ciclo 1')));
  let baseline=nativeBarrierPacket(a.sides.B);
@@ -184,7 +184,7 @@ test('Divoratore delle Scorie: CARICA, ERUZIONE, RAFFREDDAMENTO in successione p
  }
 });
 
-test('Custode dell’Antispazio: seme dominante ruota ogni tre cicli ed è comunicato in preparazione',()=>{
+test('Irelvo Gernavul, Interdittore d’Armi: seme dominante ruota ogni tre cicli ed è comunicato in preparazione',()=>{
  const expected=['♠','♠','♠','♥','♥','♥','♦','♦','♦','♣','♣','♣','♠'];
  expected.forEach((suit,i)=>assert.equal(exclusiveVoidDominantSuit(i+1),suit));
  const b=duel(20);
@@ -194,7 +194,7 @@ test('Custode dell’Antispazio: seme dominante ruota ogni tre cicli ed è comun
  assert.ok(nextPlanning.lastEvents.some(x=>x.includes('seme dominante ♠ per il ciclo 2')));
 });
 
-test('Custode dell’Antispazio: precisione valida con seme dominante +7%, Cuori o Picche avversari contrasta il ciclo SUCCESSIVO',()=>{
+test('Irelvo Gernavul, Interdittore d’Armi: precisione valida con seme dominante +7%, Cuori o Picche avversari contrasta il ciclo SUCCESSIVO',()=>{
  const b=duel(20,{ah:40,bh:40});
  b.sides.A.defense.parts.engine.hp=30;
  b.sides.A.defense.parts.engine.max=30;

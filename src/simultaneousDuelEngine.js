@@ -206,10 +206,10 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,bossNumericDeckA,equipmentLevelsA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,bossNumericDeckB,equipmentLevelsB)},
   history:[],lastEvents:bossPlanetB===20?[
-   'B: Custode dell’Antispazio · seme dominante '+exclusiveVoidDominantSuit(1)+
+   'B: Irelvo Gernavul, Interdittore d’Armi · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
   ]:bossPlanetB===19?[
-   'B: Divoratore delle Scorie · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
+   'B: Odelio Vencaril, Divoratore delle Scorie · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
   ]:[]};
  // This does not create any cards: it merely schedules the first legitimate
  // Afrodite numeric exchange after the real opening cooldown.
@@ -590,34 +590,34 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    resonanceDeck.percentage+'% ('+appliedResonanceExtra+' HP effettivi)');
  const sovereignNative=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy);
  if(sovereignNative.consumed)
-  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia +'+
+  log.push(key+': Irelvo Gernavul, Interdittore d’Armi (mazzo numerico) · Supremazia +'+
    supremacy.percentage+'% ('+appliedSupremacyExtra+' HP applicati, carica consumata)');
  if(magmaDeck.active&&hit.damage>0)
-  log.push(key+': Divoratore delle Scorie (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
+  log.push(key+': Odelio Vencaril, Divoratore delle Scorie (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
    ' +'+magmaDeck.percentage+'% ('+appliedMagmaDeckExtra+' HP effettivi)');
  const chaosProgress=rememberExclusiveChaosNativeHit(atk,hit.damage,chaos);
  if(rememberExclusiveIdraBarrierHit(atk,hit.damage,round))
   log.push(key+': Idra Criogenica · Rigenerazione +4 HP programmata per il ciclo successivo');
  if(chaosProgress.released&&hit.damage>0)
-  log.push(key+': Sovvertitore del Caso · Scarica del reattore +10% (+'+appliedChaosExtra+
+  log.push(key+': Averin Qarvenoth, Sovvertitore dei Turni · Scarica del reattore +10% (+'+appliedChaosExtra+
    ' HP effettivi), cariche azzerate');
  else if(atk.bossExclusive?.id===14&&hit.damage>0)
-  log.push(key+': Sovvertitore del Caso · Reattore carica '+chaosProgress.charges+'/3');
+  log.push(key+': Averin Qarvenoth, Sovvertitore dei Turni · Reattore carica '+chaosProgress.charges+'/3');
  if(magma.phase==='eruzione'&&hit.damage>0)
-  log.push(key+': Divoratore delle Scorie · Eruzione +10% (+'+appliedMagmaExtra+
+  log.push(key+': Odelio Vencaril, Divoratore delle Scorie · Eruzione +10% (+'+appliedMagmaExtra+
    ' HP al pacchetto nativo, prima di intercettazione e difese; non danno garantito)');
  if(magma.phase==='raffreddamento')
-  log.push(key+': Divoratore delle Scorie · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
+  log.push(key+': Odelio Vencaril, Divoratore delle Scorie · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
  if(abyss.active&&hit.damage>0)
-  log.push(key+': Serpe delle Fosse Abissali · Pressione degli abissi +8% sulla salva reale ('+
+  log.push(key+': Narevo Taqrenis, Domatore del Generatore · Pressione degli abissi +8% sulla salva reale ('+
    'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
    '/100; barriera nemica <=40% all\'inizio del ciclo)');
  if(bloodPact.active)
-  log.push(key+': Predone della Penombra · Patto di sangue +8% sul pacchetto nativo ('+
+  log.push(key+': Talviro Merqasin, Predone della Penombra · Patto di sangue +8% sul pacchetto nativo ('+
    'bonus applicato '+appliedBloodPactExtra+' HP, danno barriera '+hit.damage+
    '; costo 4 HP già pagato anche se il colpo fallisce)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
-  log.push(key+': Devastatore delle Ere · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
+  log.push(key+': Tavren Qordelis, Stratega della Quarta Carta · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
   log.push(other(key)+': Gaia · Corazza tellurica consumata (−20% primo impatto alla barriera)');
  if(hit.damage>0&&characterNative.active)
@@ -637,7 +637,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
-   'Custode dell’Antispazio · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   'Irelvo Gernavul, Interdittore d’Armi · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   guardAbsorbed:barrierGuard.absorbed,
@@ -694,7 +694,7 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  if(bossCharacterRememberHit(def,round,hit.damage))
   log.push(other(key)+': Carta Idra · rigenerazione prevista al prossimo ciclo');
  if(characterExtra>0&&hit.damage>0)
-  log.push(key+': Carta Boss del Sacrificio · scudiera +'+characterExtra+' HP potenziali');
+  log.push(key+': Carta Vamor Vemarquil, Sacrificatore degli Scarti · scudiera +'+characterExtra+' HP potenziali');
  impacts.push({kind:'escort_barrier',by:key,target:other(key),
   packet,intercepted,guardAbsorbed:barrierGuard.absorbed,damage:hit.damage,escortSlot:plan.escortSlot,
   cardId:plan.cardId,escortWeaponId:plan.escortWeaponId,
@@ -734,11 +734,11 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  }
  if(status[other(key)].newCounter===target){
   if(rememberExclusiveChronoCounter(def,round))
-   log.push(other(key)+': Devastatore delle Ere · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
+   log.push(other(key)+': Tavren Qordelis, Stratega della Quarta Carta · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
   const counterSync=bossCharacterCounterSync(def,round,true);
   const awarded=Math.min(counterSync,Math.max(0,100-def.sync));
   def.sync+=awarded;
-  if(awarded>0)log.push(other(key)+': Carta Devastatore delle Ere · Contromisura efficace +'+awarded+' Sincronia');
+  if(awarded>0)log.push(other(key)+': Carta Tavren Qordelis, Stratega della Quarta Carta · Contromisura efficace +'+awarded+' Sincronia');
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'countered'});
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
@@ -802,7 +802,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
  if(characterPrecision>0&&hit.damage>0)
-  log.push(key+': Carta Custode dell’Antispazio · precisione multi-seme +'+characterPrecision+' HP potenziali');
+  log.push(key+': Carta Irelvo Gernavul, Interdittore d’Armi · precisione multi-seme +'+characterPrecision+' HP potenziali');
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
@@ -816,18 +816,18 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const sovereignPrecision=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy,
   {destroyedEnemyVital:hit.destroyed});
  if(sovereignPrecision.armed)
-  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia armata dal KO di un vitale reale (prossimo ciclo)');
+  log.push(key+': Irelvo Gernavul, Interdittore d’Armi (mazzo numerico) · Supremazia armata dal KO di un vitale reale (prossimo ciclo)');
  if(sovereignPrecision.consumed)
-  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia +'+supremacy.percentage+
+  log.push(key+': Irelvo Gernavul, Interdittore d’Armi (mazzo numerico) · Supremazia +'+supremacy.percentage+
    '% sul colpo valido (+'+supremacy.extra+' HP prima delle difese, carica consumata)');
  if(magmaVital.active&&hit.damage>0)
-  log.push(key+': Divoratore delle Scorie (mazzo numerico) · Forgia moltiplicatrice +'+
+  log.push(key+': Odelio Vencaril, Divoratore delle Scorie (mazzo numerico) · Forgia moltiplicatrice +'+
    magmaVital.percentage+'% ('+magmaVital.extra+' HP prima delle difese)');
  if(rememberExclusiveVoidCounter(def,hit.damage,cards,round))
-  log.push(other(key)+': Custode dell’Antispazio · seme dominante '+exclusiveVoidDominantSuit(round)+
+  log.push(other(key)+': Irelvo Gernavul, Interdittore d’Armi · seme dominante '+exclusiveVoidDominantSuit(round)+
    ' contrastato da un vero colpo vitale, bonus disattivato nel prossimo ciclo');
  if(voidBonus.active&&hit.damage>0)
-  log.push(key+': Custode dell’Antispazio · '+voidBonus.suit+
+  log.push(key+': Irelvo Gernavul, Interdittore d’Armi · '+voidBonus.suit+
    ' dominante: +7% sul colpo valido ('+voidBonus.extra+' HP prima delle difese)');
  if(cancelExclusiveIdraByHeart(def,hit.damage,cards,round))
   log.push(other(key)+': Idra Criogenica · Rigenerazione annullata da Cuori su vitale esposto');
@@ -835,7 +835,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': Matriarca Tossica · Neurotossina inflitta a '+other(key)+
    ' (prossimo ciclo: −10% alla riparazione della barriera, rimovibile con Pulizia Sistemi)');
  if(leviatano.active&&hit.damage>0)
-  log.push(key+': Serpe delle Fosse Abissali · '+leviatano.abilities.join(' + ')+' ('+
+  log.push(key+': Narevo Taqrenis, Domatore del Generatore · '+leviatano.abilities.join(' + ')+' ('+
    leviatano.percentage+'%, +'+leviatano.extra+' HP, resto '+leviatano.remainder+'/100)');
  if(idra.active&&hit.damage>0)
   log.push(key+': Idra · '+idra.abilities.join(' + ')+' ('+
@@ -848,7 +848,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
    tharsis.extra+' HP (resto '+tharsis.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
-   'Custode dell’Antispazio · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   'Irelvo Gernavul, Interdittore d’Armi · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,
   destroyed:!!hit.destroyed,rift:riftBypasses});
@@ -896,12 +896,12 @@ function resolveCycle(battle,nowMs){
  if(idraRegen.repaired>0)
   log.push('B: Idra Criogenica · Rigenerazione +'+idraRegen.repaired+' HP reali alla barriera');
  const magmaStage=exclusiveMagmaPhase(sides.B,battle.round);
- if(magmaStage)log.push('B: Divoratore delle Scorie · fase '+magmaStage.toUpperCase()+' del ciclo');
+ if(magmaStage)log.push('B: Odelio Vencaril, Divoratore delle Scorie · fase '+magmaStage.toUpperCase()+' del ciclo');
  // Boss Plutone pays REAL shield HP at cycle start, BEFORE all card repairs,
  // native volleys and precision. This never reads the opponent's hidden order.
  const bloodPact=prepareExclusiveBloodPact(sides.B,battle.round,nativeBarrierPacket(sides.B));
  if(bloodPact.armed)
-  log.push('B: Predone della Penombra · Patto di sangue: -'+bloodPact.paid+
+  log.push('B: Talviro Merqasin, Predone della Penombra · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
  const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log,modifiers);
@@ -932,7 +932,7 @@ function resolveCycle(battle,nowMs){
    ionicSiphon.transferred+' Sincronia reale da A a B');
  const resonance=collectExclusiveResonanceSync(sides.B,b,battle.round);
  if(resonance>0)
-  log.push('B: Boss del Sacrificio · Memoria degli scarti +'+resonance+
+  log.push('B: Vamor Vemarquil, Sacrificatore degli Scarti · Memoria degli scarti +'+resonance+
    ' Sincronia reale (due o più carte numeriche scartate nel ciclo precedente)');
  // Bersaglio scelto e rivelato DOPO il vero impatto sulla barriera:
  // ogni lato decide senza conoscere carte o ordini avversari.
@@ -1033,7 +1033,7 @@ function resolveCycle(battle,nowMs){
  if(rememberExclusiveResonanceDiscards(sides.B,
    orders.A.numericIndices.length+orders.A.exchangeIndices.length+
     Number(orders.A.escortAmmoIndex!=null),battle.round))
-  log.push('B: Boss del Sacrificio · Memoria degli scarti armata per il prossimo ciclo');
+  log.push('B: Vamor Vemarquil, Sacrificatore degli Scarti · Memoria degli scarti armata per il prossimo ciclo');
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  armLegacyBombs(sides,legacyEffects,battle.round,log);
  let winner=winState(sides);
@@ -1060,9 +1060,9 @@ export function advanceTacticalDuel(battle,nowMs=0){
   return {...battle,phase:'planning',round:nextRound,orders:{A:null,B:null},
    deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null,
    lastEvents:bossSuit?[...battle.lastEvents,
-    'B: Custode dell’Antispazio · seme dominante '+bossSuit+' per il ciclo '+nextRound
+    'B: Irelvo Gernavul, Interdittore d’Armi · seme dominante '+bossSuit+' per il ciclo '+nextRound
    ]:bossMagma?[...battle.lastEvents,
-    'B: Divoratore delle Scorie · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
+    'B: Odelio Vencaril, Divoratore delle Scorie · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
    ]:battle.lastEvents};
  }
  if(battle.phase!=='planning')return battle;

@@ -328,7 +328,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-metallic-impatto-comandante",
     "elementId": "metallic",
-    "name": "Impattatore del Comandante d’Acciaio",
+    "name": "Impattatore di Arqevrasto",
     "rarita": "Da definire",
     "profile": {
       "pattern": "character-health",

@@ -1275,7 +1275,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_6': // P6 Saturno (Devastatore delle Ere)
+      case 'planet_char_6': // P6 Saturno (Tavren Qordelis, Stratega della Quarta Carta)
         return (
           <g>
             <circle cx="50" cy="75" r="18" fill={`${c}25`} stroke={c} strokeWidth="2.5" />
@@ -1295,7 +1295,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_8': // P8 Nettuno (Serpe delle Fosse Abissali)
+      case 'planet_char_8': // P8 Nettuno (Narevo Taqrenis, Domatore del Generatore)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="2.5" fill={`${c}20`} />
@@ -1305,7 +1305,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_9': // P9 Plutone (Predone della Penombra)
+      case 'planet_char_9': // P9 Plutone (Talviro Merqasin, Predone della Penombra)
         return (
           <g>
             <circle cx="44" cy="72" r="16" stroke={c} strokeWidth="2.5" fill={`${c}30`} />
@@ -1356,7 +1356,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_14': // P14 Proxima b (Sovvertitore del Caso)
+      case 'planet_char_14': // P14 Proxima b (Averin Qarvenoth, Sovvertitore dei Turni)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="2.5" fill={`${c}15`} />
@@ -1408,7 +1408,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_19': // P19 Io (Divoratore delle Scorie)
+      case 'planet_char_19': // P19 Io (Odelio Vencaril, Divoratore delle Scorie)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="3" fill="rgba(239, 68, 68, 0.25)" />
@@ -1418,7 +1418,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_20': // P20 Encelado (Custode dell’Antispazio)
+      case 'planet_char_20': // P20 Encelado (Irelvo Gernavul, Interdittore d’Armi)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="3" fill={`${c}20`} />

@@ -14,18 +14,18 @@ const SUITS=['spades','hearts','clubs','diamonds'];
 const SUIT_NAMES={spades:'Picche',hearts:'Cuori',clubs:'Fiori',diamonds:'Quadri'};
 const SUIT_SYMBOLS={spades:'♠',hearts:'♥',clubs:'♣',diamonds:'♦'};
 const PROFILES=[
- [1,'Curatore delle Falde Vive','Corazza tellurica','Assorbe parte del primo colpo, ma tre semi diversi la spezzano.'],
+ [1,'Soreno Nerqavol, Guaritore di Flotta','Corazza tellurica','Assorbe parte del primo colpo, ma tre semi diversi la spezzano.'],
  [2,'Colosso di Tharsis','Assalto progressivo','Ogni vittoria con salva aumenta la pressione. Fermalo per spezzare la serie.'],
  [3,'Matriarca Tossica','Neurotossina','Le salve vincenti avvelenano lo scambio successivo.'],
- [6,'Devastatore delle Ere','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
+ [6,'Tavren Qordelis, Stratega della Quarta Carta','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
  [7,'Sentinella Ionica','Sifone quantico','Intercetta l’energia Boost che conservi; sfruttarla comporta un rischio.'],
- [8,'Serpe delle Fosse Abissali','Pressione degli abissi','Quando hai pochi HP, le sue salve diventano più pericolose.'],
- [9,'Predone della Penombra','Patto di sangue','Sacrifica i propri HP per potenziare colpi con carte rosse.'],
+ [8,'Narevo Taqrenis, Domatore del Generatore','Pressione degli abissi','Quando hai pochi HP, le sue salve diventano più pericolose.'],
+ [9,'Talviro Merqasin, Predone della Penombra','Patto di sangue','Sacrifica i propri HP per potenziare colpi con carte rosse.'],
  [11,'Idra Criogenica','Rigenerazione criogenica','Recupera HP dopo una salva; i Cuori interrompono la rigenerazione.'],
- [14,'Sovvertitore del Caso','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
- [17,'Boss del Sacrificio','Memoria degli scarti','Gli scarti del giocatore alimentano il contrattacco.'],
- [19,'Divoratore delle Scorie','Ciclo magmatico','Alterna carica, eruzione e raffreddamento su tre scambi.'],
- [20,'Custode dell’Antispazio','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
+ [14,'Averin Qarvenoth, Sovvertitore dei Turni','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
+ [17,'Vamor Vemarquil, Sacrificatore degli Scarti','Memoria degli scarti','Gli scarti del giocatore alimentano il contrattacco.'],
+ [19,'Odelio Vencaril, Divoratore delle Scorie','Ciclo magmatico','Alterna carica, eruzione e raffreddamento su tre scambi.'],
+ [20,'Irelvo Gernavul, Interdittore d’Armi','Dominio dei semi','Con le anomalie cambia il seme dominante: usarlo può neutralizzare il suo potere.']
 ];
 export const PHASE16D_BOSS_PROFILES=Object.freeze(Object.fromEntries(PROFILES.map(([planet,name,ability,description])=>[planet,Object.freeze({planet,name,ability,description})])));
 export const isPhase16DBoss=planet=>Object.hasOwn(PHASE16D_BOSS_PROFILES,Number(planet));
@@ -104,10 +104,10 @@ export function resolvePhase16DBossExchange(state){
        break;
      case 6: // Saturno: ricompensa il contrattacco superiore, senza riflettere colpi letali.
        if(shot&&bossWon&&bossReplied){
-         addBoost('enemy',5,'Il Devastatore delle Ere anticipa la prossima mossa');
+         addBoost('enemy',5,'Tavren Qordelis, Stratega della Quarta Carta anticipa la prossima mossa');
          const suit=e?.suit;
          if(suit&&Number.isFinite(ammo.enemy[suit])){
-           ammo.enemy[suit]+=2;emit('ammo',2,'Il Devastatore delle Ere recupera munizioni rispondendo');
+           ammo.enemy[suit]+=2;emit('ammo',2,'Tavren Qordelis, Stratega della Quarta Carta recupera munizioni rispondendo');
          }
        }
        break;
@@ -137,14 +137,14 @@ export function resolvePhase16DBossExchange(state){
        if(shot){
          memory.charge=Math.min(12,(memory.charge||0)+4);
          emit('charge',memory.charge,'Reattore: carica accumulata');
-         if(memory.charge>=12){damage(12,'Scarica del Sovvertitore del Caso');memory.charge=0;}
+         if(memory.charge>=12){damage(12,'Scarica di Averin Qarvenoth, Sovvertitore dei Turni');memory.charge=0;}
        }
        break;
      case 17: // L'ordine è quello degli scarti effettivi, non carte generate.
        if(shot){
          const count=state.player?.discard?.length||0;
          if(count>=4)addBoost('enemy',Math.min(6,Math.floor(count/2)),'Risonanza degli scarti');
-         if(count>=8)damage(5,'Boss del Sacrificio alimentato dagli scarti');
+         if(count>=8)damage(5,'Vamor Vemarquil, Sacrificatore degli Scarti alimentato dagli scarti');
        }
        break;
      case 19: {
@@ -162,7 +162,7 @@ export function resolvePhase16DBossExchange(state){
          addBoost('player',3,`Il giocatore neutralizza il dominio ${SUIT_NAMES[dominant]}`);
          emit('status',0,`Dominio ${SUIT_NAMES[dominant]} neutralizzato`);
        }else if(shot&&enemySuits.has(dominant)){
-         damage(7,`Dominio ${SUIT_NAMES[dominant]} del Custode dell’Antispazio`);
+         damage(7,`Dominio ${SUIT_NAMES[dominant]} di Irelvo Gernavul, Interdittore d’Armi`);
        }
        break;
      }

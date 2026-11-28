@@ -23,7 +23,7 @@ function cycle(b,time=101,byB={specialIndices:[],numericIndices:[]}){
 const enemyHit=resolved=>resolved.history.at(-1).impacts.find(x=>
  x.kind==='barrier'&&x.by==='B');
 
-test('Devastatore delle Ere L1-L3 posseduto attiva la difesa sul primo colpo e non concede carte',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta L1-L3 posseduto attiva la difesa sul primo colpo e non concede carte',()=>{
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_6',bossDeckInventory:{planet_char_6:{unlocked:true,level:1}}}).enabled,true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
@@ -45,7 +45,7 @@ test('Devastatore delle Ere L1-L3 posseduto attiva la difesa sul primo colpo e n
  }
 });
 
-test('Devastatore delle Ere: riduzione consumata solo al primo danno reale alla madre',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: riduzione consumata solo al primo danno reale alla madre',()=>{
  const original=chrono(3);
  const reduced=cycle(original);
  const plain=cycle(officialBattleSetup(setup).battle);
@@ -57,7 +57,7 @@ test('Devastatore delle Ere: riduzione consumata solo al primo danno reale alla 
  assert.equal(original.sides.A.bossNumericDeck.firstHitUsed,false);
 });
 
-test('Devastatore delle Ere: primo colpo può essere ai vitali se la barriera è già a zero',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta: primo colpo può essere ai vitali se la barriera è già a zero',()=>{
  const plain=createTacticalDuel({shipA:'N00',shipB:'R04',levelA:1,levelB:1,
   nowMs:0,seed:18});
  const boss=createTacticalDuel({shipA:'N00',shipB:'R04',levelA:1,levelB:1,
@@ -76,7 +76,7 @@ test('Devastatore delle Ere: primo colpo può essere ai vitali se la barriera è
  assert.equal(result.sides.A.bossNumericDeck.firstHitUsed,true);
 });
 
-test('Devastatore delle Ere non consuma la passiva se il colpo non causa danno',()=>{
+test('Tavren Qordelis, Stratega della Quarta Carta non consuma la passiva se il colpo non causa danno',()=>{
  const game=chrono(3);
  const muted={...game,sides:{...game.sides,B:{...game.sides.B,weapons:[]}}};
  const result=cycle(muted);

@@ -15,9 +15,12 @@ test('Le 12 carte Personaggio Boss conservano ID e regole, senza raffigurazioni 
  assert.equal(Object.keys(BOSS_CHARACTER_CATALOG).length,12);
  assert.equal(existsSync(resolve('public/assets/boss-characters')),false);
  assert.equal(existsSync(resolve('public/assets/fleet-next-boss-cards')),false);
+ const names=new Set();
  for(const type of Object.keys(BOSS_CHARACTER_CATALOG)){
   assert.ok(isBossCharacterCard(type));
-  assert.match(BOSS_CHARACTER_CATALOG[type].name,/^Personaggio Boss \d{2}$/);
+  const name=BOSS_CHARACTER_CATALOG[type].name;
+  assert.ok(name && !names.has(name),'Nome mancante o duplicato: '+type);
+  names.add(name);
   assert.equal(BOSS_CHARACTER_CATALOG[type].imagePath,null,type);
   assert.equal(SPECIAL_CARD_CATALOG[type].imagePath,null,type);
   assert.equal(officialSpecialArtPath(type),null,type);

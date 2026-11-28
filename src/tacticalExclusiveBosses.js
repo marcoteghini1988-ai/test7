@@ -92,7 +92,7 @@ export function expireExclusiveNeurotoxin(side,round){
  return side;
 }
 
-// Devastatore delle Ere (Saturno): a real tactic-counter card must block a valid incoming
+// Tavren Qordelis, Stratega della Quarta Carta (Saturno): a real tactic-counter card must block a valid incoming
 // precision strike. Only then charge one native +5% volley. The shot must
 // hurt the barrier within the NEXT TWO cycles, otherwise charge expires.
 // No extra projectiles or retaliation if the boss has no real gun hit.
@@ -147,7 +147,7 @@ export function transferExclusiveIonicSync(attacker,defender,barrierDamage){
 }
 
 
-// Serpe delle Fosse Abissali (Nettuno, ID 8) - Pressione degli abissi.
+// Narevo Taqrenis, Domatore del Generatore (Nettuno, ID 8) - Pressione degli abissi.
 // The enemy barrier is sampled at the START of the simultaneous cycle,
 // before repair, native fire, precision or other resolution-phase changes.
 // No access to the opponent's hidden order, draw or numeric signature.
@@ -179,7 +179,7 @@ export function rememberExclusiveLeviatanoNativeHit(attacker,barrierDamage,bonus
 }
 
 
-// Predone della Penombra (Plutone, boss ID 9) — Patto di sangue.
+// Talviro Merqasin, Predone della Penombra (Plutone, boss ID 9) — Patto di sangue.
 // A voluntary trade: 4 REAL shield HP for +8% to this cycle's REAL
 // native-weapon packet. The shield debit happens BEFORE preparations and
 // opposing volleys, so the price remains paid even if the shot is intercepted.

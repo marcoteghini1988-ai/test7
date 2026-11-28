@@ -35,7 +35,7 @@ function bringRealSpecialToHand(side,type,slot){
  [pile.hand[slot],pile.deck[j]]=[pile.deck[j],pile.hand[slot]];
 }
 
-test('Il Serpe delle Fosse Abissali e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezionabile',()=>{
+test('Narevo Taqrenis, Domatore del Generatore e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezionabile',()=>{
  assert.equal(exclusiveBossReady(8),true);
  assert.equal(createExclusiveBossState(8)?.id,8);
  assert.equal(createExclusiveBossState(9)?.id,9);
@@ -59,7 +59,7 @@ test('Pressione degli abissi: soglia esatta del 40% all INIZIO, 41% no; 0 non cr
  const base=nativeBarrierPacket(open().sides.B);
  assert.ok(base>0);
  assert.ok(gunB(exact).damage>0);
- assert.ok(exact.lastEvents.some(e=>e.includes('Serpe delle Fosse Abissali · Pressione degli abissi')));
+ assert.ok(exact.lastEvents.some(e=>e.includes('Narevo Taqrenis, Domatore del Generatore · Pressione degli abissi')));
  assert.equal(exact.sides.B.bossExclusive.pressureRemainder,(base*8)%100);
  assert.equal(high.sides.B.bossExclusive.pressureRemainder,undefined);
  assert.ok(!high.lastEvents.some(e=>e.includes('Pressione degli abissi')));
