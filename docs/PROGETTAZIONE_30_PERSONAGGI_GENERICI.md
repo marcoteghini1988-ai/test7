@@ -24,7 +24,7 @@ Il criterio professionale richiede un meccanismo concreto della flotta, non un s
 
 ## Schede
 
-### 1. Qemirun, Medica di Bordo — Comune
+### 1. Juqelvessa, Medica di Bordo — Comune
 
 Durata: 3 turni propri. Stato: confermato; non ancora implementato.
 
@@ -221,12 +221,12 @@ Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 
-### 25. Telmuriq, Liberatore dell’Arsenale — Epica
+### 25. Arqevrasto, Liberatore dell’Arsenale — Epica
 
 Durata: permanente. Stato: proposta da verificare; non ancora implementato.
 
 - Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.
-- Attiva i potenziamenti dell'Impattatore di Telmuriq alle soglie di HP già previste.
+- Attiva i potenziamenti dell'Impattatore di Arqevrasto alle soglie di HP già previste.
 
 Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confermate e il criterio professionale; nessuna approvazione nuova.
 

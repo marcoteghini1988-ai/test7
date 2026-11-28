@@ -48,7 +48,7 @@
   "characters": [
     {
       "id": "character-general-01",
-      "name": "Qemirun, Medica di Bordo",
+      "name": "Juqelvessa, Medica di Bordo",
       "rarity": "Comune",
       "category": "Personaggio",
       "element": null,
@@ -571,7 +571,7 @@
     },
     {
       "id": "character-general-25",
-      "name": "Telmuriq, Liberatore dell’Arsenale",
+      "name": "Arqevrasto, Liberatore dell’Arsenale",
       "rarity": "Epica",
       "category": "Personaggio",
       "element": null,
@@ -581,7 +581,7 @@
       },
       "abilities": [
         "Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.",
-        "Attiva i potenziamenti dell'Impattatore di Telmuriq alle soglie di HP già previste."
+        "Attiva i potenziamenti dell'Impattatore di Arqevrasto alle soglie di HP già previste."
       ],
       "status": "proposed",
       "playable": false,

@@ -6,8 +6,10 @@ L'autore ha scelto le dodici proposte presentate in conversazione: quattro
 Personaggi generici (ID 01, 05, 25, 29) e otto Boss (ID 1, 6, 8, 9, 14, 17,
 19, 20). I nomi correnti e lo stato di approvazione del **solo nome** sono in
 `docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json`; la mappatura completa è in
-`docs/RINOMINE_CARTE_PERSONAGGI_2026-11-28.md`. Anche l'Arma collegata al
-Personaggio 25 si chiama «Impattatore di Telmuriq». Conservare ID, abilità,
+`docs/RINOMINE_CARTE_PERSONAGGI_2026-11-28.md`. I Personaggi 01 e 25 sono
+stati aggiornati a Juqelvessa e Arqevrasto dopo ulteriore scelta dell'autore.
+Anche l'Arma collegata al Personaggio 25 si chiama «Impattatore di
+Arqevrasto». Conservare ID, abilità,
 rarità, sblocchi e risorse grafiche. Le illustrazioni finali delle carte
 Personaggio Boss restano in preparazione; approvare un nome non approva la
 meccanica di una scheda ancora proposta. I nomi precedenti citati nelle

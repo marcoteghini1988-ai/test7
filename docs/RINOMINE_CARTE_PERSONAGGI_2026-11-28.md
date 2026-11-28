@@ -2,16 +2,17 @@
 
 ## Nomi Personaggio scelti dall'autore nella decisione successiva
 
-Queste dodici proposte sono state scelte dall'autore il 28/11/2026. Il nome
+Queste dodici proposte sono state scelte dall'autore il 28/11/2026; i nomi dei
+Personaggi 01 e 25 sono stati sostituiti nella decisione successiva. Il nome
 precedente è conservato per ricostruire la cronologia; il nome nella quarta
 colonna è quello corrente. È approvato **il nome**, non la meccanica o il
 fronte di una scheda ancora in proposta.
 
 | ID invariato | Nome originario | Nome intermedio, se presente | Nome scelto |
 | --- | --- | --- | --- |
-| `character-general-01` | Medico da campo | — | Qemirun, Medica di Bordo |
+| `character-general-01` | Medico da campo | Qemirun, Medica di Bordo | Juqelvessa, Medica di Bordo |
 | `character-general-05` | Archivista | Decifratrice degli Scarti | Lirena Vessalun, Recuperatrice di Strategie |
-| `character-general-25` | Comandante d’Acciaio | — | Telmuriq, Liberatore dell’Arsenale |
+| `character-general-25` | Comandante d’Acciaio | Telmuriq, Liberatore dell’Arsenale | Arqevrasto, Liberatore dell’Arsenale |
 | `character-general-29` | Signore delle Ombre | Tracciatore del Buio Astrale | Darev Ormavess, Vigilante degli Scarti |
 | `boss-character-1` | Guardiano di Gaia | Curatore delle Falde Vive | Soreno Nerqavol, Guaritore di Flotta |
 | `boss-character-6` | Crono il Distruttore | Devastatore delle Ere | Tavren Qordelis, Stratega della Quarta Carta |
@@ -23,13 +24,14 @@ fronte di una scheda ancora in proposta.
 | `boss-character-20` | Sovrano del Vuoto | Custode dell’Antispazio | Irelvo Gernavul, Interdittore d’Armi |
 
 L'Arma `weapon-designed-metallic-impatto-comandante`, collegata al
-Personaggio 25, passa da **Impattatore del Comandante d’Acciaio** a
-**Impattatore di Telmuriq**. ID ed effetti non cambiano. Le ricerche web
-sulle dodici diciture complete non hanno rilevato usi identici indicizzati;
-quelle sui nomi propri e nei registri restano preliminari. Per Qemirun e
-Telmuriq WIPO non ha mostrato risultati testuali, ma EUIPO non era
-accessibile in questa sessione. Nessuna verifica certifica un nome «libero»
-o esclude ogni marchio simile.
+Personaggio 25, passa da **Impattatore del Comandante d’Acciaio** attraverso
+**Impattatore di Telmuriq** a **Impattatore di Arqevrasto**. ID ed effetti non
+cambiano. Le ricerche web sulle dodici diciture complete non hanno rilevato
+usi identici indicizzati. Per Juqelvessa e Arqevrasto, la ricerca WIPO per
+termine contenuto e quella per somiglianza ortografica non hanno mostrato
+risultati; la ricerca web esatta non ha trovato usi identici indicizzati.
+TMview non era accessibile in questa sessione. Nessuna verifica certifica un
+nome «libero» o esclude ogni marchio simile.
 
 ## Decisione e perimetro
 

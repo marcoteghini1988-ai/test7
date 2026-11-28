@@ -1364,7 +1364,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-01",
-      "name": "Qemirun, Medica di Bordo",
+      "name": "Juqelvessa, Medica di Bordo",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1532,7 +1532,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-25",
-      "name": "Telmuriq, Liberatore dell’Arsenale",
+      "name": "Arqevrasto, Liberatore dell’Arsenale",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -2260,7 +2260,7 @@
     {
       "group": "armi_progettate_35",
       "id": "weapon-designed-metallic-impatto-comandante",
-      "name": "Impattatore di Telmuriq",
+      "name": "Impattatore di Arqevrasto",
       "source": "src/fleetNext/designedWeaponCards.js",
       "kind": "current"
     },
@@ -4632,17 +4632,19 @@
     {
       "cardId": "character-general-01",
       "previousName": "Medico da campo",
-      "newName": "Qemirun, Medica di Bordo",
+      "intermediateName": "Qemirun, Medica di Bordo",
+      "newName": "Juqelvessa, Medica di Bordo",
       "category": "personaggi_generici",
-      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerche web e WIPO per termine e somiglianza ortografica; TMview non accessibile, nessuna garanzia di disponibilità come marchio",
       "status": "approved-by-author-2026-11-28"
     },
     {
       "cardId": "character-general-25",
       "previousName": "Comandante d’Acciaio",
-      "newName": "Telmuriq, Liberatore dell’Arsenale",
+      "intermediateName": "Telmuriq, Liberatore dell’Arsenale",
+      "newName": "Arqevrasto, Liberatore dell’Arsenale",
       "category": "personaggi_generici",
-      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerca esatta preliminare; nessuna garanzia di disponibilità come marchio",
+      "reason": "Nome proprio e ruolo scelti dall’autore dopo ricerche web e WIPO per termine e somiglianza ortografica; TMview non accessibile, nessuna garanzia di disponibilità come marchio",
       "status": "approved-by-author-2026-11-28"
     },
     {
@@ -4712,7 +4714,8 @@
     {
       "cardId": "weapon-designed-metallic-impatto-comandante",
       "previousName": "Impattatore del Comandante d’Acciaio",
-      "newName": "Impattatore di Telmuriq",
+      "intermediateName": "Impattatore di Telmuriq",
+      "newName": "Impattatore di Arqevrasto",
       "category": "armi_progettate_35",
       "reason": "Riferimento all’identità aggiornata del Personaggio 25; ID ed effetti invariati",
       "status": "linked-name-update-2026-11-28"

@@ -328,7 +328,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-metallic-impatto-comandante",
     "elementId": "metallic",
-    "name": "Impattatore di Telmuriq",
+    "name": "Impattatore di Arqevrasto",
     "rarita": "Da definire",
     "profile": {
       "pattern": "character-health",
