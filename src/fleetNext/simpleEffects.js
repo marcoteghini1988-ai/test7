@@ -2,7 +2,7 @@
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
 import {getShipProgression} from './progression.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
-import {energyCardDescription} from './energyCards.js';
+import {energyCardDescription,ENERGY_FAMILY_NAMES} from './energyCards.js';
 import {siphonAttackDescription} from './siphonAttacks.js';
 import {AURORA_ACTIONS} from './auroraEngine.js';
 import {LINCE_ACTIONS} from './linceEngine.js';
@@ -59,7 +59,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
- 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Strategia negli scarti. Almeno una Energia Fuoco nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
+ 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Strategia negli scarti. Almeno una Riserva Pirofusa nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Strategia: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
@@ -260,7 +260,7 @@ export function describeEffect(card,level=1){
     return 'Sequenza III ('+FLEET_ELEMENTS[s.elementId].name+'): giocata da sola aggiunge '+s.soloDamage+' HP per un turno. Se sovrapposta a Sequenza II concatenata nel turno successivo, aggiunge '+s.chainDamage+' HP e poi si scarta.';
    }
    if(s.damageMode==='escort-count')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per due tuoi turni: '+s.baseDamage+' HP di base +'+s.perEscort+' HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.';
-   if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
+   if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una '+ENERGY_FAMILY_NAMES[s.elementId]+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
     (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
    return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   }

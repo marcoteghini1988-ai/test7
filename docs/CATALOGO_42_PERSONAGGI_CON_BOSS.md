@@ -44,7 +44,7 @@ Durata: 2 turni propri. Stato: confermato; non ancora implementato.
 
 - Prolunga di un turno la prima Difesa temporanea giocata durante la permanenza; non aggiunge cariche o attivazioni.
 
-### 5. Archivista — Comune
+### 5. Decifratrice degli Scarti — Comune
 
 Durata: istantanea. Stato: confermato; non ancora implementato.
 
@@ -276,7 +276,7 @@ Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 9
 
 Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime nove schede, da Gaia al Sovvertitore del Caso, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; gli altri tre Boss sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
-### 31. Guardiano di Gaia — Terra · settore 10 · Comune
+### 31. Curatore delle Falde Vive — Terra · settore 10 · Comune
 
 **Meccanica confermata il 27/11/2026; bilanciamento e implementazione ancora da fare.** Una sola abilità, rigenerazione HP.
 
@@ -296,7 +296,7 @@ ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarit�
 **Meccanica confermata il 27/11/2026; bilanciamento e implementazione ancora da fare.** Una sola abilità: sacrificio offensivo.
 
 **Durante lo scontro (permanente):**
-- Rimane fisso per tutta la battaglia. Madre: Lince Solare (C01); un solo supporto: Bastione Solare (C01), come da configurazione della campagna attuale.
+- Rimane fisso per tutta la battaglia. Madre: Lince Solare (C01); un solo supporto: Baluardo Eliovetro (C01), come da configurazione della campagna attuale.
 - A ogni proprio turno sacrifica una percentuale degli HP massimi del supporto per potenziare il primo attacco effettivamente eseguito. Il sacrificio può distruggere il supporto e attivare la sua passiva di cura della madre. Senza supporti vivi non può attivare nuovi potenziamenti.
 
 **Dopo lo sblocco (Comune, tre turni propri):**

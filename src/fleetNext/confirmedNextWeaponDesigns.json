@@ -143,8 +143,8 @@
       ],
       "turns": 3,
       "mechanics": [
-        "T1: consuma 2 Energie Terra e produce un terremoto su tutte le navicelle avversarie.",
-        "T2 e T3: consuma 1 Energia Terra per turno e produce assestamenti più deboli su tutte le navicelle avversarie.",
+        "T1: consuma 2 cariche di Terra e produce un terremoto su tutte le navicelle avversarie.",
+        "T2 e T3: consuma 1 carica di Terra per turno e produce assestamenti più deboli su tutte le navicelle avversarie.",
         "Se T1 non si attiva, non si attivano gli assestamenti. Se manca Energia, nessun danno, ma il turno trascorre. Scarti dopo T3. Evoluzioni aumentano solo la potenza."
       ],
       "open": [
@@ -174,7 +174,7 @@
       ],
       "turns": 3,
       "mechanics": [
-        "Tre stadi consecutivi di tempesta: consumano rispettivamente 1, 2, 3 Energie Terra, colpiscono tutte le navicelle avversarie e rendono inattiva la protezione dei supporti durante l'effetto.",
+        "Tre stadi consecutivi di tempesta: consumano rispettivamente 1, 2, 3 cariche di Terra, colpiscono tutte le navicelle avversarie e rendono inattiva la protezione dei supporti durante l'effetto.",
         "Danno base, intermedio, triplo. Se manca Energia la tempesta si placa; al successivo turno può riprendere dallo stadio non eseguito, senza saltare livelli. Esempio: se T2 manca, T3 con 2 Energie produce solo lo stadio intermedio.",
         "La durata non si estende: scarti dopo T3."
       ],
@@ -257,7 +257,7 @@
       ],
       "turns": 1,
       "mechanics": [
-        "Consuma 3 Energie Vento in Epica, 4 in Leggendaria. Raccoglie solo le carte degli scarti avversari e le trasforma in un vortice che si abbatte sulle navicelle nemiche.",
+        "Consuma 3 cariche di Vento in Epica, 4 in Leggendaria. Raccoglie solo le carte degli scarti avversari e le trasforma in un vortice che si abbatte sulle navicelle nemiche.",
         "Il danno cresce con il numero di carte negli scarti; ciascuna navicella nemica superstite riceve il valore pieno, non una frazione. Anche se ne resta una sola, riceve il valore pieno.",
         "Le carte tornano negli scarti. La Leggendaria ha danno superiore."
       ],
@@ -376,7 +376,7 @@
       "rarities": null,
       "turns": 1,
       "mechanics": [
-        "Spara contro un bersaglio valido. Se una Carta Difesa blocca il colpo, recupera parte dell'energia luminosa respinta e la converte in cariche Energia Luce proprie.",
+        "Spara contro un bersaglio valido. Se una Carta Difesa blocca il colpo, recupera parte dell'energia luminosa respinta e la converte in cariche di Luce proprie.",
         "Se il colpo va a segno, infligge il danno normale senza generare Energia."
       ],
       "open": [

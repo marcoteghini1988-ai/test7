@@ -29,7 +29,7 @@ function spendOwnHp(side,percent,{allAllies=false}={}){
  }
  return entries;
 }
-// Il Mortaio ha precedenza sulla Speciale della madre quando usa Energia Fuoco.
+// Il Mortaio ha precedenza sulla Speciale della madre quando usa carica di Fuoco.
 // La quantità di munizioni è stabilita dalla pila fisica; le altre Energie restano intatte.
 export function reserveProvisionalMortarFuel(b,ctx,h){
  const side=b.sides[ctx.who],result={};
@@ -249,7 +249,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   else if(pattern==='storm-capacitor'){
    const contributors=weaponEnergyContributions(side,'ionic',{cost:p.energyCost},h.card);
    if(!spendFreshIonic(p.energyCost)){
-    event(m,'weapon-no-energy',m.name+' · Energia Fulmine insufficiente',{stage});
+    event(m,'weapon-no-energy',m.name+' · carica di Fulmine insufficiente',{stage});
    }else{
     const supports=(side.escorts||[]).filter(physical);
     stormFeedback={energySpent:p.energyCost,energyContributions:contributors,

@@ -2,6 +2,7 @@
 // Danni nominali da bilanciare, nessuna carta addizionale inventata.
 import {calibratedWeaponCard} from './weaponBalanceCalibration.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {ENERGY_FAMILY_NAMES} from './energyCards.js';
 const DESIGNS=[
   {
     "id": "weapon-confirmed-refrigerant-compression",
@@ -60,7 +61,7 @@ export const MULTI_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
   s.mode==='double-shot'?'due colpi distinti da '+s.baseDamage+' HP ciascuno':
   s.mode==='repeat-shot'?'un colpo da '+s.baseDamage+' HP per due tuoi turni':
   s.mode==='sweep-shot'?'un colpo da '+s.baseDamage+' HP a ciascuna nave nemica':
-  'un colpo da '+s.baseDamage+' HP, più fino a '+s.maxExtraShots+' colpi da '+s.extraDamage+' HP con altrettante Carte Energia '+elem.name+' fisiche nella pila, senza consumarle';
+  'un colpo da '+s.baseDamage+' HP, più fino a '+s.maxExtraShots+' colpi da '+s.extraDamage+' HP con altrettante carte '+ENERGY_FAMILY_NAMES[s.elementId]+' fisiche nella pila, senza consumarle';
  return calibratedWeaponCard(Object.freeze({id:s.id,name:s.name,nome:s.name,
   categoria:'Supporto',category:'Arma di supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:s.rarita,

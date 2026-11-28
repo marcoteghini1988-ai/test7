@@ -15,13 +15,13 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ## Regole comuni
 
-- **Collocazione:** tutte le 32 carte Sistema (Sabotaggio e Amplificazione) e **Buco Nero** sono carte **Attacco**: si giocano nei tre slot Attacco durante il proprio turno, entro il limite complessivo di tre carte giocate per turno. Non occupano gli slot Difesa, Trappola o Personaggio. Sabotaggi e Amplificazioni si attivano alla giocata e persistono come effetti temporanei per i turni indicati senza bloccare uno slot Attacco nei turni successivi. Buco Nero si risolve subito e libera il campo.
+- **Collocazione:** tutte le 32 carte Sistema (Sabotaggio e Amplificazione) e **Collasso dei Due Campi** sono carte **Attacco**: si giocano nei tre slot Attacco durante il proprio turno, entro il limite complessivo di tre carte giocate per turno. Non occupano gli slot Difesa, Trappola o Personaggio. Sabotaggi e Amplificazioni si attivano alla giocata e persistono come effetti temporanei per i turni indicati senza bloccare uno slot Attacco nei turni successivi. Collasso dei Due Campi si risolve subito e libera il campo.
 - Non si aggiungono componenti alle navicelle che ne sono sprovviste. Le carte relative a un componente assente non sono utilizzabili su quella nave.
 - I sabotaggi durano il numero indicato di turni **del giocatore che li subisce**; le amplificazioni durano il numero indicato di **turni propri**, compreso quello in cui sono giocate. Le protezioni restano efficaci anche durante la risposta avversaria.
 - Due sabotaggi dello stesso sistema non si sommano: prevale il più incisivo e, a parità, quello che scade dopo. Lo stesso vale per due amplificazioni dello stesso sistema; sabotaggio e amplificazione possono compensarsi.
 - I sabotaggi non infliggono danno agli HP dei sistemi interni: ne alterano temporaneamente il funzionamento. Si vince portando gli HP della nave madre avversaria a zero.
 - I bonus ai colpi secondari non inventano nuovi colpi o bersagli. Le riparazioni non superano gli HP massimi né ricreano navi distrutte.
-- La carta **Buco Nero** rimane separata: rimuove tutte le carte attive (incluse le Armi nei due slot), non le navi.
+- La carta **Collasso dei Due Campi** rimane separata: rimuove tutte le carte attive (incluse le Armi nei due slot), non le navi.
 
 ## I quattro pacchetti da otto
 
@@ -79,11 +79,11 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ## Stato tecnico aggiornato (17 novembre 2026)
 
-Le **32 carte sistemi** sono ora registrate come giocabili nel ruleset `hp-sync-v2`. La carta separata **Buco Nero** porta il nuovo catalogo a **33 carte**. Le immagini non sono state prodotte.
+Le **32 carte sistemi** sono ora registrate come giocabili nel ruleset `hp-sync-v2`. La carta separata **Collasso dei Due Campi** porta il nuovo catalogo a **33 carte**. Le immagini non sono state prodotte.
 
 - **Catalogo e visualizzazione provvisoria:** `src/fleetNext/newCardRegistry.js` e `src/fleetNext/rules.js`; testi leggibili anche senza PNG.
 - **Effetti, durate e scadenze:** `src/fleetNext/newCardEffects.js` e `src/fleetNext/combat.js`. Centralina ripartisce i danni tra supporti e madre e sospende le passive sincronizzate nei gradi alti; Arsenale agisce sulle Armi temporanee; Generatore modifica le funzioni difensive/energetiche; Plancia limita o suddivide il danno sugli HP delle navicelle.
-- **Buco Nero:** annulla le carte attive dei due schieramenti, comprese Armi, carte coperte, Personaggi, Terreno e attacchi preparati; non azzera HP, navicelle, mani o mazzi. Il limite specifico è di **tre copie per mazzo**.
+- **Collasso dei Due Campi:** annulla le carte attive dei due schieramenti, comprese Armi, carte coperte, Personaggi, Terreno e attacchi preparati; non azzera HP, navicelle, mani o mazzi. Il limite specifico è di **tre copie per mazzo**.
 - **Utilizzo nelle partite:** `src/OfficialFleetBattle3D.jsx` usa il nuovo ruleset HP e la selezione del mazzo; il catalogo e la selezione sono accessibili da `src/FleetCollectionWorkshop.jsx`. I mazzi ammettono fino a 40 carte, contando le esclusive automatiche; le carte nuove devono essere possedute per inserirle.
 - **Armi temporanee per provare Arsenale:** Cannone a impulso e Condensatore offensivo sono disponibili come dotazione iniziale e occupano i due alloggiamenti, senza proteggere la madre.
 - **Verifiche automatiche:** `src/fleetNextNewCardsCombat.test.js`, `src/fleetNextNewCardRegression.test.js`, `src/fleetNextOfficialHpGameplay.test.js`. Le esecuzioni sono tracciate in GitHub Actions.

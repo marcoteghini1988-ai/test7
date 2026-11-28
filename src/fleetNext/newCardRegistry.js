@@ -1,5 +1,5 @@
 // Eclissi Stellare — registro tecnico del NUOVO catalogo comune.
-// 32 carte sistemi + Buco Nero. Eseguibili SOLO nel ruleset hp-sync-v2;
+// 32 carte sistemi + Collasso dei Due Campi. Eseguibili SOLO nel ruleset hp-sync-v2;
 // la modalità storica resta inalterata. Asset grafici non ancora realizzati.
 // Tutte le 33 carte occupano una giocata Strategia nel proprio turno;
 // gli effetti temporanei persistono come stati e non bloccano lo slot nei turni seguenti.
@@ -31,7 +31,7 @@ const systemCards=design.cards.map(c=>{
 });
 
 const blackHole=freezeCard({
- id:'sys-black-hole',name:'Buco Nero',nome:'Buco Nero',category:'Strategia',categoria:'Strategia',
+ id:'sys-black-hole',name:'Collasso dei Due Campi',nome:'Collasso dei Due Campi',category:'Strategia',categoria:'Strategia',
  sottotipo:'Controllo campo',rarita:'Leggendaria',kind:'attack',
  playable:true,nativeFace:true,maxCopiesPerDeck:3,
  effectProposed:'Risucchia tutte le carte attive sul campo di entrambi i giocatori, comprese le due Armi temporanee e il Terreno. Le navi e i loro HP restano invariati.',
@@ -50,4 +50,4 @@ export const nextCommonCard=id=>NEXT_COMMON_CARD_BY_ID[id]||null;
 if(systemCards.length!==32||NEXT_COMMON_CARD_COUNT!==33||
  new Set(NEXT_COMMON_CARDS.map(c=>c.id)).size!==33||
  COMPONENTS.some(sys=>systemCards.filter(c=>c.systemId===sys).length!==8))
- throw new Error('Il nuovo registro deve contenere 32 carte sistemi + Buco Nero');
+ throw new Error('Il nuovo registro deve contenere 32 carte sistemi + Collasso dei Due Campi');

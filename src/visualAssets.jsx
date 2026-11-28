@@ -892,7 +892,7 @@ function ModuleIcon({ id, size = 18, color = '#00f2fe', className = '' }) {
       );
 
     // --- MODULI ESCLUSIVI ROTTA DELLE CAPSULE ---
-    case 'singularity_core': // Modulo Singolarità (Buco Nero - Capsula 210 ⭐)
+    case 'singularity_core': // Modulo Singolarità (Nodo di Assorbimento - Capsula 210 ⭐)
       return (
         <svg width={s} height={s} viewBox="0 0 24 24" fill="none" className={className}>
           <circle cx="12" cy="12" r="4" fill="#000000" stroke="#facc15" strokeWidth="1.8" />

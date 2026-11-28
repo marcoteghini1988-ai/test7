@@ -52,7 +52,7 @@ Durata: 2 turni propri. Stato: confermato; non ancora implementato.
 
 - Prolunga di un turno la prima Difesa temporanea giocata durante la permanenza; non aggiunge cariche o attivazioni.
 
-### 5. Archivista — Comune
+### 5. Decifratrice degli Scarti — Comune
 
 Durata: istantanea. Stato: confermato; non ancora implementato.
 

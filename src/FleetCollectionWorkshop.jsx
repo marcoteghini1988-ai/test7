@@ -278,7 +278,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     {NEXT_WEAPON_COLLECTION_CARDS.filter(c=>c.elementId===weaponElement&&
      c.rarita===weaponRarity).map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
+   <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Collasso dei Due Campi</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {NEXT_COMMON_CARDS.map(genericCardTile)}
    </div>

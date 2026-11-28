@@ -31,7 +31,7 @@ test('Una carta sistema rimane sul campo e va negli scarti solo alla scadenza',(
  assert.ok(!b.sides.B.systemCardEffects.some(e=>e.id==='sys-command-minus-c'));
 });
 
-test('Buco Nero rimuove anche gli attacchi preparati e non cambia HP',()=>{
+test('Collasso dei Due Campi rimuove anche gli attacchi preparati e non cambia HP',()=>{
  const b=battle(),motherA=b.sides.A.ships[0].hp,motherB=b.sides.B.ships[0].hp;
  b.sides.A.falco={pending:{cardId:'nx-r01-02',releasePly:2}};
  b.sides.B.obsidian={pending:{cardId:'nx-l03-05',releasePly:3}};
@@ -47,7 +47,7 @@ test('Buco Nero rimuove anche gli attacchi preparati e non cambia HP',()=>{
  assert.equal(b.sides.B.ships[0].hp,motherB);
 });
 
-test('Buco Nero annulla gli altri comandi già preparati nello stesso turno',()=>{
+test('Collasso dei Due Campi annulla gli altri comandi già preparati nello stesso turno',()=>{
  const b=createFleetNextBattle({
   shipA:'N00',levelA:5,shipB:'C02',levelB:5,mode:'pvp',
   seed:35,deckA:[],deckB:[],ruleset:HP_SYNC_RULESET

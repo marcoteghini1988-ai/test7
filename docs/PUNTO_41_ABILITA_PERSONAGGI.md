@@ -27,7 +27,7 @@
 | Comuni | Calibratore Sottrattivo | Attacco: sottrazione valida |
 | Comuni | Cannoniere Balistico | Attacco: moltiplicazione valida |
 | Comuni | Cecchino Quantico | Attacco: divisione esatta |
-| Eroi boss | Guardiano di Gaia | Difesa: primo impatto efficace sulla madre |
+| Eroi boss | Curatore delle Falde Vive | Difesa: primo impatto efficace sulla madre |
 | Eroi boss | Colosso di Tharsis | Attacco: ripetere un vitale già colpito |
 | Eroi boss | Matriarca Tossica | Attacco: nemico già corroso |
 | Eroi boss | Arconte Solare | Attacco: tre numeriche contro un vitale |

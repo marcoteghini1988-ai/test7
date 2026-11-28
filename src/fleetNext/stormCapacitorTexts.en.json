@@ -4,5 +4,5 @@
  "duration":"DURATION","turns":"TURNS","damage":"DAMAGE / HP","base":"BASE","support":"/ LIVE SUPPORT",
  "requirement":"EACH OWN TURN","conditions":["PLAY NEW LIGHTNING","NO ENERGY: NO SHOT","ALLIES LOSE NO HP"],
  "target":"1 TARGET","shots":"1 SHOT / TURN",
- "description":"Lasts 3 of your turns. Each shot requires a newly played Lightning Energy card and spends 1 charge. Deals {base} nominal HP plus {bonus} HP per living allied support, without sacrificing ally HP. Skipping an energy payment skips that turn's shot; it may fire again in remaining turns. Normal defenses and cover apply."
+ "description":"Lasts 3 of your turns. Each shot requires a newly played Ionoflash Reserve card and spends 1 charge. Deals {base} nominal HP plus {bonus} HP per living allied support, without sacrificing ally HP. Skipping an energy payment skips that turn's shot; it may fire again in remaining turns. Normal defenses and cover apply."
 }

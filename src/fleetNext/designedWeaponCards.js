@@ -13,7 +13,7 @@ const DESIGNS=[
     "name": "Mortaio Magmatico",
     "rarita": "Rara",
     "profile": null,
-    "description": "Mortaio di tre turni con colpo base e raffiche alimentate esclusivamente da Energia Fuoco. Da scegliere colpo per carta fisica oppure per carica e HP dei colpi.",
+    "description": "Mortaio di tre turni con colpo base e raffiche alimentate esclusivamente da cariche di Fuoco. Da scegliere colpo per carta fisica oppure per carica e HP dei colpi.",
     "durationTurns": 3,
     "onlyEnergy": "plasma",
     "physicalCardOrCharge": "da definire"
@@ -116,7 +116,7 @@ const DESIGNS=[
       ],
       "maxEnergy": 2
     },
-    "description": "Un colpo da 18/30/42 HP secondo 0/1/2 Energie Fuoco fisiche disponibili; consumo futuro da definire."
+    "description": "Un colpo da 18/30/42 HP secondo 0/1/2 cariche di Fuoco fisiche disponibili; consumo futuro da definire."
   },
   {
     "id": "weapon-designed-cryogenic-ago-inverno-nero",
@@ -313,7 +313,7 @@ const DESIGNS=[
       "noDefenseBonusOnePercent": 20,
       "noDefenseBonusTwoPercent": 40
     },
-    "description": "Un colpo da 22 HP. Con una Energia Metallo supera una Difesa valida, con due ne distrugge una. Senza Difese attive: +20% con una Energia, +40% con due o più, senza consumo e senza cumulo col bypass."
+    "description": "Un colpo da 22 HP. Con una carica di Metallo supera una Difesa valida, con due ne distrugge una. Senza Difese attive: +20% con una Energia, +40% con due o più, senza consumo e senza cumulo col bypass."
   },
   {
     "id": "weapon-designed-metallic-perforatore-cascata",
@@ -321,7 +321,7 @@ const DESIGNS=[
     "name": "Perforatore a Cascata",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Durata confermata: 3 turni propri inclusa la giocata. Un colpo può trasferire HP eccedenti al bersaglio successivo consumando Energia Metallo; danno iniziale e costo esatto restano da bilanciare. Difese e Trappole si applicano a ciascun bersaglio.",
+    "description": "Durata confermata: 3 turni propri inclusa la giocata. Un colpo può trasferire HP eccedenti al bersaglio successivo consumando una carica di Metallo; danno iniziale e costo esatto restano da bilanciare. Difese e Trappole si applicano a ciascun bersaglio.",
     "durationTurns": 3,
     "damageReference": 35
   },
@@ -361,13 +361,13 @@ const DESIGNS=[
     "name": "Sonda Ionica d’Assalto",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Prima delle due Armi Fulmine combinabili con Martello del Tuono; effetto di coppia e danni da definire.",
+    "description": "Prima delle due Armi Fulmine combinabili con Impattatore Folgorico; effetto di coppia e danni da definire.",
     "combo": "martello-tuono"
   },
   {
     "id": "weapon-designed-ionic-martello-tuono",
     "elementId": "ionic",
-    "name": "Martello del Tuono",
+    "name": "Impattatore Folgorico",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma Fulmine combinabile con Sonda Ionica d’Assalto; danno e sequenza della combinazione da definire.",

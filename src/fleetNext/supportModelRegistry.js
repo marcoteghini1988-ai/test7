@@ -5,7 +5,7 @@
 // I 15 effetti precedenti rimangono disponibili nei soli percorsi legacy.
 export const SUPPORT_MODEL_DESIGNS=Object.freeze([
  Object.freeze({"shipId":"N00","name":"Velo Aurora","role":"Rigenerazione","skillId":"regeneration","originSlot":0,"visualBrief":"Supporto che rigenera la nave madre nel turno avversario","templateMotherId":"N00","elementId":"ionic","rarita":"Comune"}),
- Object.freeze({"shipId":"C01","name":"Bastione Solare","role":"Guardia finale","skillId":"last-shield","originSlot":0,"visualBrief":"Supporto corazzato che ripara la madre alla distruzione","templateMotherId":"C01","elementId":"plasma","rarita":"Comune"}),
+ Object.freeze({"shipId":"C01","name":"Baluardo Eliovetro","role":"Guardia finale","skillId":"last-shield","originSlot":0,"visualBrief":"Supporto corazzato che ripara la madre alla distruzione","templateMotherId":"C01","elementId":"plasma","rarita":"Comune"}),
  Object.freeze({"shipId":"C02","name":"Prisma Silente","role":"Blocco trappole","skillId":"trap-silence","originSlot":1,"visualBrief":"Interferitore che impedisce l'attivazione delle Trappole nemiche","templateMotherId":"C02","elementId":"refrigerant","rarita":"Comune"}),
  Object.freeze({"shipId":"C03","name":"Corvo Esploratore","role":"Pescata","skillId":"extra-draw","originSlot":1,"visualBrief":"Ricognitore che fornisce una carta aggiuntiva","templateMotherId":"C03","elementId":"void","rarita":"Comune"}),
  Object.freeze({"shipId":"C04","name":"Falce del Vento","role":"Controllo terreno","skillId":"terrain-half","originSlot":1,"visualBrief":"Supporto che riduce la durata dei Terreni avversari","templateMotherId":"E02","elementId":"aerial","rarita":"Comune"}),

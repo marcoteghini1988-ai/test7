@@ -173,7 +173,7 @@ const getStarCapsuleReward = (milestone) => {
   let unlockItem = null;
 
   if (m === 180) {
-    unlockItem = { type: 'ability', id: 'singularity_core', name: 'Modulo SingolaritÃ  (Buco Nero)' };
+    unlockItem = { type: 'ability', id: 'singularity_core', name: 'Modulo SingolaritÃ  (Nodo di Assorbimento)' };
   } else if (m === 360) {
     dust = 3000;
     diamonds = 30;
@@ -1885,7 +1885,7 @@ const ALL_ABILITIES = Object.freeze([
   // 1. MODULO SINGOLARITÃ€ / BUCO NERO (CAPSULA 210 â­)
   {
     id: 'singularity_core',
-    name: 'Modulo SingolaritÃ  (Buco Nero)',
+    name: 'Modulo SingolaritÃ  (Nodo di Assorbimento)',
     element: 'Cosmo',
     type: 'capsule_exclusive',
     tier: 2,
@@ -2219,7 +2219,7 @@ const realPlanetNames = Object.freeze([
 
 
 const PLANET_ZONE_NAMES = Object.freeze([
-  ["Valle di Cristallo", "Cratere Boreale", "Avamposto Alpha", "Piana dei Venti", "Barriera Ovest", "Tempio Sommerso", "Gola Silenziosa", "Polo Magnetico", "Faglia Profonda", "Guardiano di Gaia"],
+  ["Valle di Cristallo", "Cratere Boreale", "Avamposto Alpha", "Piana dei Venti", "Barriera Ovest", "Tempio Sommerso", "Gola Silenziosa", "Polo Magnetico", "Faglia Profonda", "Curatore delle Falde Vive"],
   ["Duna Cremisi", "Canyon Eolico", "Bacino di Vetro", "Rovine di Tharsis", "Avamposto Marziano", "Valle Marineris", "Labirinto Notturno", "Caldera Spenta", "Soglia del Plasma", "Colosso di Tharsis"],
   ["Nuvole di Acido", "Valle dei Fiori", "Cratere Luminoso", "Tempio di Afrodite", "Piana di Zolfo", "Altopiano Dorato", "Sorgente Celeste", "Barriera Radiante", "Santuario del Sole", "Matriarca Tossica"],
   ["Bacino Solare", "Cratere di Mercurio", "Piana di Metallo", "Avamposto Termico", "Faglia di Calore", "Rovine di Piombo", "Sito di Fusione", "Santuario del Fuoco", "Tempio della Forgia", "Arconte Solare"],

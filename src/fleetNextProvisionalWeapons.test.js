@@ -102,7 +102,7 @@ test('Ganasce A/B: una presa ciascuna e una collisione con due bersagli',()=>{
  assert.equal(shots(result,c).find(e=>e.jawCombo).hitCount,2);
 });
 test('Sonda e Martello: colpo di combinazione sulla stessa nave',()=>{
- const b=game(true),probe=lookup('Sonda Ionica d’Assalto'),hammer=lookup('Martello del Tuono');
+ const b=game(true),probe=lookup('Sonda Ionica d’Assalto'),hammer=lookup('Impattatore Folgorico');
  const r=play(b,'A',[probe,hammer]);
  assert.equal(shots(r,probe)[0].hitCount,1);
  assert.equal(shots(r,hammer)[0].hitCount,2);

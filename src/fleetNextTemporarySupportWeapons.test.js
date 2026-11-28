@@ -174,7 +174,7 @@ test('Le armi sono negli alloggiamenti, non negli slot delle carte Attacco',()=>
  assert.ok(!r.battle.sides.A.attackSlots.includes(MEMORY));
 });
 
-test('Buco Nero rimuove le armi e le manda negli scarti',()=>{
+test('Collasso dei Due Campi rimuove le armi e le manda negli scarti',()=>{
  let b=turn(battle(),'A',[ONE,MEMORY]).battle;
  const r=turn(b,'B',['sys-black-hole'],true);
  assert.equal(r.battle.sides.A.machines.length,0);

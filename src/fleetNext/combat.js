@@ -3028,8 +3028,8 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    ctx.power=0;ctx.pierce=0;ctx.bypass=false;ctx.multiTargets=1;
    ctx.falcoPrepared=false;ctx.obsidianPrepared=false;
    ctx.fieldReset=true;
-   at('Buco Nero: tutte le carte attive dei due campi sono state scartate');
-   events.push(emit(b,who,'field-reset','Buco Nero ha ripulito entrambi i campi',
+   at('Collasso dei Due Campi: tutte le carte attive dei due campi sono state scartate');
+   events.push(emit(b,who,'field-reset','Collasso dei Due Campi ha ripulito entrambi i campi',
     {cardId:def.id,removed:cleared}));
    break;
   }
@@ -3215,7 +3215,7 @@ function resolveElementalActivation(b,who,order,ctx,events){
     m.weaponProfile?.pattern==='magma-mortar'&&unitAlive(m)&&
     (ctx.provisionalMortarShots?.[m.id]||0)>0)){
    events.push(emit(b,who,'weapon-energy-priority',
-    'Mortaio Magmatico: Energia Fuoco già assorbita, Speciale non attivata',
+    'Mortaio Magmatico: carica di Fuoco già assorbita, Speciale non attivata',
     {elementId:'plasma',cost:effectiveCost,remainingEnergy:chargedElementalEnergy(side,'plasma')}));
    return;
   }
@@ -5320,7 +5320,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   id!=='ex-r01-01');
  nebulaHideForTurn(b,ctx,events,order); // Occultamento precede eventuale Ago nello stesso turno
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
- // Buco Nero risolve dopo le altre carte preparate nel medesimo turno.
+ // Collasso dei Due Campi risolve dopo le altre carte preparate nel medesimo turno.
  after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  const holoHooks={unitEnabled,unitSilenced,weaponSlotLocked,arsenalBonus,emit};

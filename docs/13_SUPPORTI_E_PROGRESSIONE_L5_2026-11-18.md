@@ -11,7 +11,7 @@
 | ID sorgente | Carta-navicella di supporto | Rarità sorgente | Passiva | Identità tattica |
 |---|---|---|---|---|
 | N00 | Velo Aurora | Comune | Rigenerazione continua | Cura HP madre nel turno nemico |
-| C01 | Bastione Solare | Comune | Super-scudiera | Grande riserva HP e cura alla distruzione |
+| C01 | Baluardo Eliovetro | Comune | Super-scudiera | Grande riserva HP e cura alla distruzione |
 | C02 | Prisma Silente | Comune | Soppressione Trappole | Le trappole nemiche non si attivano |
 | C03 | Corvo Esploratore | Comune | Pescata aggiuntiva | Una carta in più, sempre massimo tre giocate |
 | C04 | Falce del Vento | Comune | Terreni dimezzati | Abbrevia la durata del terreno avversario |

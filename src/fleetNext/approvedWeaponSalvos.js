@@ -74,8 +74,8 @@ export function salvoCardDescription(card,spec=card.effectSpec){
  if(p.style==='six-plus-lance')return `6 colpi rapidi + 1 lancia finale · ${damage} HP totali su un bersaglio. Difese e copertura verificano l'azione completa.`;
  if(p.style.includes('thermal')||p.style.includes('plasma'))return `3 granate base / 6 potenziate · ${damage} HP totali`+
   ` +${w.damageConversionPercent}% degli HP realmente persi dalla flotta dopo la posa (max +${w.maxExtraDamage} HP), per ${w.durationTurns} turni propri.`;
- if(p.style.includes('blade'))return base+'. Con 1 Energia Metallo supera una Difesa; con 2 ne smonta una. Senza Difese: +20% / +40% con 1 / almeno 2 Energie. Non consuma Energie e non cumula bonus e bypass.';
- if(p.style.includes('drill'))return base+` per ${w.durationTurns} turni. Il residuo passa al prossimo bersaglio pagando ${w.energyTransferCost} Energia Metallo per trasferimento.`;
+ if(p.style.includes('blade'))return base+'. Con 1 carica di Metallo supera una Difesa; con 2 ne smonta una. Senza Difese: +20% / +40% con 1 / almeno 2 Energie. Non consuma Energie e non cumula bonus e bypass.';
+ if(p.style.includes('drill'))return base+` per ${w.durationTurns} turni. Il residuo passa al prossimo bersaglio pagando ${w.energyTransferCost} ${w.energyTransferCost===1?'carica':'cariche'} di Metallo per trasferimento.`;
  if(p.familyId.endsWith('artiglieria-schegge'))return base+` per ${w.durationTurns} turni propri; cambia bersaglio quando possibile.`;
  return base+' su un bersaglio. Difese e copertura verificano la salva completa.';
 }

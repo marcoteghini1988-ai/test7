@@ -46,7 +46,7 @@ Ogni carta dello stesso modello mantiene nome, elemento ed effetto: **cambia sol
 ## Stato tecnico (integrazione del 19 novembre)
 - **120 carte** con ID, elemento, variante, rarità e testo, registrate in `src/fleetNext/elementalTerrainCards.js` e riconosciute dal catalogo ufficiale.
 - **Mazzo da 40:** le carte si possono selezionare e pescare se possedute. Non ci sono nuovi prezzi o acquisti nel negozio. Un Terreno Fulmine offensivo Comune è presente nell'inventario iniziale per collaudare in partita il funzionamento.
-- **Battaglia HP:** il Terreno occupa lo spazio centrale e rimane attivo in tutti i turni, senza scadere, finché non viene sostituito, annullato da una Trappola compatibile oppure rimosso dal reset generale Buco Nero.
+- **Battaglia HP:** il Terreno occupa lo spazio centrale e rimane attivo in tutti i turni, senza scadere, finché non viene sostituito, annullato da una Trappola compatibile oppure rimosso dal reset generale Collasso dei Due Campi.
 - **Danno:** attacco e difesa si applicano una sola volta sul colpo reale e il calcolo conserva le frazioni, così anche le raffiche leggere accumulano il bonus; gli effetti validi restano simmetrici per A e B.
 - **Armi temporanee:** il motore considera il proprio elemento dell'Arma separatamente quando differisce da quello della madre.
 - **Arena 3D:** mantenuta la geometria esistente, con segnaposto grafico per i nuovi Terreni in attesa delle immagini definitive.

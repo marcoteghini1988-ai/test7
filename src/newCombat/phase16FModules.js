@@ -47,7 +47,7 @@ const planet=[
  shape('planet_char_19','Io · Magma','shots','burn',3),
  shape('planet_char_20','Encelado · Vuoto Sovrano','received','healing',3)
 ];
-const exclusive=[shape('singularity_core','Singolarità · Buco Nero','class_switch','singularity',3)];
+const exclusive=[shape('singularity_core','Singolarità · Nodo di Assorbimento','class_switch','singularity',3)];
 // I due ID storici sono ora mazzi speciali. Soltanto chi li aveva già
 // equipaggiati come moduli conserva un potere compatibile; nessun nuovo sblocco.
 const legacy=[shape('ophiuchus','Ophiuchus · Retaggio','multisuit','burn',2),

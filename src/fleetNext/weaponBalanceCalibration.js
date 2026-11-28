@@ -3,6 +3,7 @@
 // La stessa regola produce il numero SULLA carta e il numero nel combattimento.
 // La scala differenzia progressioni con 0/1/2 supporti, non impone un timer.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {ENERGY_FAMILY_NAMES} from './energyCards.js';
 import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
 import {STRATEGIC_NO_DRAIN_BALANCE} from './strategicNoDrainBalance.js';
 import {salvoCardDescription,withApprovedWeaponSalvo} from './approvedWeaponSalvos.js';
@@ -57,8 +58,8 @@ function description(source,s){
    ' in pila, non consumate.';
   case 'discard-attacks':return 'Arma '+e+' per un turno: '+base+
    ' HP di danno base, +'+s.perDiscardAttack+
-   ' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+
-   e+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
+   ' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una '+
+   ENERGY_FAMILY_NAMES[source.elementId]+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
    (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+
     ' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
   case 'sequence':{
@@ -99,7 +100,7 @@ function description(source,s){
   case 'boreal-binary':return prefix+'due impulsi '+b+'+'+p.secondDamage+
    ' HP, un singolo impatto e una verifica difensiva.';
   case 'magma-mortar':return prefix+'per '+active+' turni: '+b+' HP per turno piu fino a '+
-   p.maxExtraShots+' colpi da '+p.extraDamage+' HP ciascuno, consumando Energie Fuoco.';
+   p.maxExtraShots+' colpi da '+p.extraDamage+' HP ciascuno, consumando cariche di Fuoco.';
   case 'incinerator':return prefix+b+' HP nel primo turno, '+p.secondDamage+
    ' HP nel secondo; bruciatura '+p.burnTurns+' attivazioni, '+p.burnPerDiscard+
    ' HP per propria Carta Strategia scartata, min '+p.burnMinimum+
@@ -128,15 +129,15 @@ function description(source,s){
    ' HP per nave coinvolta; contro il piano se rimane una sola nave. Poi rilascia entrambi i ganci.';
   case 'cascade-piercer':return prefix+b+' HP per '+active+
    ' turni; il danno eccedente passa al prossimo bersaglio spendendo '+
-   p.energyTransferCost+' Energia Metallo.';
+   p.energyTransferCost+(p.energyTransferCost===1?' carica':' cariche')+' di Metallo.';
   case 'growing-thunder-core':return prefix+fmt(p.damageStages)+
-   ' HP nei tre turni se una nuova Energia Fulmine viene spesa in ogni carica; altrimenti ricade al minimo.';
-  case 'ion-probe':return prefix+b+' HP; lascia un segnale combinabile con Martello del Tuono.';
+   ' HP nei tre turni se giochi una nuova Riserva Ionolampo e spendi una carica in ogni turno di ricarica; altrimenti ricade al minimo.';
+  case 'ion-probe':return prefix+b+' HP; lascia un segnale combinabile con Impattatore Folgorico.';
   case 'thunder-hammer':return prefix+b+' HP e +'+p.comboBonusDamage+
    ' HP con il segnale della Sonda Ionica, che viene consumato.';
   case 'command-lance':return prefix+b+' HP piu '+p.characterBonusDamage+
    ' HP con un Personaggio attivo; il Personaggio e obbligatorio.';
-  case 'storm-capacitor':return prefix+'per '+active+' turni, con nuova Energia Fulmine: '+
+  case 'storm-capacitor':return prefix+'per '+active+' turni, con nuova Riserva Ionolampo: '+
    b+' HP +'+p.perSupportDamage+' HP per ogni supporto operativo.';
   case 'wind-cycloreactor':return prefix+'per '+active+' turni colpisce tutte le navi nemiche per '+
    fmt(p.damageStages)+' HP; congela la mano per '+fmt(p.freezeSeconds)+

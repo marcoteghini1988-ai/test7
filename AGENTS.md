@@ -1,5 +1,21 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Nomi correnti dopo la revisione del 28/11/2026
+
+Il registro corrente `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`
+elenca 460 denominazioni e annota 17 etichette rinominate nella revisione
+del 28/11. Fra queste: il Personaggio 05 **Decifratrice degli Scarti**, il
+Boss 1 **Curatore delle Falde Vive**, la Strategia `sys-black-hole`
+**Collasso dei Due Campi**, il supporto C01 **Baluardo Eliovetro**, l'Arma
+`weapon-designed-ionic-martello-tuono` **Impattatore Folgorico** e le dieci
+famiglie Energia **Riserva**. Gli ID, le rarità, le affinità e le abilità
+restano identici. Il modulo `singularity_core` è **Singolarità · Nodo di
+Assorbimento**. Le vecchie denominazioni nei documenti storici descrivono
+versioni precedenti; i nomi attivi sono nel registro e in
+`docs/RINOMINE_CARTE_PERSONAGGI_2026-11-28.md`. Le dodici carte Personaggio
+Boss restano prive di fronti approvati e portano etichette provvisorie.
+Non presentare questa revisione come un'attestazione di libertà dei marchi.
+
 ## Rinomine prudenziali dopo la verifica dei marchi — 27/11/2026
 
 Su richiesta dell'utente, i nomi delle navi madri `E01` e `E02` e dei piloti `pilot_rare_3` e `pilot_leg_3` sono ora **Nefelarca**, **Vortiluce**, **Mazziere dell'Etere** e **Armiere dei Tre Fronti**. Conservare ID, meccaniche, statistiche e immagini. Anche le etichette direttamente legate alle due navi e le rispettive carte esclusive sono state allineate; la parola comune «tempesta» nelle descrizioni meteorologiche e nel nome approvato dell'arma Condensatore della Tempesta Stellare è un caso separato. Le ricerche esatte UIBM ed EUIPO sui quattro nuovi nomi non hanno mostrato risultati pubblicabili, ma non certificano disponibilità giuridica: restano ricerche per segni simili, territori e classi pertinenti. Si veda `docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md`.

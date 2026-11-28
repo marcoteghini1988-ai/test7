@@ -1,4 +1,11 @@
 # Eclissi Stellare — audit nomi e proprietà intellettuale
+
+**Aggiornamento 28/11/2026:** l'elenco corrente è il registro
+`AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`, aggiornato con 17 etichette
+rinominate. La [tabella delle rinomine](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md)
+spiega anche i nomi storici che compaiono ancora nelle sezioni sottostanti.
+Le ricerche esterne di tutti i 460 nomi nei registri ufficiali restano da
+completare prima di descriverli come verificati commercialmente.
 **Data di ricognizione:** 27 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.
 
 **Aggiornamento successivo:** dopo le ricerche UIBM/EUIPO, i nomi correnti di `E01`, `E02`, `pilot_rare_3` e `pilot_leg_3` sono **Nefelarca**, **Vortiluce**, **Mazziere dell'Etere** e **Armiere dei Tre Fronti**. Le voci storiche dei due piloti sotto vanno lette con questa correzione. L'inventario corrente completo è [qui](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json); risultati e limiti della ricerca sono nella [verifica dei marchi](VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md). I nomi nuovi non sono certificati liberi.

@@ -24,7 +24,7 @@
     "I componenti non ricevono danni diretti con queste carte; l'obiettivo di vittoria è la nave madre a zero HP.",
     "I valori indicati sono parametri di progettazione provvisori: bilanciamento finale solo dopo le meccaniche. Nessuna immagine prodotta ora.",
     "Questa bozza non è parte del catalogo runtime delle 120 esclusive e non ne cambia le meccaniche.",
-    "Buco Nero resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni.",
+    "Collasso dei Due Campi resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni.",
     "Nella nuova modalità, i colpi riducono gli HP della nave madre o delle navicelle di supporto. I componenti interni non sono bersagli, ma sistemi che le carte possono sabotare o potenziare. Le sei schede Plancia ancora riferite alla precisione sui vitali vanno riprogettate prima dell'integrazione.",
     "Sulle carte Plancia approvate o proposte, gli unici bersagli di attacco sono madre e navicelle di supporto: mai i componenti. Le interferenze Plancia possono limitare il numero di bersagli, mentre le amplificazioni consentono di ripartire un pacchetto di danno fra due supporti senza aggiungere danno né aggirare il blocco verso la madre. Serve una futura integrazione esplicita nel motore.",
     "Arsenale e Generatore sono allineati alle descrizioni approvate oralmente il 17 novembre. Durate definite; intensità descritta qualitativamente, per evitare numeri inventati. Prima dell'effettiva attivazione serve identificare le funzioni energetiche/armi temporanee e i contatori del motore."

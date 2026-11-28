@@ -331,7 +331,7 @@ Non creare l'effetto o inventare un'approvazione prima della sua risposta.
 4. Cannone del Lampo Bianco.
 5. Cannone a Nucleo di Folgore Crescente.
 6. Sonda Ionica d’Assalto.
-7. Martello del Tuono.
+7. Impattatore Folgorico.
 8. Lancia del Comando Ionico.
 9. Cannone Condensatore della Tempesta Stellare.
 10. Cannone del Giudizio Temporale.

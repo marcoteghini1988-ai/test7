@@ -28,7 +28,7 @@ test('La pila Energia non ha un tetto, mentre i costi delle Speciali restano fin
  assert.equal(ENERGY_SPECIAL_MAX_COST,4);
 });
 
-test('Sei Carte Energia Fuoco in un unico slot logico, persistenti in due turni e non negli scarti',()=>{
+test('Sei carte di Fuoco in un unico slot logico, persistenti in due turni e non negli scarti',()=>{
  let b=make();
  let r=turn(b,'A',['energy-plasma','energy-plasma','energy-plasma']);
  b=r.battle;

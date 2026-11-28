@@ -24,7 +24,7 @@ test('Nuovo mazzo separato dall’archivio storico, conserva la scelta in modo e
  const deck=buildNextBaseDeck(inv,'N00',1,readNextDeckSelection(st));
  assert.deepEqual(deck.baseDeck,ids);
 });
-test('Limiti di 40 carte totali e limite di tre copie per Buco Nero',()=>{
+test('Limiti di 40 carte totali e limite di tre copie per Collasso dei Due Campi',()=>{
  const inv=createFleetInventory();
  inv.owned=Object.fromEntries(NEXT_COMMON_CARDS.map(c=>[c.id,3]));
  const max=nextGenericCapacity('L01',5);

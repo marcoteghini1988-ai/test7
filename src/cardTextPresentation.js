@@ -32,7 +32,7 @@ export function localizedCardText(definition,locale=getCardTextLocale()){
  }
  if(definition.effectSpec?.type==='energy'){
   const spec=definition.effectSpec,element=dictionary.elements[spec.elementId]||spec.elementId;
-  return {name:format(dictionary.energyName,{element}),description:format(dictionary.energyDescription,{element,charges:spec.charges||1,chargeWord:(spec.charges||1)===1?dictionary.charge:dictionary.charges}),
+  return {name:dictionary.energyNames[spec.elementId]||definition.name,description:format(dictionary.energyDescription,{element,charges:spec.charges||1,chargeWord:(spec.charges||1)===1?dictionary.charge:dictionary.charges}),
    category:dictionary.energy,rarity:dictionary.rarities[definition.rarita]};
  }
  return null;

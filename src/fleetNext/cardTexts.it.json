@@ -26,9 +26,20 @@
     "Epica": "EPICA",
     "Leggendaria": "LEGGENDARIA"
   },
-  "coreDescription": "Infligge {stages} HP in {turns} tuoi turni, un colpo a un bersaglio per turno. Nei turni 2 e 3 gioca una nuova Carta Energia Fulmine e spendi una carica per aumentare la potenza. Saltare una ricarica riporta definitivamente quest'arma al danno minimo fino alla scadenza. Si applicano le normali Difese e coperture.",
-  "energyName": "Energia {element}",
-  "energyDescription": "Aggiungi {charges} {chargeWord} Energia {element} alla pila unica senza limite. La carta fisica resta fino al consumo dell'ultima carica, poi va negli scarti. Alimenta Armi compatibili e Speciali della madre.",
+  "coreDescription": "Infligge {stages} HP in {turns} tuoi turni, un colpo a un bersaglio per turno. Nei turni 2 e 3 gioca una nuova Riserva Ionolampo e spendi una carica per aumentare la potenza. Saltare una ricarica riporta definitivamente quest'arma al danno minimo fino alla scadenza. Si applicano le normali Difese e coperture.",
+  "energyNames": {
+    "plasma": "Riserva Pirofusa",
+    "refrigerant": "Riserva Idropressa",
+    "cryogenic": "Riserva Crioviva",
+    "ionic": "Riserva Ionolampo",
+    "mineral": "Riserva Georisonante",
+    "aerial": "Riserva Aerotorsiva",
+    "radiant": "Riserva Fotoprismatica",
+    "void": "Riserva Umbradensa",
+    "metallic": "Riserva Ferropulsiva",
+    "gravity": "Riserva Gravitessuta"
+  },
+  "energyDescription": "Aggiungi {charges} {chargeWord} dell'elemento {element} alla pila unica senza limite. La carta fisica resta fino al consumo dell'ultima carica, poi va negli scarti. Alimenta Armi compatibili e Speciali della madre.",
   "elements": {
     "plasma": "Fuoco",
     "cryogenic": "Ghiaccio",

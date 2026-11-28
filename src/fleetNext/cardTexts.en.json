@@ -26,9 +26,20 @@
     "Epica": "EPIC",
     "Leggendaria": "LEGENDARY"
   },
-  "coreDescription": "Deals {stages} HP over {turns} of your turns, one shot at one target per turn. On turns 2 and 3, play a new Lightning Energy card and spend 1 charge to increase power. Missing a recharge permanently returns this weapon to minimum damage until it expires. Normal defenses and cover apply.",
-  "energyName": "{element} Energy",
-  "energyDescription": "Adds {charges} {element} Energy {chargeWord} to the single unlimited pile. The physical card remains until its last charge is spent, then moves to the discard pile. Powers compatible weapons and mother ship specials.",
+  "coreDescription": "Deals {stages} HP over {turns} of your turns, one shot at one target per turn. On turns 2 and 3, play a new Ionoflash Reserve card and spend 1 charge to increase power. Missing a recharge permanently returns this weapon to minimum damage until it expires. Normal defenses and cover apply.",
+  "energyNames": {
+    "plasma": "Pyrofused Reserve",
+    "refrigerant": "Hydropressed Reserve",
+    "cryogenic": "Cryovive Reserve",
+    "ionic": "Ionoflash Reserve",
+    "mineral": "Georesonant Reserve",
+    "aerial": "Aerotorsion Reserve",
+    "radiant": "Photoprismatic Reserve",
+    "void": "Umbradense Reserve",
+    "metallic": "Ferropulse Reserve",
+    "gravity": "Gravithread Reserve"
+  },
+  "energyDescription": "Adds {charges} {element} {chargeWord} to the single unlimited pile. The physical card remains until its last charge is spent, then moves to the discard pile. Powers compatible weapons and mother ship specials.",
   "elements": {
     "plasma": "Fire",
     "cryogenic": "Ice",

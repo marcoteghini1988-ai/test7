@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v25-2026-11-27",
+  "revision": "personaggi-42-v26-names-2026-11-28",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
@@ -98,7 +98,7 @@
     },
     {
       "id": "character-general-05",
-      "name": "Archivista",
+      "name": "Decifratrice degli Scarti",
       "rarity": "Comune",
       "category": "Personaggio",
       "element": null,
@@ -734,7 +734,7 @@
       "id": "boss-character-1",
       "planetId": 1,
       "planet": "Terra",
-      "name": "Guardiano di Gaia",
+      "name": "Curatore delle Falde Vive",
       "sector": 10,
       "element": null,
       "rarity": "Comune",
@@ -789,7 +789,7 @@
         "replaceable": false,
         "supportCount": 1,
         "abilities": [
-          "A ogni proprio turno sacrifica una percentuale degli HP massimi del proprio supporto per potenziare il primo attacco effettivamente eseguito. La perdita degli HP è reale e può distruggere il Bastione Solare, attivandone la passiva di cura della madre. Se non ha più supporti vivi non può attivare nuovi potenziamenti."
+          "A ogni proprio turno sacrifica una percentuale degli HP massimi del proprio supporto per potenziare il primo attacco effettivamente eseguito. La perdita degli HP è reale e può distruggere il Baluardo Eliovetro, attivandone la passiva di cura della madre. Se non ha più supporti vivi non può attivare nuovi potenziamenti."
         ]
       },
       "unlocked": {

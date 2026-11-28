@@ -231,7 +231,7 @@ export function resetFieldWithBlackHole(b){
   if(side.commander?.id)out.push(side.commander.id);
   for(const m of Object.values(side.modules||{}))if(m?.cardId)out.push(m.cardId);
   for(const m of side.machines||[])if(m.sourceCardId&&!m.cardDiscarded)out.push(m.sourceCardId);
-  // Un attacco preparato è una carta fisicamente sul tavolo: Buco Nero
+  // Un attacco preparato è una carta fisicamente sul tavolo: Collasso dei Due Campi
   // la scarta prima che possa essere rilasciata nel turno successivo.
   if(side.falco?.pending?.cardId)out.push(side.falco.pending.cardId);
   if(side.obsidian?.pending?.cardId)out.push(side.obsidian.pending.cardId);

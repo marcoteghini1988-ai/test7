@@ -18,7 +18,7 @@ function play(b,who,id,extra={}){
  assert.equal(result.ok,true,JSON.stringify({id,reason:result.reason}));
  return result.battle;
 }
-test('Le 33 nuove carte sono riconosciute e Buco Nero può avere tre copie',()=>{
+test('Le 33 nuove carte sono riconosciute e Collasso dei Due Campi può avere tre copie',()=>{
  assert.equal(NEXT_COMMON_CARDS.length,33);
  assert.equal(cardCopyLimit('sys-black-hole'),3);
  assert.equal(cardCopyLimit('sys-bridge-plus-l'),2);
@@ -96,7 +96,7 @@ test('Plancia: sabotaggio limita l’attacco multibersaglio, amplificazione divi
  assert.equal(split.shot.targets.length,2);
  assert.notEqual(split.shot.targets[0].id,split.shot.targets[1].id);
 });
-test('Buco Nero scarta tutte le carte attive, inclusi i due alloggiamenti, e non danneggia navi',()=>{
+test('Collasso dei Due Campi scarta tutte le carte attive, inclusi i due alloggiamenti, e non danneggia navi',()=>{
  let b=setup();
  b.terrain={id:'T02',cardId:'gen-test',owner:'A',source:'player',expiresPly:99};
  for(const who of ['A','B']){

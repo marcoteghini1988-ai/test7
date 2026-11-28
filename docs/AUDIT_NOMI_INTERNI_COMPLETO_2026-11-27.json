@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-11-27",
+  "asOf": "2026-11-28",
   "scope": "460 nomi correnti dei cataloghi individuati, più 167 bozze storiche; titolo commerciale escluso. La scansione non prova che ogni stringa e ogni asset del repository sia stato esaminato.",
   "repo": "marcoteghini1988-ai/test7",
   "recordsCount": 460,
@@ -86,6 +86,41 @@
       "currentName": "Armiere dei Tre Fronti",
       "reason": "Rinomina precauzionale richiesta dopo ricerca UIBM e EUIPO; ricerche testuali senza risultati pubblicabili per il nuovo nome, non attestazione di disponibilità",
       "source": "docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md"
+    },
+    {
+      "id": "sys-black-hole",
+      "formerName": "Buco Nero",
+      "currentName": "Collasso dei Due Campi",
+      "reason": "Nome e ruolo di carta troppo vicini al nome di una carta Yu-Gi-Oh!; rinomina prudenziale",
+      "source": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?cid=4342&ope=2&request_locale=it"
+    },
+    {
+      "id": "character-general-05",
+      "formerName": "Archivista",
+      "currentName": "Decifratrice degli Scarti",
+      "reason": "Nome di personaggio/carta condiviso con il catalogo Magic; rinomina prudenziale",
+      "source": "https://magic.wizards.com/it/news/card-image-gallery/strixhaven-school-of-mages-card-image-gallery"
+    },
+    {
+      "id": "boss-character-1",
+      "formerName": "Guardiano di Gaia",
+      "currentName": "Curatore delle Falde Vive",
+      "reason": "Somiglianza concettuale con Guardians of Gaia; rinomina prudenziale",
+      "source": "https://store.steampowered.com/app/1718290/Guardians_Of_Gaia/"
+    },
+    {
+      "id": "C01",
+      "formerName": "Bastione Solare",
+      "currentName": "Baluardo Eliovetro",
+      "reason": "Bastione solare è una denominazione presente in Destiny 2; rinomina prudenziale",
+      "source": "https://help.bungie.net/hc/it/articles/360048720192-Problemi-conosciuti-e-informazioni-vitali-Archivio-anno-1-e-2-di-Destiny-2"
+    },
+    {
+      "id": "energy-plasma",
+      "formerName": "Energia Fuoco",
+      "currentName": "Riserva Pirofusa",
+      "reason": "Famiglia di carte rinominata insieme alle altre nove per distinguersi dai nomi delle Energie Pokémon; l’affinità Fuoco non cambia",
+      "source": "https://www.pokemon.com/it/approfondimenti/tre-mazzi-dell-espansione-spada-e-scudo-tempesta-argentata-con-protagonisti-ho-oh-v-chesnaught-v-e-wailord"
     }
   ],
   "caveats": [
@@ -95,7 +130,8 @@
     "Le proposte storiche non giocabili sono registrate separatamente.",
     "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie.",
     "Altri riferimenti storici a Crono permangono in log, test e meccaniche legacy: da distinguere dalle stringhe effettivamente mostrate.",
-    "La provenienza degli asset grafici, dei video e del font non risulta certificata da questo audit."
+    "La provenienza degli asset grafici, dei video e del font non risulta certificata da questo audit.",
+    "Il confronto dei 460 nomi verifica i cataloghi interni; la ricerca esterna sui nomi nuovi è preliminare. Non risultano ricerche ufficiali nominative complete UIBM/TMview/WIPO per tutti i nomi, né è attestata l’assenza di marchi simili."
   ],
   "currentNames": [
     {
@@ -192,7 +228,7 @@
     {
       "group": "supporti",
       "id": "C01",
-      "name": "Bastione Solare",
+      "name": "Baluardo Eliovetro",
       "source": "src/fleetNext/supportModelRegistry.js",
       "kind": "current"
     },
@@ -283,7 +319,7 @@
     {
       "group": "carte_fusione_supporti",
       "id": "fusion-ship-c01",
-      "name": "Navicella Fusione — Bastione Solare",
+      "name": "Navicella Fusione — Baluardo Eliovetro",
       "source": "src/fleetNext/supportModelRegistry.js",
       "kind": "current"
     },
@@ -1207,7 +1243,7 @@
     {
       "group": "boss",
       "id": "boss-character-1",
-      "name": "Guardiano di Gaia",
+      "name": "Curatore delle Falde Vive",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -1319,7 +1355,7 @@
     {
       "group": "personaggi_generici",
       "id": "character-general-05",
-      "name": "Archivista",
+      "name": "Decifratrice degli Scarti",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
       "kind": "current"
     },
@@ -2320,7 +2356,7 @@
     {
       "group": "armi_progettate_35",
       "id": "weapon-designed-ionic-martello-tuono",
-      "name": "Martello del Tuono",
+      "name": "Impattatore Folgorico",
       "source": "src/fleetNext/designedWeaponCards.js",
       "kind": "current"
     },
@@ -2810,7 +2846,7 @@
     {
       "group": "moduli_16F",
       "id": "singularity_core",
-      "name": "Singolarità · Buco Nero",
+      "name": "Singolarità · Nodo di Assorbimento",
       "source": "src/newCombat/phase16FModules.js",
       "kind": "current"
     },
@@ -3006,71 +3042,71 @@
     {
       "group": "carte_energia",
       "id": "energy-plasma",
-      "name": "Energia Fuoco",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Pirofusa",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-refrigerant",
-      "name": "Energia Acqua",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Idropressa",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-cryogenic",
-      "name": "Energia Ghiaccio",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Crioviva",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-ionic",
-      "name": "Energia Fulmine",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Ionolampo",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-mineral",
-      "name": "Energia Terra",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Georisonante",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-aerial",
-      "name": "Energia Vento",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Aerotorsiva",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-radiant",
-      "name": "Energia Luce",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Fotoprismatica",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-void",
-      "name": "Energia Ombra",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Umbradensa",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-metallic",
-      "name": "Energia Metallo",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Ferropulsiva",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
       "group": "carte_energia",
       "id": "energy-gravity",
-      "name": "Energia Gravità",
-      "source": "src/fleetNext/elementalAffinities.js",
+      "name": "Riserva Gravitessuta",
+      "source": "src/fleetNext/energyCards.js",
       "kind": "current"
     },
     {
@@ -3265,7 +3301,7 @@
     {
       "group": "carta_sistema_speciale",
       "id": "sys-black-hole",
-      "name": "Buco Nero",
+      "name": "Collasso dei Due Campi",
       "source": "src/fleetNext/newCardRegistry.js",
       "kind": "current"
     },
@@ -4585,6 +4621,142 @@
       "category": "Pilota",
       "reason": "Rinomina precauzionale su richiesta; ID e meccaniche invariati; verificare ancora segni simili e territori",
       "status": "corretto"
+    },
+    {
+      "cardId": "C01",
+      "previousName": "Bastione Solare",
+      "newName": "Baluardo Eliovetro",
+      "category": "supporti",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "fusion-ship-c01",
+      "previousName": "Navicella Fusione — Bastione Solare",
+      "newName": "Navicella Fusione — Baluardo Eliovetro",
+      "category": "carte_fusione_supporti",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "boss-character-1",
+      "previousName": "Guardiano di Gaia",
+      "newName": "Curatore delle Falde Vive",
+      "category": "boss",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "character-general-05",
+      "previousName": "Archivista",
+      "newName": "Decifratrice degli Scarti",
+      "category": "personaggi_generici",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "weapon-designed-ionic-martello-tuono",
+      "previousName": "Martello del Tuono",
+      "newName": "Impattatore Folgorico",
+      "category": "armi_progettate_35",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "singularity_core",
+      "previousName": "Singolarità · Buco Nero",
+      "newName": "Singolarità · Nodo di Assorbimento",
+      "category": "moduli_16F",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-plasma",
+      "previousName": "Energia Fuoco",
+      "newName": "Riserva Pirofusa",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-refrigerant",
+      "previousName": "Energia Acqua",
+      "newName": "Riserva Idropressa",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-cryogenic",
+      "previousName": "Energia Ghiaccio",
+      "newName": "Riserva Crioviva",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-ionic",
+      "previousName": "Energia Fulmine",
+      "newName": "Riserva Ionolampo",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-mineral",
+      "previousName": "Energia Terra",
+      "newName": "Riserva Georisonante",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-aerial",
+      "previousName": "Energia Vento",
+      "newName": "Riserva Aerotorsiva",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-radiant",
+      "previousName": "Energia Luce",
+      "newName": "Riserva Fotoprismatica",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-void",
+      "previousName": "Energia Ombra",
+      "newName": "Riserva Umbradensa",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-metallic",
+      "previousName": "Energia Metallo",
+      "newName": "Riserva Ferropulsiva",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "energy-gravity",
+      "previousName": "Energia Gravità",
+      "newName": "Riserva Gravitessuta",
+      "category": "carte_energia",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
+    },
+    {
+      "cardId": "sys-black-hole",
+      "previousName": "Buco Nero",
+      "newName": "Collasso dei Due Campi",
+      "category": "carta_sistema_speciale",
+      "reason": "Rinomina prudenziale e differenziazione del titolo; nessuna modifica a ID, rarità o meccanica",
+      "status": "renamed-in-catalogue-2026-11-28"
     }
   ],
   "namesCompared": 460,

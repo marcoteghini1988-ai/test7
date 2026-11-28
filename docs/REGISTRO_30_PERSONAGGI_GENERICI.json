@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-generici-v3-2026-11-27",
+  "revision": "personaggi-generici-v4-names-2026-11-28",
   "status": "design-review",
   "counts": {
     "Comune": 6,
@@ -126,7 +126,7 @@
     },
     {
       "id": "character-general-05",
-      "name": "Archivista",
+      "name": "Decifratrice degli Scarti",
       "rarity": "Comune",
       "category": "Personaggio",
       "element": null,

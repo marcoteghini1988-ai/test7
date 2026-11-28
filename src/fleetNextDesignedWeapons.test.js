@@ -93,7 +93,7 @@ test('Lanciafiamme: supporti + nave madre, 11 HP nominali ognuna',()=>{
  assert.equal(e.hitCount,3);assert.deepEqual(e.impacts.map(h=>h.nominalDamage),[11,11,11]);
  assert.ok(e.impacts.some(h=>h.targetKind==='part'));
 });
-test('Condensatore: livelli nominali 18, 30, 42 con zero, una o due Energie Fuoco',()=>{
+test('Condensatore: livelli nominali 18, 30, 42 con zero, una o due cariche di Fuoco',()=>{
  const c=named('Cannone Condensatore Pirobalistico');
  for(const [pile,expected] of [[[],18],[['energy-plasma'],30],[['energy-plasma','energy-plasma-r'],42]]){
   const b=battle();b.sides.A.energyPile=[...pile];

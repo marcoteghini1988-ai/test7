@@ -5,7 +5,7 @@ import {
  NEXT_COMMON_CARD_COUNT,nextCommonCard
 } from './fleetNext/newCardRegistry.js';
 
-test('Il registro nuovo contiene esattamente 32 carte sistemi e Buco Nero',()=>{
+test('Il registro nuovo contiene esattamente 32 carte sistemi e Collasso dei Due Campi',()=>{
  assert.equal(NEXT_COMMON_CARD_COUNT,33);
  assert.equal(new Set(NEXT_COMMON_CARDS.map(c=>c.id)).size,33);
  assert.equal(NEXT_COMMON_CARDS.filter(c=>c.effectSpec.type==='systemModifier').length,32);
@@ -18,7 +18,7 @@ test('Il registro nuovo contiene esattamente 32 carte sistemi e Buco Nero',()=>{
  }
 });
 
-test('Il Buco Nero consente tre copie e non cancella le navicelle',()=>{
+test('Il Collasso dei Due Campi consente tre copie e non cancella le navicelle',()=>{
  const blackHole=nextCommonCard('sys-black-hole');
  assert.ok(blackHole);
  assert.equal(blackHole.maxCopiesPerDeck,3);

@@ -1,5 +1,17 @@
 # Controllo dei diritti — stato verificato il 27/11/2026
 
+## Aggiornamento del 28/11/2026 — nomi delle carte e dei Personaggi
+
+I nomi correnti sono stati sincronizzati con il registro strutturato e i
+sorgenti del gioco: 17 etichette rinominate, inclusi un Personaggio generico,
+un Boss, un supporto e la sua Fusione, una Strategia, un modulo, un'Arma e
+dieci famiglie di carte Energia. ID, rarità, elementi e meccaniche non sono
+stati modificati. Le 40 varianti Energia mantengono i medesimi ID e cariche;
+i testi della carta hanno nomi distinti in italiano e inglese. Dettagli e
+limiti della ricerca: [revisione nomi del 28/11](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md).
+Le parti sottostanti documentano verifiche precedenti e possono contenere
+nomi di allora.
+
 ## Aggiornamento del 28/11/2026 — Personaggi
 
 La versione attiva e i sorgenti `src/` non contengono più gli ID del catalogo

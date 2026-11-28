@@ -104,7 +104,7 @@ test('Leggendaria: torna alle capacità L1, sospende esclusive e poi rimonta sen
  assert.equal(b.sides.B.ships[0].hp,original.hp);
  assert.deepEqual(b.sides.B.escorts.map(e=>({id:e.id,hp:e.hp,grade:e.grade})),originalEscorts);
 });
-test('Buco Nero risucchia gli effetti attivi e i moduli trattenuti senza rimontarli',()=>{
+test('Collasso dei Due Campi risucchia gli effetti attivi e i moduli trattenuti senza rimontarli',()=>{
  let b=make();
  b.sides.B.modules.weapon={id:'mod1',slot:'weapon',name:'Modulo',
   cardId:'nx-n00-07',hp:1,maxHp:2,destroyed:false};

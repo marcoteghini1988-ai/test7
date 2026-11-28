@@ -14,7 +14,7 @@ const SUITS=['spades','hearts','clubs','diamonds'];
 const SUIT_NAMES={spades:'Picche',hearts:'Cuori',clubs:'Fiori',diamonds:'Quadri'};
 const SUIT_SYMBOLS={spades:'♠',hearts:'♥',clubs:'♣',diamonds:'♦'};
 const PROFILES=[
- [1,'Guardiano di Gaia','Corazza tellurica','Assorbe parte del primo colpo, ma tre semi diversi la spezzano.'],
+ [1,'Curatore delle Falde Vive','Corazza tellurica','Assorbe parte del primo colpo, ma tre semi diversi la spezzano.'],
  [2,'Colosso di Tharsis','Assalto progressivo','Ogni vittoria con salva aumenta la pressione. Fermalo per spezzare la serie.'],
  [3,'Matriarca Tossica','Neurotossina','Le salve vincenti avvelenano lo scambio successivo.'],
  [6,'Devastatore delle Ere','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
