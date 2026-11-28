@@ -1310,7 +1310,7 @@
         "duration": "whole-battle",
         "replaceable": false,
         "abilities": [
-          "Aumenta la potenza dei propri colpi con il numero di carte avversarie negli scarti, entro un limite.",
+          "Aumenta la potenza dei propri colpi con il numero di proprie carte negli scarti, entro un limite.",
           "Con supporti vivi coordina un bonus di Arma, non attacchi autonomi dei supporti."
         ]
       },
@@ -1321,7 +1321,7 @@
         },
         "replaceable": true,
         "abilities": [
-          "Potenzia un colpo Arma in funzione delle carte negli scarti avversari, con limite.",
+          "Potenzia un colpo Arma in funzione delle proprie carte negli scarti, con limite.",
           "Con due supporti vivi applica un piccolo bonus al primo colpo Arma di ogni turno.",
           "Quando un supporto viene distrutto, trasferisce una carica virtuale dell'elemento di quel supporto alla flotta, una sola volta."
         ],
@@ -1331,7 +1331,8 @@
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità.",
+        "Correzione dell'utente del 28/11/2026: per questo Boss contano solo i propri scarti, mai quelli avversari; la bozza delle abilità va ancora riconciliata con la versione basata sul sacrificio delle proprie carte."
       ]
     },
     {
