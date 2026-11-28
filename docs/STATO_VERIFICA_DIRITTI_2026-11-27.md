@@ -1,14 +1,22 @@
 # Controllo dei diritti — stato verificato il 27/11/2026
 
-## Aggiornamento del 28/11/2026 — nomi delle carte e dei Personaggi
+## Correzione del 28/11/2026 — nomi delle carte e dei Personaggi
 
-I nomi correnti sono stati sincronizzati con il registro strutturato e i
-sorgenti del gioco: 17 etichette rinominate, inclusi un Personaggio generico,
-un Boss, un supporto e la sua Fusione, una Strategia, un modulo, un'Arma e
-dieci famiglie di carte Energia. ID, rarità, elementi e meccaniche non sono
-stati modificati. Le 40 varianti Energia mantengono i medesimi ID e cariche;
-i testi della carta hanno nomi distinti in italiano e inglese. Dettagli e
-limiti della ricerca: [revisione nomi del 28/11](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md).
+Su richiesta dell'autore, le dieci famiglie Energia sono tornate alla formula
+originaria «Energia + elemento» (Fuoco, Acqua, Ghiaccio, Fulmine, Terra,
+Vento, Luce, Ombra, Metallo, Gravità). Le denominazioni sperimentali con
+«Riserva» sono ritirate. Gli ID e le 40 varianti, le rarità, le cariche, gli
+elementi e le meccaniche non sono cambiati. La precedente dicitura «17
+etichette rinominate» descriveva una fase ormai superata: **sette** altre
+etichette modificate in quella fase restano nel codice come **provvisorie**, in
+attesa che l'autore decida sui nomi proposti. Una nuova verifica ha trovato
+**23 nomi di vecchi Piloti** contati come attuali, ma i loro due sorgenti sono
+stati eliminati. Il registro attuale distingue **437 nomi nei sorgenti
+esistenti**, inclusi cataloghi progettuali non giocabili, 23 nomi ritirati e
+167 bozze storiche. La revisione dei 437 nomi è interna; le ricerche esterne
+di tutti i nomi, anche per segni
+simili, non sono state completate. Dettagli:
+[revisione nomi del 28/11](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md).
 Le parti sottostanti documentano verifiche precedenti e possono contenere
 nomi di allora.
 

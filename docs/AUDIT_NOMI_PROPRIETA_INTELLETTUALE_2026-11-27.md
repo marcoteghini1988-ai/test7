@@ -1,10 +1,15 @@
 # Eclissi Stellare — audit nomi e proprietà intellettuale
 
-**Aggiornamento 28/11/2026:** l'elenco corrente è il registro
-`AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`, aggiornato con 17 etichette
-rinominate. La [tabella delle rinomine](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md)
+**Correzione 28/11/2026:** l'elenco corrente è il registro
+`AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`: le dieci famiglie Energia
+sono tornate ai nomi originali «Energia + elemento». Il registro conta ora
+437 nomi nei sorgenti esistenti (anche proposte e cataloghi non giocabili),
+23 nomi di vecchi Piloti rimossi dai sorgenti e 167 bozze storiche. Delle 17 rinomine
+riportate nella fase precedente, le altre sette restano provvisorie nel codice
+e sono da sottoporre alla decisione dell'autore. La
+[ricostruzione delle rinomine](RINOMINE_CARTE_PERSONAGGI_2026-11-28.md)
 spiega anche i nomi storici che compaiono ancora nelle sezioni sottostanti.
-Le ricerche esterne di tutti i 460 nomi nei registri ufficiali restano da
+Le ricerche esterne di tutti i 437 nomi nei registri ufficiali restano da
 completare prima di descriverli come verificati commercialmente.
 **Data di ricognizione:** 27 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.
 

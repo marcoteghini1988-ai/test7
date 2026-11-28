@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "asOf": "2026-11-28",
-  "scope": "460 nomi correnti dei cataloghi individuati, più 167 bozze storiche; titolo commerciale escluso. La scansione non prova che ogni stringa e ogni asset del repository sia stato esaminato.",
+  "scope": "437 nomi nei cataloghi sorgente esistenti (inclusi proposte e dati non giocabili), 23 Piloti da sorgenti eliminati come storici, più 167 bozze storiche; titolo commerciale escluso.",
   "repo": "marcoteghini1988-ai/test7",
-  "recordsCount": 460,
+  "recordsCount": 437,
   "proposalCount": 167,
   "coverage": {
     "navi_madri": 12,
@@ -12,7 +12,6 @@
     "carte_esclusive_madri": 120,
     "boss": 12,
     "personaggi_generici": 30,
-    "piloti": 16,
     "armi_catalogo_48": 48,
     "nuove_famiglie_22": 22,
     "armi_progettate_35": 35,
@@ -22,8 +21,7 @@
     "carte_tattiche": 25,
     "carte_energia": 10,
     "armi_native": 27,
-    "carta_sistema_speciale": 1,
-    "piloti_aggiuntivi_commander": 7
+    "carta_sistema_speciale": 1
   },
   "identicalNamesAcrossDefinitions": [],
   "duplicateStableIds": [],
@@ -161,6 +159,7 @@
     }
   ],
   "caveats": [
+    "23 nomi dei vecchi Piloti erano stati contati come correnti, ma i due file sorgente risultano rimossi: ora sono in retiredNames. I 437 nomi nei sorgenti esistenti includono proposte e cataloghi non giocabili; non sono 437 carte completate.",
     "Un inventario di fonti principali non prova che ogni stringa del repository sia stata esaminata.",
     "La ricerca web non sostituisce UIBM/EUIPO/WIPO; nessuna certificazione legale di libertà commerciale.",
     "I nomi di varianti evolutive e rarità condividono intenzionalmente il nome della famiglia.",
@@ -168,7 +167,7 @@
     "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie.",
     "Altri riferimenti storici a Crono permangono in log, test e meccaniche legacy: da distinguere dalle stringhe effettivamente mostrate.",
     "La provenienza degli asset grafici, dei video e del font non risulta certificata da questo audit.",
-    "Il confronto dei 460 nomi verifica i cataloghi interni; la ricerca esterna sui nomi nuovi è preliminare. Non risultano ricerche ufficiali nominative complete UIBM/TMview/WIPO per tutti i nomi, né è attestata l’assenza di marchi simili.",
+    "Il confronto dei 437 nomi verifica i cataloghi interni; la ricerca esterna sui nomi nuovi è preliminare. Non risultano ricerche ufficiali nominative complete UIBM/TMview/WIPO per tutti i nomi, né è attestata l’assenza di marchi simili.",
     "Le dieci carte Energia hanno ripreso i nomi descrittivi originari. Sette ulteriori rinomine visibili nel codice sono ancora provvisorie in attesa della decisione dell’autore."
   ],
   "currentNames": [
@@ -1570,118 +1569,6 @@
       "id": "character-general-30",
       "name": "Architetto gravitazionale",
       "source": "docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_com_1",
-      "name": "Cadetto Additivo",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_com_2",
-      "name": "Calibratore Sottrattivo",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_com_3",
-      "name": "Cannoniere Balistico",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_com_4",
-      "name": "Cecchino Quantico",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_rare_1",
-      "name": "Corsaro della Rivalsa",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_rare_2",
-      "name": "L'Adrenalinico",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_rare_3",
-      "name": "Mazziere dell'Etere",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_rare_4",
-      "name": "Mercante dei Riflessi Gemelli",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_epic_1",
-      "name": "L'Artificiere di Bordo",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_epic_2",
-      "name": "L'Alchimista Aurico",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_epic_3",
-      "name": "Il Viaggiatore del Tempo",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_epic_4",
-      "name": "Comandante della Galaverna",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_leg_1",
-      "name": "Stratega delle Tre Figure",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_leg_2",
-      "name": "Il Veggente Supremo",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_leg_3",
-      "name": "Armiere dei Tre Fronti",
-      "source": "src/newCombat/phase16GPilots.js",
-      "kind": "current"
-    },
-    {
-      "group": "piloti",
-      "id": "pilot_leg_4",
-      "name": "Il Lottatore di Sumo",
-      "source": "src/newCombat/phase16GPilots.js",
       "kind": "current"
     },
     {
@@ -3342,62 +3229,6 @@
       "name": "Collasso dei Due Campi",
       "source": "src/fleetNext/newCardRegistry.js",
       "kind": "current"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_leg_5",
-      "name": "L'Amante del Rosso",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_leg_6",
-      "name": "L'Amante del Nero",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_boss_4",
-      "name": "Arconte Solare",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_boss_5",
-      "name": "Vegliardo del Vortice",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_boss_10",
-      "name": "Colosso di Metano",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_boss_12",
-      "name": "Titano d'Acciaio",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
-    },
-    {
-      "group": "piloti_aggiuntivi_commander",
-      "id": "pilot_boss_18",
-      "name": "Entità della Discordia",
-      "source": "src/commanderAbilities.js",
-      "kind": "current",
-      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
     }
   ],
   "unapprovedDraftNames": [
@@ -4797,13 +4628,13 @@
       "status": "renamed-in-catalogue-2026-11-28"
     }
   ],
-  "namesCompared": 460,
-  "distinctCurrentNames": 460,
+  "namesCompared": 437,
+  "distinctCurrentNames": 437,
   "titleExcluded": true,
   "secondaryCatalogsReviewed": [
     {
       "source": "src/commanderAbilities.js",
-      "note": "33 record: 16 Piloti Fase 16G, 2 altri leggendari, 15 alias boss; i cinque non presenti nel catalogo di 12 Boss sono qui inventariati"
+      "note": "Fonte storica rimossa: 33 record fra Piloti e alias Boss, i sette nomi aggiuntivi già censiti sono ora in retiredNames."
     },
     {
       "source": "src/officialSpecialCardIdentity.js",
@@ -4827,5 +4658,191 @@
       "ttf": 1
     },
     "note": "File sorgenti e collaudi inclusi; nessun file di licenza/attribuzione generale individuato per percorso. Verificare individualmente gli asset destinati alla distribuzione."
-  }
+  },
+  "retiredNames": [
+    {
+      "group": "piloti",
+      "id": "pilot_com_1",
+      "name": "Cadetto Additivo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_2",
+      "name": "Calibratore Sottrattivo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_3",
+      "name": "Cannoniere Balistico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_com_4",
+      "name": "Cecchino Quantico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_1",
+      "name": "Corsaro della Rivalsa",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_2",
+      "name": "L'Adrenalinico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_3",
+      "name": "Mazziere dell'Etere",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_rare_4",
+      "name": "Mercante dei Riflessi Gemelli",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_1",
+      "name": "L'Artificiere di Bordo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_2",
+      "name": "L'Alchimista Aurico",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_3",
+      "name": "Il Viaggiatore del Tempo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_epic_4",
+      "name": "Comandante della Galaverna",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_1",
+      "name": "Stratega delle Tre Figure",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_2",
+      "name": "Il Veggente Supremo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_3",
+      "name": "Armiere dei Tre Fronti",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti",
+      "id": "pilot_leg_4",
+      "name": "Il Lottatore di Sumo",
+      "source": "src/newCombat/phase16GPilots.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_leg_5",
+      "name": "L'Amante del Rosso",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_leg_6",
+      "name": "L'Amante del Nero",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_4",
+      "name": "Arconte Solare",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_5",
+      "name": "Vegliardo del Vortice",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_10",
+      "name": "Colosso di Metano",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_12",
+      "name": "Titano d'Acciaio",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_18",
+      "name": "Entità della Discordia",
+      "source": "src/commanderAbilities.js",
+      "kind": "retired-source-deleted",
+      "reason": "File sorgente rimosso dalla versione corrente; conservato come storico"
+    }
+  ]
 }

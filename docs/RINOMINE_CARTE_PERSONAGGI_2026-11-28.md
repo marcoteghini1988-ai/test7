@@ -4,9 +4,11 @@
 
 Su richiesta dell'autore, le coincidenze e le somiglianze riconoscibili con
 nomi di carte o videogiochi sono state trattate in modo prudenziale. Il
-registro `AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json` contiene **460
-denominazioni correnti distinte**: questo numero include anche 16 Personaggi
-generici ancora **proposti**. I 42 Personaggi sono 30 generici più 12 Boss;
+registro `AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json` contiene **437
+denominazioni in sorgenti esistenti**: questo numero include anche 16 Personaggi
+generici ancora **proposti**, e non misura le carte già completate. I 23 nomi
+di vecchi Piloti, provenienti da file eliminati, sono conservati a parte come
+storici. I 42 Personaggi sono 30 generici più 12 Boss;
 solo 14 generici sono confermati. Le dodici carte Personaggio Boss illustrate
 non sono ancora approvate e nel gioco mantengono etichette temporanee.
 Le sette rinomine qui sotto sono già nel codice ma l'autore non ne ha ancora

@@ -3,7 +3,10 @@
 ## Nomi correnti dopo la revisione del 28/11/2026
 
 Il registro corrente `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json`
-elenca 460 denominazioni. Il 28/11, su indicazione dell'autore, le dieci
+elenca 437 denominazioni in sorgenti esistenti, incluse proposte non giocabili.
+Altri 23 nomi dei vecchi Piloti erano stati contati per errore come correnti:
+i due file sorgente sono stati rimossi e questi nomi sono ora storici nel
+campo `retiredNames`. Il 28/11, su indicazione dell'autore, le dieci
 famiglie di carte Energia sono tornate ai nomi originali **Energia Fuoco,
 Energia Acqua, Energia Ghiaccio, Energia Fulmine, Energia Terra, Energia
 Vento, Energia Luce, Energia Ombra, Energia Metallo, Energia Gravità**.
