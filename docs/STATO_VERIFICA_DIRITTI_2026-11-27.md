@@ -18,20 +18,26 @@ sono i nomi commerciali definitivi né un'affermazione che esistano dodici
 carte illustrate. I nomi dei Boss avversari nella campagna sono un tema
 separato e restano nomi di lavorazione.
 
-Nessuna parola comune o inventata garantisce da sola disponibilità legale.
-Prima della pubblicazione bisogna verificare segni identici e simili nei
-territori e nei prodotti/servizi interessati (per esempio software di gioco
-e intrattenimento online), confrontare i risultati e sottoporre i conflitti
-concreti a una valutazione professionale. Anche una ricerca senza risultati
-non esclude contestazioni. I documenti storici e i commit precedenti restano
-nella cronologia del repository: non sono inclusi nella build corrente e non
-sono stati riscritti.
+**Regola per ogni nuova carta:** il nome viene scelto e controllato nel
+momento in cui si crea la carta, prima che sia approvata e inserita come
+definitiva. Si cercano il nome esatto e i segni simili nelle banche dati
+UIBM/TMview e negli altri mercati previsti, oltre agli usi riconoscibili
+nei videogiochi. Si valutano i prodotti e servizi pertinenti, la somiglianza
+visiva/fonetica e il contesto d'uso; si annotano data, risultati e decisione
+insieme alla carta. Se emerge un conflitto plausibile, si cambia nome o si
+fa valutare il caso prima di approvarlo. Alla pubblicazione si ricontrollano
+i nomi più esposti nel marketing per intercettare nuove domande o usi.
+Nessuna parola comune o inventata garantisce da sola disponibilità legale:
+anche una ricerca senza risultati non esclude contestazioni. I documenti
+storici e i commit precedenti restano nella cronologia del repository: non
+sono inclusi nella build corrente e non sono stati riscritti.
 
 Verifiche locali: `npm run preflight` e `npm run build` superati; suite completa
 da 2.434 test, con due asserzioni residue sul vecchio Pilota successivamente
-aggiornate e superate in una verifica mirata. Il collaudo visivo della nuova
-etichetta nella partita e il run CI dello stesso commit sono ancora da
-confermare. Le sezioni sotto documentano la fotografia precedente e sono
+aggiornate e superate in una verifica mirata. Sul commit pubblicato sono
+riusciti [CI](https://github.com/marcoteghini1988-ai/test7/actions/runs/46117409502)
+e [collaudo mobile automatico](https://github.com/marcoteghini1988-ai/test7/actions/runs/46117409548).
+Le sezioni sotto documentano la fotografia precedente e sono
 superate, dove parlano di Piloti ancora nel menu.
 
 **Perimetro:** contenuti interni del gioco, repository `marcoteghini1988-ai/test7`. Il **titolo commerciale è escluso** su richiesta dell'utente. `Eclissi Stellare` è un nome di lavorazione.
@@ -57,7 +63,7 @@ superate, dove parlano di Piloti ancora nel menu.
 
 ## Criterio di completamento
 
-1. Dare priorità alla verifica dei segni distintivi usati come nomi di Boss, personaggi, piloti, navi, supporti e carte principali, poi gli altri nomi. Cercare equivalenti tradotti e somiglianze fonetiche/concettuali, senza confondere omonimia generica e violazione.
+1. Controllare **ogni nome quando viene scelto per una carta** e conservarne l'esito con la scheda. Dare priorità ai segni distintivi usati anche nel marketing; cercare equivalenti tradotti e somiglianze fonetiche/concettuali, senza confondere omonimia generica e violazione.
 2. Collegare ogni asset **distribuito** a una prova di titolarità/licenza o a una creazione tracciata, incluse immagini e font; distinguere risorse di test e anteprime.
 3. Accertare che tutte le categorie mostrate al giocatore siano **ARMA** e **STRATEGIA** dove pertinente; le chiavi tecniche `attack` e `offense` restano possibili per compatibilità.
 4. Ottenere un run GitHub con preflight, test logici e build completati sullo stesso commit e collaudare le schermate interessate.
