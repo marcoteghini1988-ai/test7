@@ -118,7 +118,7 @@ test('Mortaio: assorbe solo Fuoco prima della Speciale e lascia invariato altro 
  assert.ok(r.battle.sides.A.energyPile.includes('energy-metallic'));
 });
 test('Inceneritore: applica bruciatura e mantiene i danni per il numero di turni deciso',()=>{
- let b=game(false),id=lookup('Inceneritore a Plasma Rotante');
+ let b=game(false),id=lookup('Turbina Svarquendica');
  const r=play(b,'A',[id]);
  assert.ok(shots(r,id)[0].hitCount>=1);
  assert.ok(r.battle.sides.B.provisionalBurns.length===1);

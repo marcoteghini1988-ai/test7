@@ -1,14 +1,14 @@
 {
   "weapon-designed-ionic-giudizio-temporale": {
     "title": [
-      "CANNONE DEL",
-      "GIUDIZIO TEMPORALE"
+      "CANNONE",
+      "QUERVALDISSIO"
     ],
-    "name": "CANNONE DEL GIUDIZIO TEMPORALE",
+    "name": "CANNONE QUERVALDISSIO",
     "description": "Un attacco nel turno di posa, pari al 20% degli HP massimi del bersaglio prima dei modificatori. Occupa lo slot per tre turni propri. Nessun costo Energia.",
     "values": [
-      "CANNONE DEL",
-      "GIUDIZIO TEMPORALE",
+      "CANNONE",
+      "QUERVALDISSIO",
       "ARMA",
       "LEGGENDARIA",
       "ELEMENTO",
@@ -113,14 +113,14 @@
   },
   "weapon-designed-plasma-inceneritore-rotante": {
     "title": [
-      "INCENERITORE A",
-      "PLASMA ROTANTE"
+      "TURBINA",
+      "SVARQUENDICA"
     ],
-    "name": "INCENERITORE A PLASMA ROTANTE",
+    "name": "TURBINA SVARQUENDICA",
     "description": "Un colpo per ciascuno dei due turni propri: 37, poi 27 HP. Il primo impatto riuscito fissa cinque Bruciature dalle proprie Strategie scartate: 2 HP per carta, minimo 2, massimo 12, prima dei modificatori.",
     "values": [
-      "INCENERITORE A",
-      "PLASMA ROTANTE",
+      "TURBINA",
+      "SVARQUENDICA",
       "ARMA",
       "EPICA",
       "ELEMENTO",
@@ -141,14 +141,14 @@
   },
   "weapon-designed-plasma-inceneritore-rotante-rarity-l": {
     "title": [
-      "INCENERITORE A",
-      "PLASMA ROTANTE"
+      "TURBINA",
+      "SVARQUENDICA"
     ],
-    "name": "INCENERITORE A PLASMA ROTANTE",
+    "name": "TURBINA SVARQUENDICA",
     "description": "Un colpo per ciascuno dei due turni propri: 54, poi 39 HP. Il primo impatto riuscito fissa cinque Bruciature dalle proprie Strategie scartate: 3 HP per carta, minimo 3, massimo 16, prima dei modificatori.",
     "values": [
-      "INCENERITORE A",
-      "PLASMA ROTANTE",
+      "TURBINA",
+      "SVARQUENDICA",
       "ARMA",
       "LEGGENDARIA",
       "ELEMENTO",

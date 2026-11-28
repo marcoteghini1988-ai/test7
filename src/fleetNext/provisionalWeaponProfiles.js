@@ -23,7 +23,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-plasma-inceneritore-rotante",
-    "name": "Inceneritore a Plasma Rotante",
+    "name": "Turbina Svarquendica",
     "rarita": "Epica",
     "profile": {
       "pattern": "incinerator",

@@ -3,6 +3,10 @@
 > partita; gli originali PNG sono archiviati senza alterarne i byte.
 > Le attese nelle note storiche non richiedono una nuova approvazione.
 > Lo studio resta distinto dal collaudo reale della partita.
+> Nomi aggiornati dopo la scelta del 28/11: Cannone Quervaldissio /
+> Quervaldissio Cannon e Turbina Svarquendica / Svarquendica Turbine.
+> Le denominazioni nelle note datate sotto sono storiche; lo studio
+> rigenerato legge gli stessi dizionari EN/IT della partita.
 
 # Lotto di sei Carte Arma, 27 novembre 2026
 

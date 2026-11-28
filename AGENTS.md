@@ -1,5 +1,19 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Due nomi Arma approvati — 28/11/2026
+
+L'autore ha confermato con «si» **Cannone Quervaldissio** / **Quervaldissio
+Cannon** e **Turbina Svarquendica** / **Svarquendica Turbine**. Sostituiscono
+Cannone del Giudizio Temporale e Inceneritore a Plasma Rotante, anche nelle
+evoluzioni esistenti. Conservare gli ID `weapon-designed-ionic-giudizio-temporale`
+e `weapon-designed-plasma-inceneritore-rotante`, rarità, statistiche, effetti,
+illustrazioni e cornici. Cambiano soltanto nomi, dizionari EN/IT e livelli
+SVG del testo; i PNG originali restano immutati. Cronovarca e Pirovelica
+sono proposte ritirate, non nomi da ripristinare. Le citazioni precedenti
+nelle sezioni datate e nei filmati sono storiche. Mappatura e portata della
+ricerca in `docs/RINOMINE_DUE_ARMI_APPROVATE_2026-11-28.md`; nessuna
+certificazione di disponibilità dei marchi.
+
 ## Decisione dell'autore sui nomi dei Personaggi — 28/11/2026
 
 L'autore ha scelto le dodici proposte presentate in conversazione: quattro

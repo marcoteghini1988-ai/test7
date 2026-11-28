@@ -113,7 +113,7 @@ export function supportWeaponCharge(side,machine,roleForCard){
 // agli audit. Le vecchie partite conservano i danni originali delle Armi.
 // Le armi il cui danno base e' GIA' una percentuale degli HP
 // non devono essere moltiplicate ancora per la rarita'. Altrimenti
-// Giudizio Temporale (20%) si trasformerebbe invisibilmente in 37%
+// Quervaldissio (20%) si trasformerebbe invisibilmente in 37%
 // in Leggendaria, divergendo dal testo e dalle regole della carta.
 // Restano validi Arsenale, Difese, elementi, terreni e passive supporti.
 const PERCENT_BASED_WEAPON_PATTERNS=new Set(['percent','binary-overload']);

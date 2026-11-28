@@ -2071,7 +2071,7 @@
     {
       "group": "armi_progettate_35",
       "id": "weapon-designed-plasma-inceneritore-rotante",
-      "name": "Inceneritore a Plasma Rotante",
+      "name": "Turbina Svarquendica",
       "source": "src/fleetNext/designedWeaponCards.js",
       "kind": "current"
     },
@@ -2302,7 +2302,7 @@
     {
       "group": "armi_progettate_35",
       "id": "weapon-designed-ionic-giudizio-temporale",
-      "name": "Cannone del Giudizio Temporale",
+      "name": "Cannone Quervaldissio",
       "source": "src/fleetNext/designedWeaponCards.js",
       "kind": "current"
     },

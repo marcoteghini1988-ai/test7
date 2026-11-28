@@ -87,7 +87,7 @@ test('Terreno Leggendario: attacco +16% o difesa 16%, doppia funzione +8/+8 non 
  assert.equal(calc('EQ'),993);
  assert.equal(applyElementalDamage(defender(),'plasma','plasma',1000).damage,1000);
 });
-test('Giudizio Temporale e sovraccarichi percentuali: mai un secondo fattore di rarita nascosto',()=>{
+test('Quervaldissio e sovraccarichi percentuali: mai un secondo fattore di rarita nascosto',()=>{
  const patterns=['percent','binary-overload','single'];
  const results={};
  for(const pattern of patterns){

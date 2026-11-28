@@ -21,7 +21,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-plasma-inceneritore-rotante",
     "elementId": "plasma",
-    "name": "Inceneritore a Plasma Rotante",
+    "name": "Turbina Svarquendica",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma di due turni; applica bruciatura per cinque turni. Il danno della bruciatura è calcolato una volta sugli scarti al momento dell'applicazione (2 HP per carta nell'esempio da confermare).",
@@ -394,7 +394,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-ionic-giudizio-temporale",
     "elementId": "ionic",
-    "name": "Cannone del Giudizio Temporale",
+    "name": "Cannone Quervaldissio",
     "rarita": "Da definire",
     "profile": {
       "pattern": "percent",

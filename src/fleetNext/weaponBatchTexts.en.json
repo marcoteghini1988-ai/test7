@@ -1,13 +1,13 @@
 {
   "weapon-designed-ionic-giudizio-temporale": {
     "title": [
-      "TEMPORAL JUDGMENT",
+      "QUERVALDISSIO",
       "CANNON"
     ],
-    "name": "TEMPORAL JUDGMENT CANNON",
+    "name": "QUERVALDISSIO CANNON",
     "description": "One attack on the deployment turn for 20% of the target maximum HP before modifiers. Holds its slot for three own turns. No Energy cost.",
     "values": [
-      "TEMPORAL JUDGMENT",
+      "QUERVALDISSIO",
       "CANNON",
       "WEAPON",
       "LEGENDARY",
@@ -113,14 +113,14 @@
   },
   "weapon-designed-plasma-inceneritore-rotante": {
     "title": [
-      "ROTATING PLASMA",
-      "INCINERATOR"
+      "SVARQUENDICA",
+      "TURBINE"
     ],
-    "name": "ROTATING PLASMA INCINERATOR",
+    "name": "SVARQUENDICA TURBINE",
     "description": "One shot on each of two own turns: 37, then 27 HP. A successful first hit locks five burn ticks from your discarded Strategy cards: 2 HP per card, min 2, max 12, before modifiers.",
     "values": [
-      "ROTATING PLASMA",
-      "INCINERATOR",
+      "SVARQUENDICA",
+      "TURBINE",
       "WEAPON",
       "EPIC",
       "ELEMENT",
@@ -141,14 +141,14 @@
   },
   "weapon-designed-plasma-inceneritore-rotante-rarity-l": {
     "title": [
-      "ROTATING PLASMA",
-      "INCINERATOR"
+      "SVARQUENDICA",
+      "TURBINE"
     ],
-    "name": "ROTATING PLASMA INCINERATOR",
+    "name": "SVARQUENDICA TURBINE",
     "description": "One shot on each of two own turns: 54, then 39 HP. A successful first hit locks five burn ticks from your discarded Strategy cards: 3 HP per card, min 3, max 16, before modifiers.",
     "values": [
-      "ROTATING PLASMA",
-      "INCINERATOR",
+      "SVARQUENDICA",
+      "TURBINE",
       "WEAPON",
       "LEGENDARY",
       "ELEMENT",

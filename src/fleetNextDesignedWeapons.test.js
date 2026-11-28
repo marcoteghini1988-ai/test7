@@ -134,8 +134,8 @@ test('Idrocannone a Doppia Mandata: un colpo per turno proprio, totale due',()=>
  assert.equal(b.sides.A.machines.some(m=>m.sourceCardId===c.id),false);
  assert.equal(shots(play(b,'A')).length,0);
 });
-test('Cannone del Giudizio Temporale legge la barra HP massima della nave madre, non gli HP del vitale',()=>{
- const c=named('Cannone del Giudizio Temporale'),r=play(battle(),'A',[c.id]),e=shots(r)[0];
+test('Cannone Quervaldissio legge la barra HP massima della nave madre, non gli HP del vitale',()=>{
+ const c=named('Cannone Quervaldissio'),r=play(battle(),'A',[c.id]),e=shots(r)[0];
  assert.equal(e.impacts[0].nominalDamage,1000);
  assert.ok(e.actualDamage>0);
 });
@@ -157,7 +157,7 @@ test('La plancia mostra il danno nominale delle Armi progettate, non zero',()=>{
   assert.ok(berth,name);
   assert.equal(berth.nominalDamage,expected,name);
  }
- const giu=named('Cannone del Giudizio Temporale');
+ const giu=named('Cannone Quervaldissio');
  const gameState=play(battle(),'A',[giu.id]).battle;
  const berth=projectMachineBerths(gameState.sides.A,[],0).find(x=>x?.sourceCardId===giu.id);
  assert.equal(berth.damagePercent,20);

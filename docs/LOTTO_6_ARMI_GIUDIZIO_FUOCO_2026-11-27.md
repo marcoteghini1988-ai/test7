@@ -1,5 +1,12 @@
 # Sei Carte Arma — Giudizio Temporale e Fuoco
 
+> **Nomi correnti approvati il 28/11/2026:** Cannone Quervaldissio
+> (Quervaldissio Cannon) e Turbina Svarquendica (Svarquendica Turbine).
+> I nomi del resoconto e dei PNG/video originali qui sotto sono storici;
+> le carte visualizzate usano i livelli testo EN/IT aggiornati sopra le
+> medesime basi approvate. ID, valori, rarità ed effetti sono conservati.
+> Dettagli: [rinomine approvate](RINOMINE_DUE_ARMI_APPROVATE_2026-11-28.md).
+
 **Stato al 27/11/2026: integrate e collaudate.** L’utente ha approvato le due direzioni Fuoco con «Confermo entrambe le direzioni» e poi i sei fronti e l’inserimento su test7/main con «procedi». Non richiedere una nuova approvazione e non rigenerare i PNG approvati.
 
 Il registro giocabile comprende **58 varianti: 22 Metallo, 31 Fulmine, 5 Fuoco**. Integrazione: `6ae9bfd178d8900e39b368f238db591a69d7c2d0`. Materializzazione dei dodici PNG originali e sorgente collaudato su StackBlitz: `cf381aaafd0a5b5f12239ef38e115f26cac4ef74`.

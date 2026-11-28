@@ -41,7 +41,7 @@ export function drawBatchReview(ctx,s,ms,assets,{reducedMotion=false}={}){
   if(plan.energySpent&&Math.abs(age-plan.energyAt)<300)judgmentGlow(ctx,{x,y},24,'#ffac46',Math.max(0,1-Math.abs(age-plan.energyAt)/300)*.4);}
  if(assets.cards[s.cardId]&&(s.kind!=='incinerator'||frame.stage<=2))ctx.drawImage(assets.cards[s.cardId],s.slot?86:23,s.who==='A'?615:137,54,81);
  if(s.expiration?.discarded&&index===2&&age>3700)label(ctx,'DURATA TERMINATA: ARMA NEGLI SCARTI',225,690,8.4,'#e4cfaa');
- ctx.fillStyle='#06101ff5';ctx.fillRect(0,0,450,107);label(ctx,({judgment:'TEMPORAL JUDGMENT CANNON',mortar:'MAGMATIC MORTAR',incinerator:'ROTATING PLASMA INCINERATOR'}[s.kind]),225,26,14);
+ ctx.fillStyle='#06101ff5';ctx.fillRect(0,0,450,107);label(ctx,({judgment:'QUERVALDISSIO CANNON',mortar:'MAGMATIC MORTAR',incinerator:'SVARQUENDICA TURBINE'}[s.kind]),225,26,14);
  label(ctx,`${s.rarity.toUpperCase()} · TURNO ${frame.stage} · LATO ${s.who} · SLOT ${s.slot+1}`,225,49,9.5,'#bbd8ef');
  const h=plan.hits[0],judgmentPhase=plan.disabled?'Arma disabilitata: nessun colpo':plan.noRepeat?'Nessun altro attacco nei turni 2 e 3':
   h?(age<h.launchAt?'Un solo attacco nel turno di posa':age<h.impactAt-350?'Tre anelli elettrici in rotazione':age<h.impactAt?'Gli anelli si allineano sul bersaglio':h.blocked?'La Difesa disperde la scarica':'Una scarica concentrata sullo scafo'):'Nessun attacco';
